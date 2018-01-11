@@ -1,0 +1,24 @@
+service: fi-slseed-api
+
+custom: ${file(./configs/custom/${opt:stage}.yml)}
+
+functions: ${file(./configs/functions.yml)}
+
+provider:
+  name: aws
+  profile: default
+  runtime: nodejs6.10
+  memorySize: 512
+  timeout: 30
+  stage: ${opt:stage}
+  environment: ${file(./configs/environment.yml)}
+
+package:
+  exclude:
+    - '**/**'
+    - '!node_modules/**'
+  include:
+    - service/**
+
+plugins:
+  - serverless-offline

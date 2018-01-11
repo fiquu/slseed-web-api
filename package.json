@@ -1,0 +1,68 @@
+{
+  "name": "fi-slseed-api",
+  "description": "Mejor Municipio Upstream API.",
+  "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
+  "contributors": [
+    "Santiago G. Marín <santiago@finaldevstudio.com> (https://github.com/stgogm)"
+  ],
+  "group": {
+    "title": "Fi Slseed",
+    "name": "slseed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FinalDevStudio/fi-slseed-api.git"
+  },
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "engines": {
+    "node": ">= 4.0.0",
+    "npm": ">= 5.0.0"
+  },
+  "scripts": {
+    "start": "sls offline start --stage local",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "domain": "sls create_domain --stage production",
+    "staging-deploy": "sls deploy --stage staging",
+    "dev-deploy": "sls deploy --stage development",
+    "deploy": "sls deploy --stage production",
+    "predomain": "cp configs/stages/production.yml serverless.yml",
+    "prestaging-deploy": "cp configs/stages/staging.yml serverless.yml",
+    "predeploy": "cp configs/stages/production.yml serverless.yml",
+    "predev-deploy": "cp configs/stages/development.yml serverless.yml",
+    "prestart": "cp configs/stages/local.yml serverless.yml",
+    "postdomain": "rm serverless.yml",
+    "poststaging-deploy": "rm serverless.yml",
+    "postdeploy": "rm serverless.yml",
+    "postdev-deploy": "rm serverless.yml",
+    "poststart": "rm serverless.yml",
+    "check": "npm-check -u"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.1.0",
+    "jwk-to-pem": "^1.2.6",
+    "mailgun.js": "^2.0.1",
+    "moment": "^2.20.1",
+    "mongoose": "^4.13.9",
+    "pug": "^2.0.0-rc.4",
+    "request": "^2.83.0",
+    "validator": "^9.2.0"
+  },
+  "devDependencies": {
+    "inquirer": "^5.0.0",
+    "aws-sdk": "^2.177.0",
+    "eslint": "^4.15.0",
+    "eslint-config-prettier": "^2.9.0",
+    "serverless": "^1.25.0",
+    "serverless-domain-manager": "^2.0.2",
+    "serverless-offline": "^3.16.0"
+  }
+}
