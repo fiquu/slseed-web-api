@@ -14,4 +14,8 @@ Serveless Seed API project.
 1. Merge the master into your branch:
     - `git merge slseed/master`
 
-Repeat the last step to update your repo with the latest changes from this one.
+Repeat the last 2 steps to update your repo with the latest changes from this one:
+
+`git fetch slseed && git merge slseed/master`
+
+And have fun resolving conflicts!
