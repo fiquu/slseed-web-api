@@ -1,13 +1,9 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const AWS = require('aws-sdk');
+const ora = require('ora');
 
 const package = require('../package.json');
-
-const DIR_OPTS = {
-  colors: true,
-  depth: 6
-};
 
 AWS.config.update({
   region: 'us-east-1',
@@ -70,18 +66,15 @@ inquirer
 
     delete answers.confirm;
 
-    ssm.putParameter(answers, (err, param) => {
-      if (err) {
-        console.log();
-        console.error(err);
-        console.log();
+    const spinner = ora('Creating/updating parameter...').start();
 
+    ssm.putParameter(answers, err => {
+      if (err) {
+        spinner.fail(err.message);
         process.exit(1);
       }
 
-      console.log('\nParameter created:');
-      console.dir(param, DIR_OPTS);
-      console.log();
+      spinner.succeed('Parameter created/updated!');
 
       process.exit(0);
     });
