@@ -1,9 +1,0 @@
-description: Example index function.
-
-handler: service/functions/example/index.handler
-events:
-  - http:
-      method: get
-      path: example
-      cors: true
-      authorizer: ${self:custom.authorizer}

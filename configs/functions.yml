@@ -1,3 +1,0 @@
-authorizer: ${file(./configs/functions/authorizer.yml)}
-
-example-index: ${file(./configs/functions/example/index.yml)}

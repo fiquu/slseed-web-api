@@ -1,4 +1,0 @@
-authorizer:
-  resultTtlInSeconds: 0 # It causes weird issues if not 0
-  name: authorizer
-  type: request
