@@ -4,7 +4,7 @@
  * @module configs/provider
  */
 
-module.exports = {
+const provider = {
   name: 'aws',
   profile: 'default',
   runtime: 'nodejs6.10',
@@ -13,3 +13,9 @@ module.exports = {
   stage: '${opt:stage}',
   environment: require('./environment')
 };
+
+if (process.env.NODE_ENV === 'production') {
+  provider.profile = 'production';
+}
+
+module.exports = provider;
