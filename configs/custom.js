@@ -11,10 +11,10 @@ module.exports = {
     type: 'request'
   },
   customDomain: {
+    certificateName: 'example.com',
     domainName: 'api.example.com',
-    certificateName: '*.api.example.com',
-    stage: '${opt:stage}',
     createRoute53Record: true,
+    stage: '${opt:stage}',
     basePath: ''
   },
   'serverless-offline': {
