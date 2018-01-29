@@ -34,7 +34,9 @@ module.exports.handler = (event, context, callback) => {
 
       query.match({ sub: decoded.sub });
 
-      query.append(config.pipeline);
+      if (config.pipeline) {
+        query.append(config.pipeline);
+      }
 
       return query.then(([data]) => [decoded, data]);
     })
