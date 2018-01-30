@@ -5,7 +5,7 @@
  */
 
 module.exports = {
-  uri: process.env.SLSEED_DB_URI,
+  uri: process.env.DB_URI,
   options: {
     connectTimeoutMS: 3000,
     socketTimeoutMS: 3000,

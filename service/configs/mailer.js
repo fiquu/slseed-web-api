@@ -5,8 +5,8 @@
  */
 
 module.exports = {
-  sender: process.env.SLSEED_MAILER_SENDER,
-  domain: process.env.SLSEED_MAILER_DOMAIN,
-  key: process.env.SLSEED_MAILER_API_KEY,
+  sender: process.env.MAILER_SENDER,
+  domain: process.env.MAILER_DOMAIN,
+  key: process.env.MAILER_API_KEY,
   username: 'api' // Shouldn't change
 };

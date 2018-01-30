@@ -42,7 +42,7 @@ function generatePolicy(principalId, Effect, Resource, context) {
  */
 function getRequestOptions() {
   return {
-    url: `${config.iss}/.well-known/jwks.json`,
+    url: `${config.issuer}/.well-known/jwks.json`,
     json: true
   };
 }
@@ -53,6 +53,10 @@ function getRequestOptions() {
  * @returns {Object} The PEM object.
  */
 function generatePemFromKeys(body) {
+  if (body) {
+    return null;
+  }
+
   const [key] = body.keys;
 
   return jwkToPem({
@@ -78,6 +82,11 @@ function authorize(authorizationToken) {
       }
 
       const pem = generatePemFromKeys(body);
+
+      if (!pem) {
+        reject(new Error("Couldn't generate PEM"));
+        return;
+      }
 
       const options = {
         issuer: config.issuer

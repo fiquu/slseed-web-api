@@ -14,13 +14,19 @@ const ALLOW = 'allow';
  * @param {Function} callback Callback function.
  */
 module.exports.handler = (event, context, callback) => {
+  console.log('event.headers.Authorization', event.headers && event.headers.Authorization);
+  console.log('event.authorizationToken', event.authorizationToken);
+
   /* Serverless Offline plugin doesn't support "request" auth type */
-  const token = process.env.NODE_ENV === 'local' ? event.authorizationToken : event.headers.Authorization;
+  // const token = process.env.NODE_ENV === 'local' ? event.authorizationToken : event.headers.Authorization;
+  const token = event.headers.Authorization;
   const db = new Database();
 
   if (!token) {
     console.error('No authorization token found!');
+
     callback(UNAUTHORIZED);
+
     return;
   }
 
@@ -57,6 +63,7 @@ module.exports.handler = (event, context, callback) => {
 
     .catch(err => {
       console.error('Authorization:', err);
+
       callback(UNAUTHORIZED);
 
       return db.disconnect();

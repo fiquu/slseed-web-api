@@ -61,6 +61,7 @@
     "serverless-mocha-plugin": "^1.7.0",
     "serverless-offline": "^3.16.0",
     "slug": "^0.9.1",
+    "titleize": "^1.0.0",
     "uglify-js-brunch": "^2.10.0",
     "walk-sync": "^0.3.2",
     "yargs": "^11.0.0"

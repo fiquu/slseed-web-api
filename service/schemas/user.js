@@ -8,7 +8,7 @@ const { Schema } = require('mongoose');
 
 const schema = new Schema(
   {
-    // Cognito user name
+    // Cognito user name (subject)
     sub: {
       type: String,
       required: true,
