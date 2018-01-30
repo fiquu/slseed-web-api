@@ -8,7 +8,7 @@ const package = require('../package.json');
 
 const values = {};
 const params = [
-  'cognito-identity-pool-id',
+  // 'cognito-identity-pool-id',
   'cognito-user-pool-id',
   // 'mailer-api-key',
   // 'mailer-sender',
