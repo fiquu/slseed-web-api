@@ -35,11 +35,15 @@ const s = val =>
     lower: true
   });
 
+const n = val => (val ? s(val) + '-' : '');
+
+const t = val => (val ? val + ' ' : '');
+
 const questions = [
   {
     name: 'name',
     type: 'input',
-    message: `Description ${chalk.reset.gray('(without group name)')}`
+    message: `Instance name ${chalk.reset.gray('(blank for none)')}`
   }
 ];
 
@@ -53,7 +57,7 @@ inquirer
     spinner.start();
 
     const params = {
-      PoolName: `${s(package.group.name)}-${s(answers.name)}-${s(process.env.NODE_ENV)}`,
+      PoolName: `${s(package.group.name)}-${n(answers.name)}${s(process.env.NODE_ENV)}`,
       AdminCreateUserConfig: {
         AllowAdminCreateUserOnly: true
       },
@@ -107,7 +111,7 @@ inquirer
     spinner.start();
 
     const params = {
-      ClientName: `${s(package.group.name)}-${s(answers.name)}-app-${process.env.NODE_ENV}`,
+      ClientName: `${s(package.group.name)}-${n(answers.name)}app-${process.env.NODE_ENV}`,
       ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
       UserPoolId: UserPool.Id,
       GenerateSecret: false
@@ -134,11 +138,11 @@ inquirer
     spinner.start();
 
     const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${s(answers.name)}-cognito-user-pool-id`,
+      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(answers.name)}cognito-user-pool-id`,
       Value: UserPool.Id,
       Overwrite: true,
       Type: 'String',
-      Description: titleize(`${package.group.title} ${answers.name} Cognito User Pool Id`)
+      Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(answers.name)}Cognito User Pool Id`)
     };
 
     return new Promise((resolve, reject) =>
@@ -162,11 +166,11 @@ inquirer
 
     /* Create the App Client Id SSM parameter */
     const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${s(answers.name)}-cognito-app-client-id`,
+      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(answers.name)}cognito-app-client-id`,
       Value: UserPoolClient.ClientId,
       Overwrite: true,
       Type: 'String',
-      Description: titleize(`${package.group.title} ${answers.name} Cognito App Client Id`)
+      Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(answers.name)}Cognito App Client Id`)
     };
 
     return new Promise((resolve, reject) =>
@@ -208,7 +212,7 @@ inquirer
     /* Create the Identity Pool */
     const params = {
       AllowUnauthenticatedIdentities: false,
-      IdentityPoolName: titleize(`${package.group.title} ${name} ${process.env.NODE_ENV}`),
+      IdentityPoolName: titleize(`${package.group.title} ${process.env.NODE_ENV}${t(name)}`),
       CognitoIdentityProviders: [
         {
           ProviderName: `cognito-idp.${AWS.config.region}.amazonaws.com/${UserPool.Id}`,
@@ -242,11 +246,13 @@ inquirer
 
     /* Create the Identity Pool Id SSM parameter */
     const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${s(name)}-cognito-identity-pool-id`,
+      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-identity-pool-id`,
       Value: IdentityPoolId,
       Overwrite: true,
       Type: 'String',
-      Description: titleize(`${package.group.title} ${name} Cognito Identity Pool Id`)
+      Description: titleize(
+        `${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito Identity Pool Id`
+      )
     };
 
     return new Promise((resolve, reject) =>
