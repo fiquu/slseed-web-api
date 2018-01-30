@@ -1,3 +1,11 @@
+/**
+ * SSM parameter create script.
+ *
+ * Creates a SSM parameter.
+ *
+ * @example $ AWS_PROFILE=default NODE_ENV=local node scripts/cognito-user-pool-create.js
+ */
+
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const AWS = require('aws-sdk');
