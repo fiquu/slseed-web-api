@@ -4,8 +4,17 @@
  * @module configs/plugins
  */
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports = ['serverless-domain-manager'];
-} else {
-  module.exports = ['serverless-offline'];
+const plugins = [];
+
+/* Set per-stage plugins */
+switch (process.env.NODE_ENV) {
+  case 'production':
+    plugins.push('serverless-domain-manager');
+    break;
+
+  default:
+    plugins.push('serverless-mocha-plugin');
+    plugins.push('serverless-offline');
 }
+
+module.exports = plugins;

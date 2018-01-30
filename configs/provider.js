@@ -6,7 +6,6 @@
 
 const provider = {
   name: 'aws',
-  profile: 'default',
   runtime: 'nodejs6.10',
   memorySize: 512,
   timeout: 30,
@@ -14,8 +13,18 @@ const provider = {
   environment: require('./environment')
 };
 
-if (process.env.NODE_ENV === 'production') {
-  provider.profile = 'production';
+/* Set per-stage profiles */
+switch (process.env.NODE_ENV) {
+  case 'production':
+    provider.profile = 'production';
+    break;
+
+  case 'staging':
+    provider.profile = 'staging';
+    break;
+
+  default:
+    provider.profile = 'default';
 }
 
 module.exports = provider;
