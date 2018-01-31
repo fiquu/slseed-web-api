@@ -19,7 +19,7 @@ const params = [
 /* Map al SSM parameter names to env variables */
 params.forEach(name => {
   const value = `\${ssm:/${package.group.name}/\${self:provider.stage}/${name}~true}`;
-  const env = name.toUpperCase().replace(/-/g, '_');
+  const env = name.toUpperCase().replace(/[^A-Z]+/g, '_');
 
   console.log(`> SSM:ENV ${name} --> ${env} = ${value}`);
 

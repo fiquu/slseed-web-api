@@ -10,6 +10,8 @@ const UNAUTHORIZED = 'Unauthorized';
 
 const mochaPlugin = require('serverless-mocha-plugin');
 
+const jwtToken = require('./jwt-token.json'); // ["jwt-or-id-token"]
+
 const wrapped = mochaPlugin.getWrapper('authorizer', '/service/functions/authorizer.js', 'handler');
 const expect = mochaPlugin.chai.expect;
 
@@ -20,7 +22,7 @@ describe('authorizer', () => {
         headers: {}
       })
 
-      .then(response => expect(response).to.be.empty)
+      .then(res => expect(res).to.be.empty)
 
       .catch(err => expect(err).to.equal(UNAUTHORIZED)));
 
@@ -32,7 +34,24 @@ describe('authorizer', () => {
         }
       })
 
-      .then(response => expect(response).to.be.empty)
+      .then(res => expect(res).to.be.empty)
 
       .catch(err => expect(err).to.equal(UNAUTHORIZED)));
+
+  it('should authorize a user with a valid a token', () =>
+    wrapped
+      .run({
+        headers: {
+          Authorization: jwtToken[0]
+        }
+      })
+
+      .then(res => {
+        expect(res).to.not.be.empty;
+        expect(res.principalId).to.be.a('string');
+        expect(res.context).to.be.an('object');
+        expect(res.context.data).to.be.a('string');
+      })
+
+      .catch(err => console.error(err))).timeout(30000);
 });
