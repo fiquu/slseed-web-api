@@ -1,13 +1,18 @@
 /**
  * Serverless configuration.
  *
- * @module serverless
+ * @see https://serverless.com/framework/docs/providers/aws/
  */
 
 const argv = require('yargs').argv;
 
+const profiles = require('./configs/profiles');
+
 /* Force NODE_ENV to equal Serverless' stage */
 process.env.NODE_ENV = argv.stage;
+
+/* Set proper AWS stage profile */
+process.env.AWS_PROFILE = profiles[argv.stage] || 'default';
 
 /* Service Name */
 module.exports.service = require('./package.json').name;
