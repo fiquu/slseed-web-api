@@ -3,8 +3,12 @@
  *
  * Creates a SSM parameter.
  *
- * @example $ AWS_PROFILE=default NODE_ENV=local node scripts/cognito-user-pool-create.js
+ * @example $ NODE_ENV=local node scripts/aam-param-put.js
  */
+
+const profiles = require('../configs/profiles');
+
+process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
 
 const inquirer = require('inquirer');
 const chalk = require('chalk');

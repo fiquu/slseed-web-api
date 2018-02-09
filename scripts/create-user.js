@@ -3,8 +3,12 @@
  *
  * Creates a Cognito user and the user reference in the database.
  *
- * @example $ AWS_PROFILE=default NODE_ENV=local node scripts/create-user.js
+ * @example $ NODE_ENV=local node scripts/create-user.js
  */
+
+const profiles = require('../configs/profiles');
+
+process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
 
 const validator = require('validator');
 const mongoose = require('mongoose');
