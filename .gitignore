@@ -2,7 +2,6 @@
 test/jwt-token.json
 
 # Serverless
-serverless.yml
 .serverless
 
 # Mongo dumps
