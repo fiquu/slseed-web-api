@@ -43,6 +43,10 @@ const n = val => (val ? s(val) + '-' : '');
 
 const t = val => (val ? val + ' ' : '');
 
+console.log(`\n${chalk.cyan.bold('Create AWS Cognito User Pool Script')}\n`);
+console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
+console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
+
 const questions = [
   {
     name: 'name',

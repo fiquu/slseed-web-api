@@ -26,9 +26,10 @@ AWS.config.update({
 
 const ssm = new AWS.SSM();
 
-console.log(`\n${chalk.cyan.bold('Insert AWS Systems Manager Parameter')}\n`);
-console.log(`${chalk.bold('Group:')} ${package.group.title}`);
-console.log(`${chalk.bold('Path: ')} /${package.group.name}/${process.env.NODE_ENV}/\n`);
+console.log(`\n${chalk.cyan.bold('Insert AWS Systems Manager Parameter Script')}\n`);
+console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
+console.log(`${chalk.bold('Group:   ')} ${package.group.title}`);
+console.log(`${chalk.bold('Path:    ')} /${package.group.name}/${process.env.NODE_ENV}/\n`);
 
 const questions = [
   {

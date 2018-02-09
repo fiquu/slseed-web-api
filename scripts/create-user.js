@@ -33,6 +33,10 @@ const cognito = new AWS.CognitoIdentityServiceProvider();
 const ssm = new AWS.SSM();
 const spinner = ora();
 
+console.log(`\n${chalk.cyan.bold('Create User Script')}\n`);
+console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
+console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
+
 /* Fetch SSM parameters */
 new Promise((resolve, reject) => {
   spinner.text = 'Resolving SSM parameters...';
