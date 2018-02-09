@@ -4,7 +4,7 @@
   "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
   "version": "0.0.0",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
   "contributors": [
     "Santiago G. Marín <santiago@finaldevstudio.com> (https://github.com/stgogm)"
