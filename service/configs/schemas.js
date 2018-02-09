@@ -3,6 +3,7 @@
  *
  * @module configs/schemas
  */
+
 const user = require('../schemas/user');
 
 const schemas = {

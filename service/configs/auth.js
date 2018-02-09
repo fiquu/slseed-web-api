@@ -1,7 +1,7 @@
 /**
- * Database Config module.
+ * Auth Config module.
  *
- * @module configs/database
+ * @module configs/auth
  */
 
 if (!process.env.COGNITO_USER_POOL_ID) {

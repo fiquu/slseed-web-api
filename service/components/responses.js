@@ -3,6 +3,7 @@
  *
  * @module components/responses
  */
+
 const config = require('../configs/responses');
 
 /**

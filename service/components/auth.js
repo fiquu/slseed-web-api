@@ -1,3 +1,9 @@
+/**
+ * Auth Component module.
+ *
+ * @module components/auth
+ */
+
 const jwkToPem = require('jwk-to-pem');
 const jwk = require('jsonwebtoken');
 const request = require('request');

@@ -6,6 +6,8 @@
 
 const { Schema } = require('mongoose');
 
+const GENDERS = require('../consts/genders');
+
 const schema = new Schema(
   {
     // Cognito user name (subject)
@@ -13,6 +15,13 @@ const schema = new Schema(
       type: String,
       required: true,
       unique: true
+    },
+
+    gender: {
+      type: String,
+      required: true,
+      enum: Object.keys(GENDERS).map(key => GENDERS[key]),
+      default: GENDERS.NONE
     }
   },
   {

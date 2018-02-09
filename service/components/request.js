@@ -1,5 +1,5 @@
 /**
- * Request handler component.
+ * Request handler component module.
  *
  * @module components/request
  */
