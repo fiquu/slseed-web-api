@@ -47,10 +47,7 @@
     "validator": "^9.4.0"
   },
   "devDependencies": {
-    "auto-reload-brunch": "^2.7.1",
     "aws-sdk": "^2.188.0",
-    "brunch": "^2.10.12",
-    "clean-css-brunch": "^2.10.0",
     "eslint": "^4.16.0",
     "eslint-config-prettier": "^2.9.0",
     "inquirer": "^5.0.1",
@@ -62,7 +59,6 @@
     "serverless-offline": "^3.16.0",
     "slug": "^0.9.1",
     "titleize": "^1.0.0",
-    "uglify-js-brunch": "^2.10.0",
     "walk-sync": "^0.3.2",
     "yargs": "^11.0.0"
   }
