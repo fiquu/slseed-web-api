@@ -8,7 +8,7 @@ module.exports = {
   authorizer: {
     resultTtlInSeconds: 0,
     name: 'authorizer',
-    type: 'REQUEST'
+    type: 'request'
   },
   customDomain: {
     certificateName: 'example.com',
