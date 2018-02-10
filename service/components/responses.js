@@ -26,7 +26,7 @@ class Response {
     this.statusCode = parseInt(statusCode || 200, 10);
     this.body = '';
 
-    if (body && headers['Content-Type'] === 'application/json') {
+    if (body && this.headers['Content-Type'] === 'application/json') {
       this.body = JSON.stringify(body) || '""';
     }
 
