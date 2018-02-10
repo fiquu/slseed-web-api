@@ -22,7 +22,7 @@ class Response {
    * @memberof Response
    */
   constructor(statusCode, body, headers) {
-    this.headers = Object.assign({}, config.defaults.headers, headers);
+    this.headers = Object.assign({}, config.default.headers, headers);
     this.statusCode = parseInt(statusCode || 200, 10);
     this.body = '';
 

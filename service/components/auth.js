@@ -59,7 +59,7 @@ function getRequestOptions() {
  * @returns {Object} The PEM object.
  */
 function generatePemFromKeys(body) {
-  if (!body || body.keys.length < 1) {
+  if (!body || !body.keys || body.keys.length < 1) {
     console.error(body);
     return null;
   }
