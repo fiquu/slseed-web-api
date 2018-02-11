@@ -11,23 +11,17 @@ const schemas = require('./schemas');
 
 mongoose.Promise = Promise;
 
-class Database {
-  /**
-   * Creates an instance of Database.
-   *
-   * @constructor
-   */
-  constructor() {
-    this.connected = false;
-    this.schemas = schemas;
-  }
+if (process.env.NODE_ENV === 'local') {
+  mongoose.set('debug', true);
+}
 
+class Database {
   /**
    * Creates a connection to the database.
    */
   connect() {
     return new Promise((resolve, reject) => {
-      if (this.connected) {
+      if (mongoose.connection.readyState === 1) {
         resolve();
         return;
       }
@@ -36,7 +30,7 @@ class Database {
         .connect(config.uri, config.options)
 
         .then(() => {
-          this.connected = true;
+          schemas.register(mongoose);
           resolve();
         })
 
@@ -49,11 +43,6 @@ class Database {
    */
   disconnect() {
     return new Promise(resolve => {
-      if (process.env.IS_OFFLINE === 'true' || !this.connected) {
-        resolve();
-        return;
-      }
-
       mongoose
         .disconnect()
 
@@ -71,7 +60,7 @@ class Database {
    * @returns {Object} The model.
    */
   model(name) {
-    return this.schemas.model(name);
+    return mongoose.model(name);
   }
 }
 

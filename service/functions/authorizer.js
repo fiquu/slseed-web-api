@@ -1,4 +1,4 @@
-const Database = require('../components/database');
+const Request = require('../components/request');
 const auth = require('../components/auth');
 
 const config = require('../configs/auth');
@@ -14,8 +14,9 @@ const ALLOW = 'allow';
  * @param {Function} callback Callback function.
  */
 module.exports.handler = (event, context, callback) => {
+  const req = new Request(event, context, callback);
+
   const token = event.headers.Authorization || event.headers.authorization;
-  const db = new Database();
 
   if (!token) {
     console.error('No authorization token found!');
@@ -28,10 +29,10 @@ module.exports.handler = (event, context, callback) => {
   auth
     .authorize(token, event.methodArn)
 
-    .then(decoded => db.connect().then(() => decoded))
+    .then(decoded => req.db.connect().then(() => decoded))
 
     .then(decoded => {
-      const query = db.model(config.model).aggregate();
+      const query = req.db.model(config.model).aggregate();
 
       query.match({ sub: decoded.sub });
 
@@ -51,7 +52,7 @@ module.exports.handler = (event, context, callback) => {
         data: JSON.stringify(data)
       });
 
-      return db.disconnect().then(() => policy);
+      return policy;
     })
 
     .then(policy => callback(null, policy))
@@ -60,7 +61,5 @@ module.exports.handler = (event, context, callback) => {
       console.error('Authorization:', err);
 
       callback(UNAUTHORIZED);
-
-      return db.disconnect();
     });
 };

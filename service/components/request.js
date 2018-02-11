@@ -31,6 +31,8 @@ module.exports = class Request {
       throw new Error('Event must be an object!');
     }
 
+    context.callbackWaitsForEmptyEventLoop = false; /* Optimize DB connections */
+
     this.db = new Database();
 
     this.callback = callback;
@@ -147,10 +149,6 @@ module.exports = class Request {
    * @memberof Request
    */
   send(res) {
-    if (this.db) {
-      this.db.disconnect();
-    }
-
     /* Process empty responses as Internal Server Error (500) */
     if (!res) {
       this.callback(null, new InternalServerError());

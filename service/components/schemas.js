@@ -4,44 +4,19 @@
  * @module components/schemas
  */
 
-const mongoose = require('mongoose');
-
 const config = require('../configs/schemas');
 
-if (process.env.NODE_ENV === 'local') {
-  mongoose.set('debug', true);
-}
-
 /**
- * Retrieves a schema object only by name.
+ * Registers all schemas into the connection.
  *
- * @param {any} name The schema name to retrieve.
- *
- * @returns {mongoose.Schema} The schema object.
+ * @param {Object} db The database instance object.
  */
-function get(name) {
-  return config.schemas[name];
+function register(db) {
+  Object.keys(config.schemas).forEach(name => {
+    db.model(name, config.schemas[name]);
+  });
 }
-
-/**
- * Retrieves a schema's model by name.
- *
- * @param {String} name The model's name.
- *
- * @returns
- */
-function model(name) {
-  return mongoose.model(name);
-}
-
-/* Pre-register all schemas */
-Object.keys(config.schemas).forEach(name => {
-  if (!mongoose.models[name]) {
-    mongoose.model(name, get(name));
-  }
-});
 
 module.exports = {
-  model,
-  get
+  register
 };
