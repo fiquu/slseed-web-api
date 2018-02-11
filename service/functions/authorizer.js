@@ -52,10 +52,8 @@ module.exports.handler = (event, context, callback) => {
         data: JSON.stringify(data)
       });
 
-      return policy;
+      callback(null, policy);
     })
-
-    .then(policy => callback(null, policy))
 
     .catch(err => {
       console.error('Authorization:', err);
