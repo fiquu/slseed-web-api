@@ -20,7 +20,7 @@ module.exports.handler = (event, context, callback) => {
   }
 
   req
-    .initDb()
+    .db.connect()
 
     .then(() => {
       const query = req.db.model(USER).find();

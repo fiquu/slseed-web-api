@@ -31,20 +31,11 @@ module.exports = class Request {
       throw new Error('Event must be an object!');
     }
 
+    this.db = new Database();
+
     this.callback = callback;
     this.context = context;
     this.event = event;
-    this.db = null;
-  }
-
-  /**
-   * Initializes the database connection.
-   *
-   * @return {Promise} Connection promise.
-   */
-  initDb() {
-    this.db = new Database();
-    return this.db.connect();
   }
 
   /**

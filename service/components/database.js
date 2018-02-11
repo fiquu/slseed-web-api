@@ -19,41 +19,34 @@ class Database {
    */
   constructor() {
     this.schemas = schemas;
-    this.connected = false;
   }
 
   /**
    * Creates a connection to the database.
    */
   connect() {
-    return new Promise((resolve, reject) => {
-      if (this.connected) {
-        resolve();
-        return;
-      }
-
+    return new Promise((resolve, reject) =>
       mongoose
         .connect(config.uri, config.options)
 
-        .then(() => {
-          this.connected = true;
-          resolve();
-        })
+        .then(() => resolve())
 
-        .catch(err => reject(err));
-    });
+        .catch(err => reject(err))
+    );
   }
 
   /**
    * Closes the database connection.
    */
   disconnect() {
-    if (this.connected) {
-      this.connected = false;
-      return mongoose.disconnect();
-    }
+    return new Promise(resolve =>
+      mongoose
+        .disconnect()
 
-    return new Promise(resolve => resolve());
+        .then(() => resolve())
+
+        .catch(() => resolve())
+    );
   }
 
   /**
