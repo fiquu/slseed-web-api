@@ -18,6 +18,7 @@ class Database {
    * @constructor
    */
   constructor() {
+    this.connected = false;
     this.schemas = schemas;
   }
 
@@ -25,28 +26,41 @@ class Database {
    * Creates a connection to the database.
    */
   connect() {
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, reject) => {
+      if (this.connected) {
+        resolve();
+        return;
+      }
+
       mongoose
         .connect(config.uri, config.options)
 
-        .then(() => resolve())
+        .then(() => {
+          this.connected = true;
+          resolve();
+        })
 
-        .catch(err => reject(err))
-    );
+        .catch(err => reject(err));
+    });
   }
 
   /**
    * Closes the database connection.
    */
   disconnect() {
-    return new Promise(resolve =>
+    return new Promise(resolve => {
+      if (process.env.IS_OFFLINE === 'true' || !this.connected) {
+        resolve();
+        return;
+      }
+
       mongoose
         .disconnect()
 
         .then(() => resolve())
 
-        .catch(() => resolve())
-    );
+        .catch(() => resolve());
+    });
   }
 
   /**
