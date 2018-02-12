@@ -16,8 +16,7 @@ config.views.forEach(view => {
 /**
  * Renders a template.
  *
- * @param {String} template The template's name.
- * @param {String} view The view's name to render.
+ * @param {String} path The view's path name to render.
  * @param {Object} locals The locals object.
  *
  * @returns {String} The rendered HTML string.
