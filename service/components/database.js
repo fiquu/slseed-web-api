@@ -9,8 +9,6 @@ const mongoose = require('mongoose');
 const config = require('../configs/database');
 const schemas = require('./schemas');
 
-mongoose.Promise = Promise;
-
 if (process.env.NODE_ENV === 'local') {
   mongoose.set('debug', true);
 }

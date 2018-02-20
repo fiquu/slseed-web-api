@@ -7,7 +7,9 @@
 module.exports = {
   uri: process.env.DB_URI,
   options: {
+    promiseLibrary: Promise,
     connectTimeoutMS: 3000,
-    socketTimeoutMS: 3000
+    socketTimeoutMS: 3000,
+    poolSize: 1
   }
 };
