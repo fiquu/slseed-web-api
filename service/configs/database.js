@@ -10,7 +10,7 @@ module.exports = {
     promiseLibrary: Promise,
     connectTimeoutMS: 30000, // Match default HTTP timeout
     socketTimeoutMS: 30000, // Match default HTTP timeout
-    autoIndex: false, // You should have a script to create the database indexes
+    autoIndex: false, // You should use the db-indexes script to create the database indexes
     poolSize: 1 // We don't need more for each function
   }
 };
