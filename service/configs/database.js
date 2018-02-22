@@ -8,8 +8,9 @@ module.exports = {
   uri: process.env.DB_URI,
   options: {
     promiseLibrary: Promise,
-    connectTimeoutMS: 3000,
-    socketTimeoutMS: 3000,
-    poolSize: 1
+    connectTimeoutMS: 30000, // Match default HTTP timeout
+    socketTimeoutMS: 30000, // Match default HTTP timeout
+    autoIndex: false, // You should have a script to create the database indexes
+    poolSize: 1 // We don't need more for each function
   }
 };
