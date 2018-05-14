@@ -4,13 +4,11 @@
  * @module components/request
  */
 
-const utils = require('./utils');
+const { Response, Ok, InternalServerError } = require('./responses');
+const Database = require('./database');
 
 const config = require('../configs/request');
 const views = require('./views');
-
-const { Response, Ok, InternalServerError } = require('./responses');
-const Database = require('./database');
 
 /**
  * Request handler class.
@@ -184,8 +182,6 @@ class Request {
       version: process.env.VERSION,
 
       host: this.getHeader('Host'),
-
-      utils,
 
       data
     };
