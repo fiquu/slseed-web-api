@@ -3,8 +3,6 @@ const Ably = require('ably');
 const { Created, BadRequest } = require('../../components/responses');
 const Request = require('../../components/request');
 
-const NOTIFICATION = 'notification';
-
 /**
  * Messages create handler function.
  *
@@ -12,11 +10,9 @@ const NOTIFICATION = 'notification';
  * create notifications for any user. It is not registered as a function and use it for example purposes only.
  *
  * @param {Object} event Call event object.
- * @param {Object} context Context object.
- * @param {Function} callback Callback function.
  */
-module.exports.handler = (event, context, callback) => {
-  const req = new Request(event, context, callback);
+module.exports.handler = async event => {
+  const req = new Request(event);
   const body = req.getBody();
 
   if (!body) {
@@ -37,30 +33,33 @@ module.exports.handler = (event, context, callback) => {
     refId: body.refId
   };
 
-  const query = req.db.model(NOTIFICATION).create(data);
+  try {
+    await req.db.connect();
 
-  query
-    .then(notification => {
-      if (!notification || !notification._id) {
-        throw new BadRequest();
-      }
+    const query = req.db.model('notification').create(data);
 
-      return new Promise(resolve => {
-        const client = new Ably.Rest(process.env.ABLY_SERVER_REST_KEY);
-        const channel = client.channels.get(`clients:${notification.toId}`);
+    const notification = await query;
 
-        channel.publish('notification', notification._id, err => {
-          /* TODO: Don't care about error handling for now */
-          if (err) {
-            console.log(err);
-          }
+    if (!notification || !notification._id) {
+      throw new BadRequest();
+    }
 
-          resolve();
-        });
-      });
-    })
+    const client = new Ably.Rest(process.env.ABLY_SERVER_REST_KEY);
+    const channel = client.channels.get(`clients:${notification.toId}`);
 
-    .then(() => req.send(new Created()))
+    await new Promise(resolve =>
+      channel.publish('notification', notification._id, err => {
+        /* TODO: Handle errors */
+        if (err) {
+          console.log(err);
+        }
 
-    .catch(err => req.send(err));
+        resolve();
+      })
+    );
+
+    return new Created();
+  } catch (err) {
+    return req.send(err);
+  }
 };

@@ -9,9 +9,9 @@ const templates = require('./templates');
 
 const views = {};
 
-config.views.forEach(view => {
+for (let view of config.views) {
   views[view] = templates.get(view);
-});
+}
 
 /**
  * Renders a template.
@@ -22,7 +22,7 @@ config.views.forEach(view => {
  * @returns {String} The rendered HTML string.
  */
 function render(path, locals) {
-  return views[path](Object.assign({}, locals, config.locals));
+  return views[path]({ ...config.locals, ...locals });
 }
 
 module.exports = {

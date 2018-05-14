@@ -5,24 +5,16 @@ const Request = require('../../../components/request');
 
 const { ObjectId } = Types;
 
-const NOTIFICATION = 'notification';
-const TO_MODEL = 'toModel';
-const DISMISSED_AT = 'dismissedAt';
-const MONITOR = 'monitor';
-const TO_ID = 'toId';
-const ID = '_id';
-
 /**
  * Notifications by id handler function.
  *
  * @param {Object} event Call event object.
- * @param {Object} context Context object.
- * @param {Function} callback Callback function.
  */
-module.exports.handler = (event, context, callback) => {
-  const req = new Request(event, context, callback);
+module.exports.handler = async event => {
+  const req = new Request(event);
+
   const authData = req.getAuthData();
-  const _id = req.getParam(ID);
+  const _id = req.getParam('_id');
 
   if (!authData) {
     req.send(new Forbidden());
@@ -34,31 +26,27 @@ module.exports.handler = (event, context, callback) => {
     return;
   }
 
-  req.db
-    .connect()
+  try {
+    await req.db.connect();
 
-    .then(() => {
-      const query = req.db.model(NOTIFICATION).findById(_id);
+    const query = req.db.model('notification').findById(_id);
 
-      query.where(TO_MODEL).equals(MONITOR);
-      query.where(TO_ID).equals(authData._id);
-      query.where(DISMISSED_AT).equals(null);
+    query.where('toModel').equals('user');
+    query.where('toId').equals(authData._id);
+    query.where('dismissedAt').equals(null);
 
-      query.populate('from', 'citizen.name');
-      query.populate('ref', '_id');
-      // query.populate('to');
+    query.populate('from', 'citizen.name');
+    query.populate('ref', '_id');
+    // query.populate('to');
 
-      return query;
-    })
+    const notification = await query;
 
-    .then(notification => {
-      if (!notification || !notification._id) {
-        req.send(new NoContent());
-        return;
-      }
+    if (!notification || !notification._id) {
+      return new NoContent();
+    }
 
-      req.send(new Ok(notification));
-    })
-
-    .catch(err => req.send(err));
+    return new Ok(notification);
+  } catch (err) {
+    return req.send(err);
+  }
 };

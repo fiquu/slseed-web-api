@@ -5,6 +5,12 @@
     "node": true,
     "es6": true
   },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
   "rules": {
     "no-console": 0
   }

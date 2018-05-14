@@ -17,14 +17,14 @@ const params = [
 ];
 
 /* Map al SSM parameter names to env variables */
-params.forEach(name => {
+for (let name of params) {
   const value = `\${ssm:/${package.group.name}/\${self:provider.stage}/${name}~true}`;
   const env = name.toUpperCase().replace(/[^A-Z]+/g, '_');
 
   console.log(`> SSM:ENV ${name} --> ${env} = ${value}`);
 
   values[env] = value;
-});
+}
 
 values.NODE_ENV = process.env.NODE_ENV;
 

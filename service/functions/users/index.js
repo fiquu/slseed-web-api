@@ -1,41 +1,35 @@
 const { Forbidden, NoContent, Ok } = require('../../components/responses');
 const Request = require('../../components/request');
 
-const USER = 'user';
-
 /**
  * Users index handler function.
  *
  * @param {Object} event Call event object.
- * @param {Object} context Context object.
- * @param {Function} callback Callback function.
+ *
+ * @returns {Object|Error} The response.
  */
-module.exports.handler = (event, context, callback) => {
-  const req = new Request(event, context, callback);
+module.exports.handler = async event => {
+  const req = new Request(event);
+
   const auth = req.getAuthData(); // Authorization resolved data
 
   if (!auth) {
-    req.send(new Forbidden());
-    return;
+    return new Forbidden();
   }
 
-  req.db
-    .connect()
+  try {
+    await req.db.connect();
 
-    .then(() => {
-      const query = req.db.model(USER).find();
+    const query = req.db.model('user').find();
+    const users = await query.lean();
 
-      return query.lean();
-    })
+    if (!users || !users.length) {
+      req.send(new NoContent());
+      return;
+    }
 
-    .then(users => {
-      if (!users || !users.length) {
-        req.send(new NoContent());
-        return;
-      }
-
-      req.send(new Ok(users));
-    })
-
-    .catch(err => req.send(err));
+    return new Ok(users);
+  } catch (err) {
+    return req.send(err);
+  }
 };

@@ -7,7 +7,7 @@
 const path = require('path');
 const pug = require('pug');
 
-const OPTIONS = {
+const options = {
   basedir: path.join('service', 'views'),
   self: true
 };
@@ -18,7 +18,7 @@ const OPTIONS = {
  * @param {String} rel The view's template relative path.
  */
 function get(rel) {
-  return pug.compileFile(`${path.join(OPTIONS.basedir, rel)}.pug`, OPTIONS);
+  return pug.compileFile(`${path.join(options.basedir, rel)}.pug`, options);
 }
 
 module.exports.get = get;

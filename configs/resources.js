@@ -6,6 +6,7 @@
 
 module.exports = {
   Resources: {
+    // Responses needed for auth CORS
     GatewayResponse: {
       Type: 'AWS::ApiGateway::GatewayResponse',
       Properties: {

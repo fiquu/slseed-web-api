@@ -58,6 +58,7 @@
     "serverless-domain-manager": "^2.3.6",
     "serverless-mocha-plugin": "^1.8.0",
     "serverless-offline": "^3.20.3",
+    "serverless-plugin-split-stacks": "^1.4.1",
     "slug": "^0.9.1",
     "titleize": "^1.0.1",
     "walk-sync": "^0.3.2",

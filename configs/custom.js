@@ -6,7 +6,7 @@
 
 module.exports = {
   authorizer: {
-    resultTtlInSeconds: 0,
+    resultTtlInSeconds: 0, // TODO: Set this to an appropriate value
     name: 'authorizer',
     type: 'request'
   },

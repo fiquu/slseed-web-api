@@ -3,9 +3,6 @@ const auth = require('../components/auth');
 
 const config = require('../configs/auth');
 
-const UNAUTHORIZED = 'Unauthorized';
-const ALLOW = 'allow';
-
 /**
  * Authorizer handler function.
  *
@@ -13,51 +10,42 @@ const ALLOW = 'allow';
  * @param {Object} context Context object.
  * @param {Function} callback Callback function.
  */
-module.exports.handler = (event, context, callback) => {
-  const req = new Request(event, context, callback);
+module.exports.handler = async event => {
+  const req = new Request(event);
 
   const token = event.headers.Authorization || event.headers.authorization;
 
   if (!token) {
     console.error('No authorization token found!');
-
-    callback(UNAUTHORIZED);
-
-    return;
+    return 'Unauthorized';
   }
 
-  auth
-    .authorize(token, event.methodArn)
+  try {
+    const decoded = await auth.authorize(token, event.methodArn);
 
-    .then(decoded => req.db.connect().then(() => decoded))
+    await req.db.connect();
 
-    .then(decoded => {
-      const query = req.db.model(config.model).aggregate();
+    const query = req.db.model(config.model).aggregate();
 
-      query.match({ sub: decoded.sub });
+    query.match({ sub: decoded.sub });
 
-      if (config.pipeline) {
-        query.append(config.pipeline);
-      }
+    if (config.pipeline) {
+      query.append(config.pipeline);
+    }
 
-      return query.then(([data]) => [decoded, data]);
-    })
+    const [data] = await query;
 
-    .then(([decoded, data]) => {
-      if (!data || !data._id) {
-        throw new Error('No auth data found.');
-      }
+    if (!data || !data._id) {
+      throw new Error('No auth data found.');
+    }
 
-      const policy = auth.generatePolicy(decoded.sub, ALLOW, event.methodArn, {
-        data: JSON.stringify(data)
-      });
-
-      callback(null, policy);
-    })
-
-    .catch(err => {
-      console.error('Authorization:', err);
-
-      callback(UNAUTHORIZED);
+    const policy = auth.generatePolicy(decoded.sub, 'ALLOW', event.methodArn, {
+      data: JSON.stringify(data)
     });
+
+    return policy;
+  } catch (err) {
+    console.error('Authorization:', err);
+    return 'Unauthorized';
+  }
 };

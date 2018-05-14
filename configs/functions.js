@@ -15,7 +15,7 @@ const basedir = path.resolve(path.join(__dirname, 'functions'));
 const paths = walk(basedir);
 
 /* Define and declare each found function */
-paths.forEach(value => {
+for (let value of paths) {
   if (path.extname(value) === '.js') {
     const name = slug(value.replace(/\.js/gi, '').replace(/\//g, '-'), {
       lower: true
@@ -23,4 +23,4 @@ paths.forEach(value => {
 
     module.exports[name] = require(path.join(basedir, value));
   }
-});
+}

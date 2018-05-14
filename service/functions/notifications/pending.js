@@ -1,53 +1,40 @@
 const { Forbidden, NoContent, Ok } = require('../../components/responses');
 const Request = require('../../components/request');
 
-const NOTIFICATION = 'notification';
-const TO_MODEL = 'toModel';
-const DISMISSED_AT = 'dismissedAt';
-const MONITOR = 'monitor';
-const TO_ID = 'toId';
-
 /**
  * Notifications pending handler function.
  *
  * @param {Object} event Call event object.
- * @param {Object} context Context object.
- * @param {Function} callback Callback function.
  */
-module.exports.handler = (event, context, callback) => {
-  const req = new Request(event, context, callback);
+module.exports.handler = async event => {
+  const req = new Request(event);
   const authData = req.getAuthData();
 
   if (!authData) {
-    req.send(new Forbidden());
-    return;
+    return new Forbidden();
   }
 
-  req.db
-    .connect()
+  try {
+    await req.db.connect();
 
-    .then(() => {
-      const query = req.db.model(NOTIFICATION).find();
+    const query = req.db.model('notification').find();
 
-      query.where(TO_MODEL).equals(MONITOR);
-      query.where(TO_ID).equals(authData._id);
-      query.where(DISMISSED_AT).equals(null);
+    query.where('toModel').equals('user');
+    query.where('toId').equals(authData._id);
+    query.where('dismissedAt').equals(null);
 
-      query.populate('from', 'citizen.name');
-      query.populate('ref', '_id');
-      // query.populate('to');
+    query.populate('from', 'citizen.name');
+    query.populate('ref', '_id');
+    // query.populate('to');
 
-      return query;
-    })
+    const notifications = await query;
 
-    .then(notifications => {
-      if (!notifications || !notifications.length) {
-        req.send(new NoContent());
-        return;
-      }
+    if (!notifications || !notifications.length) {
+      return new NoContent();
+    }
 
-      req.send(new Ok(notifications));
-    })
-
-    .catch(err => req.send(err));
+    return new Ok(notifications);
+  } catch (err) {
+    return req.send(err);
+  }
 };

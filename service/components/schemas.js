@@ -12,9 +12,9 @@ const config = require('../configs/schemas');
  * @param {Object} db The database instance object.
  */
 function register(db) {
-  Object.keys(config.schemas).forEach(name => {
+  for (let name of Object.keys(config.schemas)) {
     db.model(name, config.schemas[name]);
-  });
+  }
 }
 
 module.exports = {
