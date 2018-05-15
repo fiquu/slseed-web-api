@@ -11,14 +11,13 @@ const config = require('../configs/auth');
 module.exports.handler = async event => {
   const req = new Request(event);
 
-  const token = event.headers.Authorization || event.headers.authorization;
-
-  if (!token) {
-    console.error('No authorization token found!');
-    return 'Unauthorized';
-  }
-
   try {
+    const token = req.getHeader('authorization');
+
+    if (!token) {
+      throw new Error('No authorization token found!');
+    }
+
     const decoded = await auth.authorize(token, event.methodArn);
 
     await req.db.connect();
@@ -31,14 +30,14 @@ module.exports.handler = async event => {
       query.append(config.pipeline);
     }
 
-    const [data] = await query;
+    const [result] = await query;
 
-    if (!data || !data._id) {
+    if (!result || !result._id) {
       throw new Error('No auth data found.');
     }
 
-    const policy = auth.generatePolicy(decoded.sub, 'ALLOW', event.methodArn, {
-      data: JSON.stringify(data)
+    const policy = auth.generatePolicy(decoded.sub, 'Allow', event.methodArn, {
+      data: JSON.stringify(result)
     });
 
     return policy;
