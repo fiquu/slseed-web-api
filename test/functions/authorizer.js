@@ -8,46 +8,38 @@
 
 const mochaPlugin = require('serverless-mocha-plugin');
 
-const jwtToken = require('./jwt-token.json'); // ["jwt-or-id-token"]
+const [jwtToken] = require(`${__dirname}/jwt-token.json`); // ["jwt-or-id-token"]
 
 const wrapped = mochaPlugin.getWrapper('authorizer', '/service/functions/authorizer.js', 'handler');
-const expect = mochaPlugin.chai.expect;
+const { expect } = mochaPlugin.chai;
 
 describe('authorizer', () => {
   it('should not authorize a user without a token', async () => {
-    try {
-      const res = await wrapped.run({
-        headers: {}
-      });
+    const res = await wrapped.run({
+      headers: {}
+    });
 
-      expect(res).to.be.empty;
-    } catch (err) {
-      expect(err).to.equal('Unauthorized');
-    }
-  });
+    expect(res).to.equal('Unauthorized');
+  }).timeout(30000);
 
   it('should not authorize a user with an invalid a token', async () => {
-    try {
-      const res = await wrapped.run({
-        headers: {
-          Authorization: 'im-invalid-lol'
-        }
-      });
+    const res = await wrapped.run({
+      headers: {
+        Authorization: 'im-invalid-lol'
+      }
+    });
 
-      expect(res).to.be.empty;
-    } catch (err) {
-      expect(err).to.equal('Unauthorized');
-    }
-  });
+    expect(res).to.equal('Unauthorized');
+  }).timeout(30000);
 
   it('should authorize a user with a valid a token', async () => {
     const res = await wrapped.run({
       headers: {
-        Authorization: jwtToken[0]
+        Authorization: jwtToken
       }
     });
 
-    expect(res).to.not.be.empty;
+    expect(res).to.not.equal('Unauthorized');
     expect(res.principalId).to.be.a('string');
     expect(res.context).to.be.an('object');
     expect(res.context.data).to.be.a('string');
