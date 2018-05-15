@@ -125,6 +125,19 @@ class Request {
   }
 
   /**
+   * Retrieves the authorization Monitor object.
+   *
+   * @return {Object} The Monitor object.
+   */
+  getAuthData() {
+    try {
+      return JSON.parse(this.event.requestContext.authorizer.data);
+    } catch (ex) {
+      return null;
+    }
+  }
+
+  /**
    * Sends a response to the request.
    *
    * @param {Error|Response|Object} res The response object to send.
