@@ -8,7 +8,7 @@ const config = require('../configs/auth');
  *
  * @param {Object} event Call event object.
  */
-module.exports.handler = async event => {
+module.exports.handler = async (event, context, callback) => {
   const req = new Request(event);
 
   try {
@@ -40,9 +40,9 @@ module.exports.handler = async event => {
       data: JSON.stringify(result)
     });
 
-    return policy;
+    callback(null, policy);
   } catch (err) {
     console.error('Authorization Error:', err.message);
-    return 'Unauthorized';
+    callback('Unauthorized');
   }
 };
