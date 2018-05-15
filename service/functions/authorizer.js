@@ -7,8 +7,6 @@ const config = require('../configs/auth');
  * Authorizer handler function.
  *
  * @param {Object} event Call event object.
- * @param {Object} context Context object.
- * @param {Function} callback Callback function.
  */
 module.exports.handler = async event => {
   const req = new Request(event);
@@ -45,7 +43,7 @@ module.exports.handler = async event => {
 
     return policy;
   } catch (err) {
-    console.error('Authorization:', err);
+    console.error('Authorization Error:', err.message);
     return 'Unauthorized';
   }
 };
