@@ -17,37 +17,28 @@ class Database {
   /**
    * Creates a connection to the database.
    */
-  connect() {
-    return new Promise((resolve, reject) => {
-      if (mongoose.connection.readyState === 1) {
-        resolve();
-        return;
-      }
+  async connect() {
+    if (mongoose.connection.readyState === 1) {
+      return;
+    }
 
-      mongoose
-        .connect(config.uri, config.options)
+    await mongoose.connect(
+      config.uri,
+      config.options
+    );
 
-        .then(() => {
-          schemas.register(mongoose);
-          resolve();
-        })
-
-        .catch(err => reject(err));
-    });
+    schemas.register(mongoose);
   }
 
   /**
    * Closes the database connection.
    */
-  disconnect() {
-    return new Promise(resolve => {
-      mongoose
-        .disconnect()
-
-        .then(() => resolve())
-
-        .catch(() => resolve());
-    });
+  async disconnect() {
+    try {
+      await mongoose.disconnect();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**

@@ -16,6 +16,7 @@ const config = require('../configs/auth');
  * @param {String} principalId The principal ID.
  * @param {String} Effect The statement Effect value.
  * @param {String} Resource The statement Resource value.
+ * @param {String} context Context data to pass to the next function.
  *
  * @returns {Object} The authorization policy object.
  */
