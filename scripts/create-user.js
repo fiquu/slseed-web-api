@@ -11,15 +11,13 @@ const profiles = require('../configs/profiles');
 process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
 
 const validator = require('validator');
-const mongoose = require('mongoose');
 const inquirer = require('inquirer');
+const mongoose = require('mongoose');
 const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
 
 const package = require('../package.json');
-
-mongoose.Promise = Promise;
 
 AWS.config.update({
   region: 'us-east-1',
@@ -38,54 +36,56 @@ console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
 console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
 /* Fetch SSM parameters */
-new Promise((resolve, reject) => {
-  spinner.text = 'Resolving SSM parameters...';
+(async () => {
+  try {
+    spinner.text = 'Resolving SSM parameters...';
 
-  spinner.start();
+    spinner.start();
 
-  const mappings = {
-    [`/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-id`]: 'COGNITO_USER_POOL_ID',
-    [`/${package.group.name}/${process.env.NODE_ENV}/db-uri`]: 'DB_URI'
-  };
+    const mappings = {
+      [`/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-id`]: 'COGNITO_USER_POOL_ID',
+      [`/${package.group.name}/${process.env.NODE_ENV}/db-uri`]: 'DB_URI'
+    };
 
-  const params = {
-    Names: Object.keys(mappings),
-    WithDecryption: true
-  };
+    let params = {
+      Names: Object.keys(mappings),
+      WithDecryption: true
+    };
 
-  ssm.getParameters(params, (err, data) => {
-    if (err) {
-      reject(err);
-      return;
-    }
+    await new Promise((resolve, reject) => {
+      ssm.getParameters(params, (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
 
-    /* Map SSM parameters to env vars */
-    data.Parameters.forEach(param => {
-      if (mappings[param.Name]) {
-        spinner.info(
-          `SSM: ${chalk.bold(param.Name)} --> ${chalk.bold(mappings[param.Name])} = ${chalk.bold(param.Value)}`
-        );
-        process.env[mappings[param.Name]] = param.Value;
-      }
+        /* Map SSM parameters to env vars */
+        for (let param of data.Parameters) {
+          if (mappings[param.Name]) {
+            spinner.info(
+              `SSM: ${chalk.bold(param.Name)} --> ${chalk.bold(mappings[param.Name])} = ${chalk.bold(param.Value)}`
+            );
+
+            process.env[mappings[param.Name]] = param.Value;
+          }
+        }
+
+        resolve();
+      });
     });
 
     spinner.succeed('SSM parameters resolved.');
 
-    resolve();
-  });
-})
-
-  .then(() => {
     spinner.text = 'Connecting to the database...';
 
     spinner.start();
 
-    const dbConfig = require('../service/configs/database');
+    const Database = require('../service/components/database');
 
-    mongoose.connect(process.env.DB_URI, dbConfig.options);
-  })
+    const database = new Database();
 
-  .then(() => {
+    await database.connect();
+
     spinner.succeed('Successfully connected to the database.');
 
     const UserAttributes = [];
@@ -156,23 +156,26 @@ new Promise((resolve, reject) => {
       }
     ];
 
-    return inquirer.prompt(questions).then(answers => {
-      answers.UserAttributes = UserAttributes;
-      return answers;
-    });
-  })
+    const answers = await inquirer.prompt(questions);
 
-  .then(answers => {
     spinner.text = 'Creating Cognito user...';
 
     spinner.start();
 
-    const params = Object.assign(answers, {
+    params = {
+      ...answers,
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
-      DesiredDeliveryMediums: ['EMAIL']
-    });
+      DesiredDeliveryMediums: ['EMAIL'],
+      UserAttributes: [
+        ...UserAttributes,
+        {
+          Name: 'name',
+          Value: 'slseed'
+        }
+      ]
+    };
 
-    return new Promise((resolve, reject) =>
+    const data = await new Promise((resolve, reject) =>
       cognito.adminCreateUser(params, (err, data) => {
         if (err) {
           reject(err);
@@ -184,9 +187,7 @@ new Promise((resolve, reject) => {
         resolve(data);
       })
     );
-  })
 
-  .then(data => {
     spinner.text = 'Inserting user reference in the database...';
 
     spinner.start();
@@ -194,27 +195,22 @@ new Promise((resolve, reject) => {
     const userSchema = require('../service/schemas/user');
     const User = mongoose.model('user', userSchema);
 
-    return User.create({
+    const user = await User.create({
       sub: data.User.Username
     });
-  })
 
-  .then(user => {
     if (!user) {
       throw new Error('User reference not created!');
     }
 
     spinner.succeed(`User reference created: ${chalk.bold(user._id.toString())}`);
 
-    return null;
-  })
-
-  .then(() => process.exit(0))
-
-  .catch(err => {
+    process.exit(0);
+  } catch (err) {
     spinner.fail(err.message);
 
     console.error(err);
 
     process.exit(1);
-  });
+  }
+})();
