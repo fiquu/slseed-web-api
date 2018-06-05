@@ -8,7 +8,7 @@ const config = require('../configs/auth');
  *
  * @param {Object} event Call event object.
  */
-module.exports.handler = async (event, context, callback) => {
+module.exports.handler = async event => {
   const req = new Request(event);
 
   try {
@@ -24,7 +24,9 @@ module.exports.handler = async (event, context, callback) => {
 
     const query = req.db.model(config.model).aggregate();
 
-    query.match({ sub: decoded.sub });
+    query.match({
+      sub: decoded.sub
+    });
 
     if (config.pipeline) {
       query.append(config.pipeline);
@@ -40,9 +42,9 @@ module.exports.handler = async (event, context, callback) => {
       data: JSON.stringify(result)
     });
 
-    callback(null, policy);
+    return policy;
   } catch (err) {
     console.error('Authorization Error:', err.message);
-    callback('Unauthorized');
+    return 'Unauthorized';
   }
 };
