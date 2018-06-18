@@ -24,16 +24,14 @@
     "x64"
   ],
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 5.0.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 6.0.0"
   },
   "scripts": {
-    "test": "sls invoke test --stage local",
-    "start": "sls offline start --stage local",
+    "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
     "domain": "sls create_domain --stage production",
-    "deploy:development": "sls deploy --stage development",
-    "deploy:staging": "sls deploy --stage staging",
-    "deploy": "sls deploy --stage production",
+    "start": "sls offline start --stage local",
+    "test": "sls invoke test --stage local",
     "check": "npm-check -u && npm-check"
   },
   "dependencies": {
