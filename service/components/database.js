@@ -6,13 +6,19 @@
 
 const mongoose = require('mongoose');
 
-const config = require('../configs/database');
+const { uri, options } = require('../configs/database');
 const schemas = require('./schemas');
 
-if (process.env.NODE_ENV === 'local') {
-  mongoose.set('debug', true);
-}
+/* Do not log queries on production */
+mongoose.set('debug', process.env.NODE_ENV !== 'production');
 
+/**
+ * Database Class.
+ *
+ * Handles the database connection during the function's life cycle.
+ *
+ * @class Database
+ */
 class Database {
   /**
    * Creates a connection to the database.
@@ -22,10 +28,7 @@ class Database {
       return;
     }
 
-    await mongoose.connect(
-      config.uri,
-      config.options
-    );
+    await mongoose.connect(uri, options);
 
     schemas.register(mongoose);
   }
@@ -37,6 +40,7 @@ class Database {
     try {
       await mongoose.disconnect();
     } catch (err) {
+      /* Here you could handle a disconnection error more graciously */
       console.error(err);
     }
   }
@@ -44,12 +48,10 @@ class Database {
   /**
    * Creates the model for the current database connection.
    *
-   * @param {Object} schema The Mongoose schema to create the model.
-   *
    * @returns {Object} The model.
    */
-  model(name) {
-    return mongoose.model(name);
+  model(...args) {
+    return mongoose.model(...args);
   }
 }
 
