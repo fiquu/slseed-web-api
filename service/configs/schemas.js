@@ -4,12 +4,11 @@
  * @module configs/schemas
  */
 
-const user = require('../schemas/user');
+const path = require('path');
 
-const schemas = {
-  user
-};
-
+/* List all the schemas you want to import here */
+/* You can use paths too relative to the `schemas` folder */
 module.exports = {
-  schemas
+  basedir: path.join(__dirname, '..', 'schemas'),
+  schemas: ['gender', 'user']
 };

@@ -4,19 +4,31 @@
  * @module components/schemas
  */
 
+const path = require('path');
+
 const config = require('../configs/schemas');
 
 /**
- * Registers all schemas into the connection.
+ * Schemas Component Class.
  *
- * @param {Object} db The database instance object.
+ * @class Schemas
  */
-function register(db) {
-  for (let name of Object.keys(config.schemas)) {
-    db.model(name, config.schemas[name]);
+class Schemas {
+  /**
+   * Registers all schemas into the connection.
+   *
+   * @param {Object} db The database instance object.
+   */
+  static register(db) {
+    for (let name of config.schemas) {
+      const relative = path.join(config.basedir, name);
+      const full = path.resolve(path.normalize(relative));
+
+      const schema = require(full);
+
+      db.model(name, schema);
+    }
   }
 }
 
-module.exports = {
-  register
-};
+module.exports = Schemas;
