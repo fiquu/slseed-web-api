@@ -2,7 +2,17 @@
 
 Serveless Seed API project.
 
-# Usage
+## What's included
+
+- Easy project and service configuration.
+- Logical folder structure.
+- Simplified authorization handling.
+- Simplified database connection management with Mongoose.
+- Simplified HTTP response handling.
+- Mailing integration with Mailgun.
+- Simplified email template rendering.
+
+## Usage
 
 1. Create a repo.
 1. Add remote as slseed:
