@@ -8,17 +8,11 @@ const { Schema } = require('mongoose');
 
 const schema = new Schema(
   {
-    // Cognito user name (subject)
-    sub: {
+    // For translations
+    tag: {
       type: String,
       required: true,
       unique: true
-    },
-
-    gender: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'gender'
     }
   },
   {
