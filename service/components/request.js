@@ -199,13 +199,9 @@ class Request {
       data
     };
 
-    try {
-      const body = views.render(view, locals);
+    const body = views.render(view, locals);
 
-      return new Ok(body, headers);
-    } catch (err) {
-      return this.send(err);
-    }
+    return new Ok(body, headers);
   }
 }
 
