@@ -3,7 +3,7 @@
  *
  * Creates a SSM parameter.
  *
- * @example $ NODE_ENV=local node scripts/aam-param-put.js
+ * @example $ NODE_ENV=local node scripts/ssm-param-put.js
  */
 
 const profiles = require('../configs/profiles');
