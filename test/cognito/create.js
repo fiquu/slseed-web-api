@@ -81,7 +81,7 @@ module.exports = async () => {
       ...data
     });
 
-    fs.writeFile(`${__dirname}/test-data.json`, json, err => {
+    fs.writeFile(`${__dirname}/data.json`, json, err => {
       err ? reject(err) : resolve();
     });
   });

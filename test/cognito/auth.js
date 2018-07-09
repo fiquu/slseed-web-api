@@ -5,12 +5,15 @@
  */
 
 const { CognitoIdentityServiceProvider } = { ...require('aws-sdk') }; // Clone
+const fs = require('fs');
 
 const Cognito = require('amazon-cognito-identity-js-node');
 
 CognitoIdentityServiceProvider.AuthenticationDetails = Cognito.AuthenticationDetails;
 CognitoIdentityServiceProvider.CognitoUserPool = Cognito.CognitoUserPool;
 CognitoIdentityServiceProvider.CognitoUser = Cognito.CognitoUser;
+
+global.navigator = () => null;
 
 module.exports = async credentials => {
   const { Username, Password } = credentials;
@@ -37,29 +40,51 @@ module.exports = async credentials => {
 
   const authenticationDetails = new CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
-  const responseFunctions = {
-    onSuccess: result => {
-      console.info('IT WORKED!');
-      console.dir(result);
-    },
-    onFailure: err => {
-      console.error('no go :(');
-      console.dir(err);
-    }
-  };
-
-  // newPasswordRequired has to be added separately because it sends responseFunctions to completeNewPasswordChallenge
-  responseFunctions.newPasswordRequired = userAttributes => {
-    delete userAttributes.email_verified;
-
-    cognitoUser.completeNewPasswordChallenge(
-      `${Password}@1`,
-      {
-        email: Username
+  const session = await new Promise((resolve, reject) => {
+    const responseFunctions = {
+      onSuccess: result => {
+        resolve(result);
       },
-      responseFunctions
-    );
-  };
 
-  cognitoUser.authenticateUser(authenticationDetails, responseFunctions);
+      onFailure: err => {
+        reject(err);
+      }
+    };
+
+    // newPasswordRequired has to be added separately because it sends responseFunctions to completeNewPasswordChallenge
+    responseFunctions.newPasswordRequired = userAttributes => {
+      delete userAttributes.email_verified;
+
+      cognitoUser.completeNewPasswordChallenge(
+        `${Password}@1`,
+        {
+          email: Username
+        },
+        responseFunctions
+      );
+    };
+
+    cognitoUser.authenticateUser(authenticationDetails, responseFunctions);
+  });
+
+  const data = await new Promise((resolve, reject) => {
+    fs.readFile(`${__dirname}/data.json`, (err, data) => {
+      try {
+        resolve(JSON.parse(data));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+
+  const json = JSON.stringify({
+    ...data,
+    ...session
+  });
+
+  await new Promise((resolve, reject) => {
+    fs.writeFile(`${__dirname}/data.json`, json, err => {
+      err ? reject(err) : resolve();
+    });
+  });
 };

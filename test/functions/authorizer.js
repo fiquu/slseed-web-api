@@ -16,8 +16,7 @@ const { expect } = mochaPlugin.chai;
 const cognito = require('../cognito');
 
 describe('authorizer', () => {
-  before(() => cognito.cleanup());
-  before(() => cognito.createUser());
+  before(() => cognito.create());
 
   it('should not authorize a user without a token', async () => {
     const res = await wrapped.run({
@@ -38,6 +37,10 @@ describe('authorizer', () => {
   }).timeout(30000);
 
   it('should authorize a user with a valid a token', async () => {
+    const authData = await cognito.getAuthData();
+
+    const { jwtToken } = authData.idToken;
+
     const res = await wrapped.run({
       headers: {
         Authorization: jwtToken
