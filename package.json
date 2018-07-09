@@ -46,6 +46,7 @@
     "validator": "^10.3.0"
   },
   "devDependencies": {
+    "amazon-cognito-identity-js-node": "0.0.3",
     "aws-sdk": "^2.251.1",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",

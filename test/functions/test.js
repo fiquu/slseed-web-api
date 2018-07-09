@@ -1,7 +1,7 @@
 /**
  * Test function tests.
  *
- * @module tests/test
+ * @module tests/functions/test
  */
 
 const mochaPlugin = require('serverless-mocha-plugin');
