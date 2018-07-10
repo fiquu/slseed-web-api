@@ -32,25 +32,25 @@ console.log(`\n${chalk.cyan.bold('Database Indexes Script')}\n`);
 
 mongoose.set('debug', true);
 
-const spinner = ora('');
+(async () => {
+  const spinner = ora('');
 
-const questions = [
-  {
-    name: 'drop',
-    type: 'confirm',
-    message: 'Drop indexes first?'
-  },
-  {
-    name: 'confirm',
-    type: 'confirm',
-    message: 'Proceed with indexing?'
-  }
-];
+  try {
+    const questions = [
+      {
+        name: 'drop',
+        type: 'confirm',
+        message: 'Drop indexes first?'
+      },
+      {
+        name: 'confirm',
+        type: 'confirm',
+        message: 'Proceed with indexing?'
+      }
+    ];
 
-inquirer
-  .prompt(questions)
+    const answers = await inquirer.prompt(questions);
 
-  .then(answers => {
     if (!answers.confirm) {
       console.log(chalk.bold.yellow('\nCanceled\n'));
       process.exit();
@@ -60,7 +60,7 @@ inquirer
 
     spinner.start();
 
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       const mappings = {
         [`/${package.group.name}/${process.env.NODE_ENV}/db-uri`]: 'DB_URI'
       };
@@ -92,19 +92,18 @@ inquirer
         resolve(answers);
       });
     });
-  })
 
-  .then(answers => {
     spinner.text = 'Connecting to the database...';
 
     spinner.start();
 
     const config = require('../service/configs/database');
 
-    return mongoose.connect(config.uri, config.options).then(() => answers);
-  })
+    await mongoose.connect(
+      config.uri,
+      config.options
+    );
 
-  .then(answers => {
     spinner.succeed('Connected to the database.');
 
     spinner.info(`${chalk.bold('Target:')} ${process.env.DB_URI.replace(/^mongodb:\/\/([^:]+:[^@]+@)?(.+)/, '$2')}`);
@@ -117,8 +116,6 @@ inquirer
 
     spinner.succeed('Schemas registered.');
 
-    console.log(answers);
-
     if (!answers.drop) {
       return null;
     }
@@ -127,45 +124,30 @@ inquirer
 
     spinner.start();
 
-    const promises = [];
+    for (let name of Object.keys(mongoose.models)) {
+      await mongoose.model(name).collection.dropIndexes();
+    }
 
-    Object.keys(mongoose.models).forEach(name => {
-      promises.push(mongoose.model(name).collection.dropIndexes());
-    });
+    spinner.succeed('Indexes dropped!');
 
-    return Promise.all(promises).then(() => {
-      spinner.succeed('Indexes dropped!');
-    });
-  })
-
-  .then(() => {
     spinner.text = 'Ensuring indexes...';
 
     spinner.start();
 
-    const promises = [];
+    for (let name of Object.keys(mongoose.models)) {
+      await mongoose.model(name).ensureIndexes();
+    }
 
-    Object.keys(mongoose.models).forEach(name => {
-      promises.push(mongoose.model(name).ensureIndexes());
-    });
-
-    return Promise.all(promises);
-  })
-
-  .then(() => {
     spinner.succeed('Indexes ensured!');
 
-    return mongoose.disconnect();
-  })
+    await mongoose.disconnect();
 
-  .then(() => {
     spinner.info('Database connection closed.');
-  })
-
-  .catch(err => {
+  } catch (err) {
     spinner.fail(err.message);
 
     console.error(err);
 
     process.exit(1);
-  });
+  }
+})();
