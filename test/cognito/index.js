@@ -4,16 +4,16 @@
  * @module tests/cognito/index
  */
 
+const awsProfile = require('../../utils/aws-profile');
+
+awsProfile.update();
+
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
-const profiles = require('../../configs/profiles');
-
-const cleanupUser = require('./cleanup');
-const createUser = require('./create');
-const authUser = require('./auth');
-
-process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
+const createUser = require('./create-user');
+const authUser = require('./auth-user');
+const cleanup = require('./cleanup');
 
 class Cognito {
   constructor() {
@@ -26,22 +26,36 @@ class Cognito {
     });
   }
 
+  /**
+   * Cleans up saved user data.
+   */
   async cleanup() {
-    await cleanupUser();
+    await cleanup();
   }
 
-  async create() {
+  /**
+   * Creates and authorizes user.
+   */
+  async createUser() {
     await this.cleanup();
 
     const credentials = await createUser();
 
-    await this.auth(credentials);
+    await this.authUser(credentials);
   }
 
-  async auth(credentials) {
+  /**
+   * Authorizes a user's credentials.
+   *
+   * @param {Object} credentials The credentials object.
+   */
+  async authUser(credentials) {
     await authUser(credentials);
   }
 
+  /**
+   * Retrieves cognito auth data.
+   */
   async getAuthData() {
     return await new Promise((resolve, reject) => {
       fs.readFile(`${__dirname}/data.json`, (err, data) => {

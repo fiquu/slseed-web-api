@@ -17,14 +17,13 @@ global.navigator = () => null;
 
 module.exports = async credentials => {
   const { Username, Password } = credentials;
-  // const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
 
   const userPool = new CognitoIdentityServiceProvider.CognitoUserPool({
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
     ClientId: process.env.COGNITO_APP_CLIENT_ID
   });
 
-  //User
+  // User
   const userParams = {
     Pool: userPool,
     Username
@@ -41,7 +40,7 @@ module.exports = async credentials => {
   const authenticationDetails = new CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
   const session = await new Promise((resolve, reject) => {
-    const responseFunctions = {
+    const callbacks = {
       onSuccess: result => {
         resolve(result);
       },
@@ -52,19 +51,18 @@ module.exports = async credentials => {
     };
 
     // newPasswordRequired has to be added separately because it sends responseFunctions to completeNewPasswordChallenge
-    responseFunctions.newPasswordRequired = userAttributes => {
-      delete userAttributes.email_verified;
+    callbacks.newPasswordRequired = userAttributes => {
+      delete userAttributes.email_verified; // API won't take this back
 
-      cognitoUser.completeNewPasswordChallenge(
-        `${Password}@1`,
-        {
-          email: Username
-        },
-        responseFunctions
-      );
+      const data = {
+        email: Username
+      };
+
+      // Create new password and complete challenge
+      cognitoUser.completeNewPasswordChallenge(`${Password}@1`, data, callbacks);
     };
 
-    cognitoUser.authenticateUser(authenticationDetails, responseFunctions);
+    cognitoUser.authenticateUser(authenticationDetails, callbacks);
   });
 
   const data = await new Promise((resolve, reject) => {
