@@ -37,17 +37,12 @@ module.exports = async credentials => {
     Password // 1st time use TempPassword
   };
 
-  const authenticationDetails = new CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+  const authDetails = new CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
 
   const session = await new Promise((resolve, reject) => {
     const callbacks = {
-      onSuccess: result => {
-        resolve(result);
-      },
-
-      onFailure: err => {
-        reject(err);
-      }
+      onSuccess: result => resolve(result),
+      onFailure: err => reject(err)
     };
 
     // newPasswordRequired has to be added separately because it sends responseFunctions to completeNewPasswordChallenge
@@ -62,9 +57,10 @@ module.exports = async credentials => {
       cognitoUser.completeNewPasswordChallenge(`${Password}@1`, data, callbacks);
     };
 
-    cognitoUser.authenticateUser(authenticationDetails, callbacks);
+    cognitoUser.authenticateUser(authDetails, callbacks);
   });
 
+  // Complete data with new info
   const data = await new Promise((resolve, reject) => {
     fs.readFile(`${__dirname}/data.json`, (err, data) => {
       try {
@@ -82,7 +78,12 @@ module.exports = async credentials => {
 
   await new Promise((resolve, reject) => {
     fs.writeFile(`${__dirname}/data.json`, json, err => {
-      err ? reject(err) : resolve();
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve();
     });
   });
 };

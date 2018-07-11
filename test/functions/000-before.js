@@ -12,7 +12,7 @@ const auth = require('../auth');
 
 const { expect } = mochaPlugin.chai;
 
-describe('authorization', function() {
+describe('Authorization manager', function() {
   this.timeout(60000); // Lots of stuff to do
 
   before(async function() {

@@ -14,7 +14,15 @@ const auth = require('../auth');
 describe('users', function() {
   this.timeout(30000);
 
-  it('should respond OK (200)', async function() {
+  it('should respond Forbidden (403) with invalid context', async function() {
+    const res = await wrapped.run({});
+
+    expect(res).to.be.ok;
+    expect(res.statusCode).to.equal(403);
+    expect(res.body).to.be.empty;
+  });
+
+  it('should respond OK (200) with valid context', async function() {
     const data = await auth.getData();
 
     const res = await wrapped.run({
@@ -24,8 +32,6 @@ describe('users', function() {
         }
       }
     });
-
-    console.dir(data, { colors: true });
 
     expect(res).to.be.ok;
     expect(res.statusCode).to.equal(200);

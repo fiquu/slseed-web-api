@@ -8,7 +8,9 @@ const database = require('../database');
 const cognito = require('../cognito');
 
 module.exports = async () => {
-  await cognito.createUser();
+  const credentials = await cognito.createUser();
+
+  await cognito.authUser(credentials);
 
   const authData = await cognito.getData();
 

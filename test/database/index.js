@@ -4,13 +4,12 @@
  * @module tests/database/index
  */
 
-const fs = require('fs');
-
 const awsProfile = require('../../utils/aws-profile');
 
 awsProfile.update();
 
 const createUser = require('./create-user');
+const getData = require('./get-data');
 const cleanup = require('./cleanup');
 
 class Database {
@@ -26,20 +25,7 @@ class Database {
    * Retrieves cognito auth data.
    */
   async getData() {
-    return await new Promise((resolve, reject) => {
-      fs.readFile(`${__dirname}/data.json`, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        try {
-          resolve(JSON.parse(data));
-        } catch (err) {
-          reject(err);
-        }
-      });
-    });
+    return await getData();
   }
 }
 

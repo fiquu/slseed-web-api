@@ -9,7 +9,12 @@ const fs = require('fs');
 module.exports = async () => {
   await new Promise((resolve, reject) => {
     fs.unlink(`${__dirname}/data.json`, err => {
-      err && err.code !== 'ENOENT' ? reject(err) : resolve();
+      if (err && err.code !== 'ENOENT') {
+        reject(err);
+        return;
+      }
+
+      resolve();
     });
   });
 };

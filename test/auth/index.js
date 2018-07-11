@@ -1,7 +1,12 @@
-const fs = require('fs');
+/**
+ * Auth utility class.
+ *
+ * @module tests/auth
+ */
 
 const createAndAuthUser = require('./create-and-auth-user');
 const saveData = require('./save-data');
+const getData = require('./get-data');
 const cleanup = require('./cleanup');
 
 class Auth {
@@ -9,8 +14,7 @@ class Auth {
    * Creates and authorizes a user.
    */
   async createAndAuthUser() {
-    this.cleanup();
-
+    await cleanup();
     await createAndAuthUser();
   }
 
@@ -32,22 +36,11 @@ class Auth {
 
   /**
    * Retrieves auth data.
+   *
+   * @return {Object} The parsed JSON data.
    */
   async getData() {
-    return await new Promise((resolve, reject) => {
-      fs.readFile(`${__dirname}/data.json`, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        try {
-          resolve(JSON.parse(data));
-        } catch (err) {
-          reject(err);
-        }
-      });
-    });
+    return await getData();
   }
 }
 

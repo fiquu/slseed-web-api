@@ -27,11 +27,18 @@ module.exports = async sub => {
 
   const user = await db.model('user').create(data);
 
+  await db.disconnect();
+
   await new Promise((resolve, reject) => {
     const json = JSON.stringify(user);
 
     fs.writeFile(`${__dirname}/data.json`, json, err => {
-      err ? reject(err) : resolve();
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve();
     });
   });
 };

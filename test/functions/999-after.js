@@ -12,16 +12,22 @@ const auth = require('../auth');
 
 const { expect } = mochaPlugin.chai;
 
-describe('authorizer', function() {
+describe('Authorization manager', function() {
   this.timeout(60000); // Lots of stuff to do
 
-  after(async function() {
+  before(async function() {
     await database.cleanup();
     await cognito.cleanup();
     await auth.cleanup();
   });
 
-  it('should clean the auth data', function() {
-    expect(true).to.equal(true);
+  it('should have cleaned the created auth data', async function() {
+    const databaseData = await database.getData();
+    const cognitoData = await cognito.getData();
+    const authData = await auth.getData();
+
+    expect(databaseData).to.be.null;
+    expect(cognitoData).to.be.null;
+    expect(authData).to.be.null;
   });
 });

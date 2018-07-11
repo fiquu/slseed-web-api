@@ -45,7 +45,12 @@ module.exports = async () => {
     };
 
     cognito.adminCreateUser(params, (err, data) => {
-      err ? reject(err) : resolve(data);
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(data);
     });
   });
 
@@ -56,7 +61,12 @@ module.exports = async () => {
     });
 
     fs.writeFile(`${__dirname}/data.json`, json, err => {
-      err ? reject(err) : resolve();
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve();
     });
   });
 

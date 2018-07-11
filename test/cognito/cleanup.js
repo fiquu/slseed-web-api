@@ -28,14 +28,24 @@ module.exports = async () => {
       };
 
       cognito.adminDeleteUser(params, (err, data) => {
-        err ? reject(err) : resolve(data);
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(data);
       });
     });
   }
 
   await new Promise((resolve, reject) => {
     fs.unlink(`${__dirname}/data.json`, err => {
-      err && err.code !== 'ENOENT' ? reject(err) : resolve();
+      if (err && err.code !== 'ENOENT') {
+        reject(err);
+        return;
+      }
+
+      resolve();
     });
   });
 };

@@ -9,10 +9,10 @@ const awsProfile = require('../../utils/aws-profile');
 awsProfile.update();
 
 const AWS = require('aws-sdk');
-const fs = require('fs');
 
 const createUser = require('./create-user');
 const authUser = require('./auth-user');
+const getData = require('./get-data');
 const cleanup = require('./cleanup');
 
 class Cognito {
@@ -37,11 +37,8 @@ class Cognito {
    * Creates and authorizes user.
    */
   async createUser() {
-    await this.cleanup();
-
-    const credentials = await createUser();
-
-    await this.authUser(credentials);
+    await cleanup();
+    return await createUser();
   }
 
   /**
@@ -57,20 +54,7 @@ class Cognito {
    * Retrieves cognito auth data.
    */
   async getData() {
-    return await new Promise((resolve, reject) => {
-      fs.readFile(`${__dirname}/data.json`, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        try {
-          resolve(JSON.parse(data));
-        } catch (err) {
-          reject(err);
-        }
-      });
-    });
+    return await getData();
   }
 }
 
