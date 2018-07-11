@@ -56,7 +56,7 @@ class Cognito {
   /**
    * Retrieves cognito auth data.
    */
-  async getAuthData() {
+  async getData() {
     return await new Promise((resolve, reject) => {
       fs.readFile(`${__dirname}/data.json`, (err, data) => {
         if (err) {
