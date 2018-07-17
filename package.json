@@ -29,9 +29,9 @@
   },
   "scripts": {
     "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
+    "test": "nyc --reporter=html sls invoke test --stage local --path test/functions",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
-    "test": "nyc --reporter=html sls invoke test --stage local --path test/functions",
     "check": "npm-check -u && npm-check"
   },
   "dependencies": {
