@@ -4,7 +4,7 @@
  * @module tests/cognito/index
  */
 
-const awsProfile = require('../../utils/aws-profile');
+const awsProfile = require('../../aws-profile');
 
 awsProfile.update();
 

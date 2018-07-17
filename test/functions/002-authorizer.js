@@ -9,8 +9,8 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const wrapped = mochaPlugin.getWrapper('authorizer', '/service/functions/authorizer.js', 'handler');
 const { expect } = mochaPlugin.chai;
 
-const cognito = require('../cognito');
-const auth = require('../auth');
+const cognito = require('../../utils/test/cognito');
+const auth = require('../../utils/test/auth');
 
 describe('authorizer', function() {
   this.timeout(30000);

@@ -9,7 +9,7 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const wrapped = mochaPlugin.getWrapper('users', '/service/functions/users/index.js', 'handler');
 const { expect } = mochaPlugin.chai;
 
-const auth = require('../auth');
+const auth = require('../../../utils/test/auth');
 
 describe('users', function() {
   this.timeout(30000);

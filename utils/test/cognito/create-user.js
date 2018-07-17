@@ -7,8 +7,8 @@
 const { CognitoIdentityServiceProvider } = require('aws-sdk');
 const fs = require('fs');
 
-const ssmr = require('../../utils/ssm-params-resolve');
-const package = require('../../package.json');
+const ssmr = require('../../ssm-params-resolve');
+const package = require('../../../package.json');
 
 module.exports = async () => {
   const credentials = {

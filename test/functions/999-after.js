@@ -6,9 +6,9 @@
 
 const mochaPlugin = require('serverless-mocha-plugin');
 
-const database = require('../database');
-const cognito = require('../cognito');
-const auth = require('../auth');
+const database = require('../../utils/test/database');
+const cognito = require('../../utils/test/cognito');
+const auth = require('../../utils/test/auth');
 
 const { expect } = mochaPlugin.chai;
 

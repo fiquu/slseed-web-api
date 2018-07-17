@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 
-const Database = require('../../service/components/database');
+const Database = require('../../../service/components/database');
 
 module.exports = async () => {
   const db = new Database();
