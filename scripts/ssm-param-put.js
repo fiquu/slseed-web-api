@@ -82,13 +82,17 @@ const package = require('../package.json');
 
     const spinner = ora('Creating/updating parameter...').start();
 
-    ssm.putParameter(answers, err => {
+    ssm.putParameter(answers, (err, data) => {
       if (err) {
         spinner.fail(err.message);
         process.exit(1);
       }
 
-      spinner.succeed('Parameter created/updated!');
+      if (data.Version > 1) {
+        spinner.succeed(`Parameter updated to version ${data.Version}!`);
+      } else {
+        spinner.succeed(`Parameter created!`);
+      }
 
       process.exit(0);
     });
