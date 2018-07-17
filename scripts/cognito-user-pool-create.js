@@ -7,10 +7,6 @@
  * @example $ NODE_ENV=local node scripts/cognito-user-pool-create.js
  */
 
-const awsProfile = require('../utils/aws-profile');
-
-awsProfile.update();
-
 const inquirer = require('inquirer');
 const titleize = require('titleize');
 const chalk = require('chalk');
@@ -20,34 +16,32 @@ const ora = require('ora');
 
 const package = require('../package.json');
 
-AWS.config.update({
-  region: 'us-east-1',
-  apiVersions: {
-    cognitoidentityserviceprovider: '2016-04-18',
-    cognitoidentity: '2014-06-30',
-    ssm: '2014-11-06'
-  }
-});
-
-const cognito = new AWS.CognitoIdentityServiceProvider();
-const identity = new AWS.CognitoIdentity();
-const ssm = new AWS.SSM();
-const spinner = ora();
-
-const s = val =>
-  slug(val, {
-    lower: true
-  });
-
-const n = val => (val ? s(val) + '-' : '');
-
-const t = val => (val ? val + ' ' : '');
+console.log(`\n${chalk.yellow.bold('IMPORTANT: You should use CloudFormation templates for this!')}\n`);
 
 console.log(`\n${chalk.cyan.bold('Create AWS Cognito User Pool Script')}\n`);
-console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
 console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
 (async () => {
+  await require('../utils/stage-select')(true); // Set proper stage ENV
+
+  AWS.config.update({
+    region: 'us-east-1',
+    apiVersions: {
+      cognitoidentityserviceprovider: '2016-04-18',
+      cognitoidentity: '2014-06-30',
+      ssm: '2014-11-06'
+    }
+  });
+
+  const cognito = new AWS.CognitoIdentityServiceProvider();
+  const identity = new AWS.CognitoIdentity();
+  const ssm = new AWS.SSM();
+  const spinner = ora();
+
+  const s = val => slug(val, { lower: true });
+  const n = val => (val ? s(val) + '-' : '');
+  const t = val => (val ? val + ' ' : '');
+
   try {
     const { name } = await inquirer.prompt([
       {
@@ -188,75 +182,73 @@ console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
     const { createIdPool } = await inquirer.prompt([
       {
-        name: 'create',
+        name: 'createIdPool',
         type: 'confirm',
         message: `Create and associate an Identity Pool?`,
         default: true
       }
     ]);
 
-    if (!createIdPool) {
-      return null;
-    }
+    if (createIdPool) {
+      spinner.text = 'Creating Cognito Identity Pool...';
 
-    spinner.text = 'Creating Cognito Identity Pool...';
+      spinner.start();
 
-    spinner.start();
+      /* Create the Identity Pool */
+      const IdentityPoolId = await new Promise((resolve, reject) => {
+        const params = {
+          AllowUnauthenticatedIdentities: false,
+          IdentityPoolName: titleize(`${package.group.title} ${process.env.NODE_ENV}${t(name)}`),
+          CognitoIdentityProviders: [
+            {
+              ProviderName: `cognito-idp.${AWS.config.region}.amazonaws.com/${UserPool.Id}`,
+              ClientId: UserPoolClient.ClientId
+            }
+          ]
+        };
 
-    /* Create the Identity Pool */
-    const IdentityPoolId = await new Promise((resolve, reject) => {
-      const params = {
-        AllowUnauthenticatedIdentities: false,
-        IdentityPoolName: titleize(`${package.group.title} ${process.env.NODE_ENV}${t(name)}`),
-        CognitoIdentityProviders: [
-          {
-            ProviderName: `cognito-idp.${AWS.config.region}.amazonaws.com/${UserPool.Id}`,
-            ClientId: UserPoolClient.ClientId
+        identity.createIdentityPool(params, (err, data) => {
+          if (err) {
+            reject(err, err.stack);
+            return;
           }
-        ]
-      };
 
-      identity.createIdentityPool(params, (err, data) => {
-        if (err) {
-          reject(err, err.stack);
-          return;
-        }
+          spinner.succeed(`Cognito Identity Pool created: ${chalk.bold(data.IdentityPoolId)}`);
 
-        spinner.succeed(`Cognito Identity Pool created: ${chalk.bold(data.IdentityPoolId)}`);
-
-        resolve(data.IdentityPoolId);
+          resolve(data.IdentityPoolId);
+        });
       });
-    });
 
-    if (!IdentityPoolId) {
-      return null;
+      if (!IdentityPoolId) {
+        throw new Error('No Identity Pool ID received!');
+      }
+
+      spinner.text = 'Creating Identity Pool Id SSM parameter...';
+
+      spinner.start();
+
+      /* Create the Identity Pool Id SSM parameter */
+      await new Promise((resolve, reject) => {
+        const params = {
+          Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-identity-pool-id`,
+          Value: IdentityPoolId,
+          Overwrite: true,
+          Type: 'String',
+          Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito Identity Pool Id`)
+        };
+
+        ssm.putParameter(params, err => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          spinner.succeed(`Cognito Identity Pool Id SSM parameter created: ${chalk.bold(params.Name)}`);
+
+          resolve();
+        });
+      });
     }
-
-    spinner.text = 'Creating Identity Pool Id SSM parameter...';
-
-    spinner.start();
-
-    /* Create the Identity Pool Id SSM parameter */
-    await new Promise((resolve, reject) => {
-      const params = {
-        Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-identity-pool-id`,
-        Value: IdentityPoolId,
-        Overwrite: true,
-        Type: 'String',
-        Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito Identity Pool Id`)
-      };
-
-      ssm.putParameter(params, err => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        spinner.succeed(`Cognito Identity Pool Id SSM parameter created: ${chalk.bold(params.Name)}`);
-
-        resolve();
-      });
-    });
 
     spinner.succeed('All done!');
     process.exit(0);
