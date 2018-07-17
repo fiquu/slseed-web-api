@@ -6,9 +6,9 @@
  * @example $ NODE_ENV=local node scripts/db-indexes.js
  */
 
-const profiles = require('../configs/profiles');
+const awsProfile = require('../utils/aws-profile');
 
-process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
+awsProfile.update();
 
 const inquirer = require('inquirer');
 const mongoose = require('mongoose');
@@ -17,7 +17,7 @@ const AWS = require('aws-sdk');
 const ora = require('ora');
 
 const schemas = require('../service/components/schemas');
-const package = require('../package.json');
+const ssmr = require('../utils/ssm-params-resolve');
 
 AWS.config.update({
   region: 'us-east-1',
@@ -25,8 +25,6 @@ AWS.config.update({
     ssm: '2014-11-06'
   }
 });
-
-const ssm = new AWS.SSM();
 
 console.log(`\n${chalk.cyan.bold('Database Indexes Script')}\n`);
 
@@ -60,38 +58,9 @@ mongoose.set('debug', true);
 
     spinner.start();
 
-    await new Promise((resolve, reject) => {
-      const mappings = {
-        [`/${package.group.name}/${process.env.NODE_ENV}/db-uri`]: 'DB_URI'
-      };
+    await ssmr(['db-uri'], true);
 
-      const params = {
-        Names: Object.keys(mappings),
-        WithDecryption: true
-      };
-
-      ssm.getParameters(params, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        /* Map SSM parameters to env vars */
-        data.Parameters.forEach(param => {
-          if (mappings[param.Name]) {
-            spinner.info(
-              `SSM: ${chalk.bold(param.Name)} --> ${chalk.bold(mappings[param.Name])} = ${chalk.bold(param.Value)}`
-            );
-
-            process.env[mappings[param.Name]] = param.Value;
-          }
-        });
-
-        spinner.succeed('SSM parameters resolved.');
-
-        resolve(answers);
-      });
-    });
+    spinner.succeed('SSM parameters resolved.');
 
     spinner.text = 'Connecting to the database...';
 

@@ -7,9 +7,9 @@
  * @example $ NODE_ENV=local node scripts/cognito-user-pool-create.js
  */
 
-const profiles = require('../configs/profiles');
+const awsProfile = require('../utils/aws-profile');
 
-process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
+awsProfile.update();
 
 const inquirer = require('inquirer');
 const titleize = require('titleize');
@@ -47,58 +47,56 @@ console.log(`\n${chalk.cyan.bold('Create AWS Cognito User Pool Script')}\n`);
 console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
 console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
-const questions = [
-  {
-    name: 'name',
-    type: 'input',
-    message: `Instance name ${chalk.reset.gray('(blank for none)')}`
-  }
-];
+(async () => {
+  try {
+    const { name } = await inquirer.prompt([
+      {
+        name: 'name',
+        type: 'input',
+        message: `Instance name ${chalk.reset.gray('(blank for none)')}`
+      }
+    ]);
 
-inquirer
-  .prompt(questions)
-
-  /* Create the user pool */
-  .then(answers => {
+    /* Create the user pool */
     spinner.text = 'Creating User Pool...';
 
     spinner.start();
 
-    const params = {
-      PoolName: `${s(package.group.name)}-${n(answers.name)}${s(process.env.NODE_ENV)}`,
-      AdminCreateUserConfig: {
-        AllowAdminCreateUserOnly: true
-      },
-      AutoVerifiedAttributes: ['email'],
-      UsernameAttributes: ['email'],
-      MfaConfiguration: 'OFF',
-      Policies: {
-        PasswordPolicy: {
-          MinimumLength: 8,
-          RequireLowercase: false,
-          RequireNumbers: false,
-          RequireSymbols: false,
-          RequireUppercase: false
-        }
-      },
-      Schema: [
-        {
-          AttributeDataType: 'String',
-          Name: 'email',
-          Required: true
+    const UserPool = await new Promise((resolve, reject) => {
+      const params = {
+        PoolName: `${s(package.group.name)}-${n(name)}${s(process.env.NODE_ENV)}`,
+        AdminCreateUserConfig: {
+          AllowAdminCreateUserOnly: true
         },
-        {
-          AttributeDataType: 'String',
-          Name: 'name',
-          Required: true
+        AutoVerifiedAttributes: ['email'],
+        UsernameAttributes: ['email'],
+        MfaConfiguration: 'OFF',
+        Policies: {
+          PasswordPolicy: {
+            MinimumLength: 8,
+            RequireLowercase: false,
+            RequireNumbers: false,
+            RequireSymbols: false,
+            RequireUppercase: false
+          }
+        },
+        Schema: [
+          {
+            AttributeDataType: 'String',
+            Name: 'email',
+            Required: true
+          },
+          {
+            AttributeDataType: 'String',
+            Name: 'name',
+            Required: true
+          }
+        ],
+        VerificationMessageTemplate: {
+          DefaultEmailOption: 'CONFIRM_WITH_CODE'
         }
-      ],
-      VerificationMessageTemplate: {
-        DefaultEmailOption: 'CONFIRM_WITH_CODE'
-      }
-    };
+      };
 
-    return new Promise((resolve, reject) =>
       cognito.createUserPool(params, (err, data) => {
         if (err) {
           reject(err);
@@ -107,25 +105,23 @@ inquirer
 
         spinner.succeed(`User Pool created: ${chalk.bold(data.UserPool.Id)}`);
 
-        resolve([answers, data.UserPool]);
-      })
-    );
-  })
+        resolve(data.UserPool);
+      });
+    });
 
-  /* Create the User Pool Client */
-  .then(([answers, UserPool]) => {
+    /* Create the User Pool Client */
     spinner.text = 'Creating User Pool Client...';
 
     spinner.start();
 
-    const params = {
-      ClientName: `${s(package.group.name)}-${n(answers.name)}app-${process.env.NODE_ENV}`,
-      ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
-      UserPoolId: UserPool.Id,
-      GenerateSecret: false
-    };
+    const UserPoolClient = await new Promise((resolve, reject) => {
+      const params = {
+        ClientName: `${s(package.group.name)}-${n(name)}app-${process.env.NODE_ENV}`,
+        ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
+        UserPoolId: UserPool.Id,
+        GenerateSecret: false
+      };
 
-    return new Promise((resolve, reject) =>
       cognito.createUserPoolClient(params, (err, data) => {
         if (err) {
           reject(err);
@@ -134,26 +130,24 @@ inquirer
 
         spinner.succeed(`User Pool Client created: ${chalk.bold(data.UserPoolClient.ClientId)}`);
 
-        resolve([answers, UserPool, data.UserPoolClient]);
-      })
-    );
-  })
+        resolve(data.UserPoolClient);
+      });
+    });
 
-  /* Create the User Pool Id SSM parameter */
-  .then(([answers, UserPool, UserPoolClient]) => {
+    /* Create the User Pool Id SSM parameter */
     spinner.text = 'Creating User Pool Id SSM parameter...';
 
     spinner.start();
 
-    const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(answers.name)}cognito-user-pool-id`,
-      Value: UserPool.Id,
-      Overwrite: true,
-      Type: 'String',
-      Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(answers.name)}Cognito User Pool Id`)
-    };
+    await new Promise((resolve, reject) => {
+      const params = {
+        Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-user-pool-id`,
+        Value: UserPool.Id,
+        Overwrite: true,
+        Type: 'String',
+        Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito User Pool Id`)
+      };
 
-    return new Promise((resolve, reject) =>
       ssm.putParameter(params, err => {
         if (err) {
           reject(err);
@@ -162,26 +156,24 @@ inquirer
 
         spinner.succeed(`Cognito User Pool Id SSM parameter created: ${chalk.bold(params.Name)}`);
 
-        resolve([answers, UserPool, UserPoolClient]);
-      })
-    );
-  })
+        resolve();
+      });
+    });
 
-  .then(([answers, UserPool, UserPoolClient]) => {
     spinner.text = 'Creating App Client Id SSM parameter...';
 
     spinner.start();
 
     /* Create the App Client Id SSM parameter */
-    const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(answers.name)}cognito-app-client-id`,
-      Value: UserPoolClient.ClientId,
-      Overwrite: true,
-      Type: 'String',
-      Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(answers.name)}Cognito App Client Id`)
-    };
+    await new Promise((resolve, reject) => {
+      const params = {
+        Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-app-client-id`,
+        Value: UserPoolClient.ClientId,
+        Overwrite: true,
+        Type: 'String',
+        Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito App Client Id`)
+      };
 
-    return new Promise((resolve, reject) =>
       ssm.putParameter(params, err => {
         if (err) {
           reject(err);
@@ -190,26 +182,20 @@ inquirer
 
         spinner.succeed(`Cognito App Client Id SSM parameter created: ${chalk.bold(params.Name)}`);
 
-        resolve([answers.name, UserPool, UserPoolClient]);
-      })
-    );
-  })
+        resolve();
+      });
+    });
 
-  .then(([name, UserPool, UserPoolClient]) => {
-    const questions = [
+    const { createIdPool } = await inquirer.prompt([
       {
         name: 'create',
         type: 'confirm',
         message: `Create and associate an Identity Pool?`,
         default: true
       }
-    ];
+    ]);
 
-    return inquirer.prompt(questions).then(answers => [answers, name, UserPool, UserPoolClient]);
-  })
-
-  .then(([answers, name, UserPool, UserPoolClient]) => {
-    if (!answers.create) {
+    if (!createIdPool) {
       return null;
     }
 
@@ -218,18 +204,18 @@ inquirer
     spinner.start();
 
     /* Create the Identity Pool */
-    const params = {
-      AllowUnauthenticatedIdentities: false,
-      IdentityPoolName: titleize(`${package.group.title} ${process.env.NODE_ENV}${t(name)}`),
-      CognitoIdentityProviders: [
-        {
-          ProviderName: `cognito-idp.${AWS.config.region}.amazonaws.com/${UserPool.Id}`,
-          ClientId: UserPoolClient.ClientId
-        }
-      ]
-    };
+    const IdentityPoolId = await new Promise((resolve, reject) => {
+      const params = {
+        AllowUnauthenticatedIdentities: false,
+        IdentityPoolName: titleize(`${package.group.title} ${process.env.NODE_ENV}${t(name)}`),
+        CognitoIdentityProviders: [
+          {
+            ProviderName: `cognito-idp.${AWS.config.region}.amazonaws.com/${UserPool.Id}`,
+            ClientId: UserPoolClient.ClientId
+          }
+        ]
+      };
 
-    return new Promise((resolve, reject) =>
       identity.createIdentityPool(params, (err, data) => {
         if (err) {
           reject(err, err.stack);
@@ -238,12 +224,10 @@ inquirer
 
         spinner.succeed(`Cognito Identity Pool created: ${chalk.bold(data.IdentityPoolId)}`);
 
-        resolve([data.IdentityPoolId, name]);
-      })
-    );
-  })
+        resolve(data.IdentityPoolId);
+      });
+    });
 
-  .then(([IdentityPoolId, name]) => {
     if (!IdentityPoolId) {
       return null;
     }
@@ -253,17 +237,15 @@ inquirer
     spinner.start();
 
     /* Create the Identity Pool Id SSM parameter */
-    const params = {
-      Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-identity-pool-id`,
-      Value: IdentityPoolId,
-      Overwrite: true,
-      Type: 'String',
-      Description: titleize(
-        `${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito Identity Pool Id`
-      )
-    };
+    await new Promise((resolve, reject) => {
+      const params = {
+        Name: `/${s(package.group.name)}/${s(process.env.NODE_ENV)}/${n(name)}cognito-identity-pool-id`,
+        Value: IdentityPoolId,
+        Overwrite: true,
+        Type: 'String',
+        Description: titleize(`${package.group.title} ${process.env.NODE_ENV} ${t(name)}Cognito Identity Pool Id`)
+      };
 
-    return new Promise((resolve, reject) =>
       ssm.putParameter(params, err => {
         if (err) {
           reject(err);
@@ -273,19 +255,16 @@ inquirer
         spinner.succeed(`Cognito Identity Pool Id SSM parameter created: ${chalk.bold(params.Name)}`);
 
         resolve();
-      })
-    );
-  })
+      });
+    });
 
-  .then(() => {
     spinner.succeed('All done!');
     process.exit(0);
-  })
-
-  .catch(err => {
+  } catch (err) {
     spinner.fail(err.message);
 
     console.error(err);
 
     process.exit(1);
-  });
+  }
+})();

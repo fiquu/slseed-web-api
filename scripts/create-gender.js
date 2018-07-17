@@ -5,6 +5,11 @@
  *
  * @example $ NODE_ENV=local node scripts/create-user.js
  */
+
+const awsProfile = require('../utils/aws-profile');
+
+awsProfile.update();
+
 const validator = require('validator');
 const inquirer = require('inquirer');
 const chalk = require('chalk');

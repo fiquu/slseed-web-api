@@ -6,9 +6,9 @@
  * @example $ NODE_ENV=local node scripts/create-user.js
  */
 
-const profiles = require('../configs/profiles');
+const awsProfile = require('../utils/aws-profile');
 
-process.env.AWS_PROFILE = profiles[process.env.NODE_ENV] || 'default';
+awsProfile.update();
 
 const validator = require('validator');
 const inquirer = require('inquirer');
@@ -17,6 +17,7 @@ const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
 
+const ssmr = require('../utils/ssm-params-resolve');
 const package = require('../package.json');
 
 AWS.config.update({
@@ -28,7 +29,6 @@ AWS.config.update({
 });
 
 const cognito = new AWS.CognitoIdentityServiceProvider();
-const ssm = new AWS.SSM();
 const spinner = ora();
 
 console.log(`\n${chalk.cyan.bold('Create User Script')}\n`);
@@ -42,37 +42,7 @@ console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
     spinner.start();
 
-    const mappings = {
-      [`/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-id`]: 'COGNITO_USER_POOL_ID',
-      [`/${package.group.name}/${process.env.NODE_ENV}/db-uri`]: 'DB_URI'
-    };
-
-    let params = {
-      Names: Object.keys(mappings),
-      WithDecryption: true
-    };
-
-    await new Promise((resolve, reject) => {
-      ssm.getParameters(params, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        /* Map SSM parameters to env vars */
-        for (let param of data.Parameters) {
-          if (mappings[param.Name]) {
-            spinner.info(
-              `SSM: ${chalk.bold(param.Name)} --> ${chalk.bold(mappings[param.Name])} = ${chalk.bold(param.Value)}`
-            );
-
-            process.env[mappings[param.Name]] = param.Value;
-          }
-        }
-
-        resolve();
-      });
-    });
+    await ssmr(['db-uri', 'cognito-user-pool-id'], true);
 
     spinner.succeed('SSM parameters resolved.');
 
