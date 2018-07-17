@@ -18,6 +18,11 @@ const ora = require('ora');
 const package = require('../package.json');
 
 (async () => {
+  console.log(`\n${chalk.cyan.bold('Insert AWS Systems Manager Parameter Script')}\n`);
+  console.log(`${chalk.bold('Group:   ')} ${package.group.title}`);
+
+  await require('../utils/stage-select')(true); // Set proper stage ENV
+
   AWS.config.update({
     region: 'us-east-1',
     apiVersions: {
@@ -26,11 +31,6 @@ const package = require('../package.json');
   });
 
   const ssm = new AWS.SSM();
-
-  console.log(`\n${chalk.cyan.bold('Insert AWS Systems Manager Parameter Script')}\n`);
-  console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
-  console.log(`${chalk.bold('Group:   ')} ${package.group.title}`);
-  console.log(`${chalk.bold('Path:    ')} /${package.group.name}/${process.env.NODE_ENV}/\n`);
 
   try {
     const questions = [

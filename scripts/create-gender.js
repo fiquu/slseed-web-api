@@ -6,26 +6,24 @@
  * @example $ NODE_ENV=local node scripts/create-user.js
  */
 
-const awsProfile = require('../utils/aws-profile');
-
-awsProfile.update();
-
 const validator = require('validator');
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const ora = require('ora');
 
-const ssmr = require('../utils/ssm-params-resolve');
 const package = require('../package.json');
-
-const spinner = ora();
-
-console.log(`\n${chalk.cyan.bold('Create Gender Script')}\n`);
-console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
-console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
 /* Fetch SSM parameters */
 (async () => {
+  console.log(`\n${chalk.cyan.bold('Create Gender Script')}\n`);
+  console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
+
+  await require('../utils/stage-select')(true); // Set proper stage ENV
+
+  const ssmr = require('../utils/ssm-params-resolve');
+
+  const spinner = ora();
+
   try {
     spinner.text = 'Resolving SSM parameters...';
 

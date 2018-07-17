@@ -17,26 +17,28 @@ const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
 
-const ssmr = require('../utils/ssm-params-resolve');
 const package = require('../package.json');
-
-AWS.config.update({
-  region: 'us-east-1',
-  apiVersions: {
-    cognitoidentityserviceprovider: '2016-04-18',
-    ssm: '2014-11-06'
-  }
-});
-
-const cognito = new AWS.CognitoIdentityServiceProvider();
-const spinner = ora();
-
-console.log(`\n${chalk.cyan.bold('Create User Script')}\n`);
-console.log(`${chalk.bold('Profile: ')} ${process.env.AWS_PROFILE}`);
-console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
 
 /* Fetch SSM parameters */
 (async () => {
+  console.log(`\n${chalk.cyan.bold('Create User Script')}\n`);
+  console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
+
+  await require('../utils/stage-select')(true); // Set proper stage ENV
+
+  const ssmr = require('../utils/ssm-params-resolve');
+
+  AWS.config.update({
+    region: 'us-east-1',
+    apiVersions: {
+      cognitoidentityserviceprovider: '2016-04-18',
+      ssm: '2014-11-06'
+    }
+  });
+
+  const cognito = new AWS.CognitoIdentityServiceProvider();
+  const spinner = ora();
+
   try {
     spinner.text = 'Resolving SSM parameters...';
 

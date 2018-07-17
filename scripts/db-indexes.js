@@ -16,22 +16,24 @@ const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
 
-const schemas = require('../service/components/schemas');
-const ssmr = require('../utils/ssm-params-resolve');
-
-AWS.config.update({
-  region: 'us-east-1',
-  apiVersions: {
-    ssm: '2014-11-06'
-  }
-});
-
-console.log(`\n${chalk.cyan.bold('Database Indexes Script')}\n`);
-
-mongoose.set('debug', true);
-
 (async () => {
+  console.log(`\n${chalk.cyan.bold('Database Indexes Script')}\n`);
+
+  await require('../utils/stage-select')(true); // Set proper stage ENV
+
+  const schemas = require('../service/components/schemas');
+  const ssmr = require('../utils/ssm-params-resolve');
+
   const spinner = ora('');
+
+  mongoose.set('debug', true);
+
+  AWS.config.update({
+    region: 'us-east-1',
+    apiVersions: {
+      ssm: '2014-11-06'
+    }
+  });
 
   try {
     const questions = [

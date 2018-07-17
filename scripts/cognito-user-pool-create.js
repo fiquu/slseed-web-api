@@ -16,12 +16,12 @@ const ora = require('ora');
 
 const package = require('../package.json');
 
-console.log(`\n${chalk.yellow.bold('IMPORTANT: You should use CloudFormation templates for this!')}\n`);
-
-console.log(`\n${chalk.cyan.bold('Create AWS Cognito User Pool Script')}\n`);
-console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
-
 (async () => {
+  console.log(`\n${chalk.yellow.bold('IMPORTANT: You should use CloudFormation templates for this!')}\n`);
+
+  console.log(`\n${chalk.cyan.bold('Create AWS Cognito User Pool Script')}\n`);
+  console.log(`${chalk.bold('Group:   ')} ${package.group.title}\n`);
+
   await require('../utils/stage-select')(true); // Set proper stage ENV
 
   AWS.config.update({
