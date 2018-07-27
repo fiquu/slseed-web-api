@@ -8,6 +8,7 @@ const { Response, Ok, InternalServerError } = require('./responses');
 const Database = require('./database');
 
 const config = require('../configs/request');
+const auth = require('../components/auth');
 const views = require('./views');
 
 /**
@@ -129,9 +130,29 @@ class Request {
    *
    * @return {Object} The Monitor object.
    */
-  getAuthData() {
+  async getAuthData() {
     try {
-      return JSON.parse(this.event.requestContext.authorizer.data);
+      const cfg = auth.getConfig();
+
+      const { sub } = this.event.requestContext.authorizer.claims;
+
+      const query = this.db.model(cfg.model).aggregate();
+
+      query.match({
+        sub
+      });
+
+      if (cfg.pipeline) {
+        query.append(cfg.pipeline);
+      }
+
+      const [result] = await query;
+
+      if (!result || !result._id) {
+        throw new Error('No auth data found.');
+      }
+
+      return result;
     } catch (ex) {
       return null;
     }

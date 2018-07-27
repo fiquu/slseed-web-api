@@ -4,8 +4,6 @@
  * @module configs/environment
  */
 
-const package = require('../package.json');
-
 const values = {};
 const params = [
   // 'cognito-identity-pool-id',
@@ -18,7 +16,7 @@ const params = [
 
 /* Map al SSM parameter names to env variables */
 for (let name of params) {
-  const value = `\${ssm:/${package.group.name}/\${self:provider.stage}/${name}~true}`;
+  const value = `\${ssm:/\${self:custom.package.group.name}/\${self:provider.stage}/${name}~true}`;
   const env = name.toUpperCase().replace(/[^A-Z]+/g, '_');
 
   console.log(`> SSM:ENV ${name} --> ${env} = ${value}`);

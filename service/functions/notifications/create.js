@@ -1,6 +1,6 @@
 const Ably = require('ably');
 
-const { Created, BadRequest } = require('../../components/responses');
+const { Created, BadRequest, Forbidden } = require('../../components/responses');
 const Request = require('../../components/request');
 
 /**
@@ -16,8 +16,7 @@ module.exports.handler = async event => {
   const body = req.getBody();
 
   if (!body) {
-    req.send(new BadRequest());
-    return;
+    return new BadRequest();
   }
 
   const data = {
@@ -35,6 +34,12 @@ module.exports.handler = async event => {
 
   try {
     await req.db.connect();
+
+    const authData = req.getAuthData();
+
+    if (!authData) {
+      return new Forbidden();
+    }
 
     const query = req.db.model('notification').create(data);
 

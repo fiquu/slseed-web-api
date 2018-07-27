@@ -5,10 +5,9 @@
  */
 
 module.exports = {
+  package: '${file(./package.json)}',
   authorizer: {
-    resultTtlInSeconds: 0, // TODO: Set this to an appropriate value
-    name: 'authorizer',
-    type: 'request'
+    arn: '${ssm:/${self:custom.package.group.name}/${self:provider.stage}/auth-cognito-user-pool-arn~true}'
   },
   customDomain: {
     certificateName: 'example.com',

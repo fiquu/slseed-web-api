@@ -26,7 +26,13 @@ const package = require('../package.json');
 
   await require('../utils/stage-select')(true); // Set proper stage ENV
 
+  const genderSchema = require('../service/schemas/gender');
+  const userSchema = require('../service/schemas/user');
+
   const ssmr = require('../utils/ssm-params-resolve');
+
+  const Gender = mongoose.model('gender', genderSchema);
+  const User = mongoose.model('user', userSchema);
 
   AWS.config.update({
     region: 'us-east-1',
@@ -134,20 +140,20 @@ const package = require('../package.json');
 
     spinner.start();
 
-    params = {
-      ...answers,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-      DesiredDeliveryMediums: ['EMAIL'],
-      UserAttributes: [
-        ...UserAttributes,
-        {
-          Name: 'name',
-          Value: 'slseed'
-        }
-      ]
-    };
+    const data = await new Promise((resolve, reject) => {
+      const params = {
+        ...answers,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        DesiredDeliveryMediums: ['EMAIL'],
+        UserAttributes: [
+          ...UserAttributes,
+          {
+            Name: 'name',
+            Value: 'slseed'
+          }
+        ]
+      };
 
-    const data = await new Promise((resolve, reject) =>
       cognito.adminCreateUser(params, (err, data) => {
         if (err) {
           reject(err);
@@ -157,17 +163,15 @@ const package = require('../package.json');
         spinner.succeed(`Cognito user created: ${chalk.bold(data.User.Username)}`);
 
         resolve(data);
-      })
-    );
+      });
+    });
 
     spinner.text = 'Inserting user reference in the database...';
 
     spinner.start();
 
-    const userSchema = require('../service/schemas/user');
-    const User = mongoose.model('user', userSchema);
-
     const user = await User.create({
+      gender: (await Gender.find())[0]._id,
       sub: data.User.Username
     });
 

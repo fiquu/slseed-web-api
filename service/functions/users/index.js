@@ -11,14 +11,16 @@ const Request = require('../../components/request');
 module.exports.handler = async event => {
   const req = new Request(event);
 
-  const auth = req.getAuthData(); // Authorization resolved data
-
-  if (!auth) {
-    return new Forbidden();
-  }
-
   try {
     await req.db.connect();
+
+    const auth = await req.getAuthData(); // Authorization data
+
+    console.dir(auth, { colors: true });
+
+    if (!auth) {
+      return new Forbidden();
+    }
 
     const query = req.db.model('user').find();
     const users = await query.lean();

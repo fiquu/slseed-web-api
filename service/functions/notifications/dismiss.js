@@ -13,12 +13,7 @@ const { ObjectId } = Types;
 module.exports.handler = async event => {
   const req = new Request(event);
 
-  const authData = req.getAuthData();
   const body = req.getBody();
-
-  if (!authData) {
-    return new Forbidden();
-  }
 
   /* No params provided */
   if (!body.refModel && !body.refId && !body.type && !body._id) {
@@ -27,6 +22,12 @@ module.exports.handler = async event => {
 
   try {
     await req.db.connect();
+
+    const authData = req.getAuthData();
+
+    if (!authData) {
+      return new Forbidden();
+    }
 
     const conditions = {
       toId: authData._id,

@@ -8,14 +8,15 @@ const Request = require('../../components/request');
  */
 module.exports.handler = async event => {
   const req = new Request(event);
-  const authData = req.getAuthData();
-
-  if (!authData) {
-    return new Forbidden();
-  }
 
   try {
     await req.db.connect();
+
+    const authData = req.getAuthData();
+
+    if (!authData) {
+      return new Forbidden();
+    }
 
     const query = req.db.model('notification').find();
 
