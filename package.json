@@ -35,33 +35,33 @@
     "check": "npm-check -u && npm-check"
   },
   "dependencies": {
-    "ably": "^1.0.14",
-    "jsonwebtoken": "^8.2.2",
+    "ably": "^1.0.16",
+    "jsonwebtoken": "^8.3.0",
     "jwk-to-pem": "^2.0.0",
     "mailgun.js": "^2.0.1",
     "moment": "^2.22.2",
-    "mongoose": "^5.1.4",
+    "mongoose": "^5.2.5",
     "pug": "^2.0.3",
     "request": "^2.87.0",
-    "validator": "^10.3.0"
+    "validator": "^10.4.0"
   },
   "devDependencies": {
     "amazon-cognito-identity-js-node": "0.0.3",
-    "aws-sdk": "^2.251.1",
-    "eslint": "^4.19.1",
+    "aws-sdk": "^2.282.1",
+    "eslint": "^5.2.0",
     "eslint-config-prettier": "^2.9.0",
     "inquirer": "^6.0.0",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
-    "ora": "^2.1.0",
-    "serverless": "^1.27.3",
-    "serverless-domain-manager": "^2.4.0",
+    "ora": "^3.0.0",
+    "serverless": "^1.29.0",
+    "serverless-domain-manager": "^2.6.0",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
-    "serverless-offline": "^3.25.3",
+    "serverless-offline": "^3.25.6",
     "serverless-plugin-split-stacks": "^1.5.5",
     "slug": "^0.9.1",
     "titleize": "^1.0.1",
     "walk-sync": "^0.3.2",
-    "yargs": "^11.0.0"
+    "yargs": "^12.0.1"
   }
 }
