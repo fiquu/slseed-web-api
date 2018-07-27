@@ -16,8 +16,6 @@ module.exports.handler = async event => {
 
     const auth = await req.getAuthData(); // Authorization data
 
-    console.dir(auth, { colors: true });
-
     if (!auth) {
       return new Forbidden();
     }
@@ -26,8 +24,7 @@ module.exports.handler = async event => {
     const users = await query.lean();
 
     if (!users || !users.length) {
-      req.send(new NoContent());
-      return;
+      return new NoContent();
     }
 
     return new Ok(users);

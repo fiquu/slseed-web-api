@@ -19,19 +19,6 @@ module.exports.handler = async event => {
     return new BadRequest();
   }
 
-  const data = {
-    type: body.type,
-
-    fromModel: body.fromModel,
-    fromId: body.fromId,
-
-    toModel: body.toModel,
-    toId: body.toId,
-
-    refModel: body.refModel,
-    refId: body.refId
-  };
-
   try {
     await req.db.connect();
 
@@ -40,6 +27,19 @@ module.exports.handler = async event => {
     if (!authData) {
       return new Forbidden();
     }
+
+    const data = {
+      type: body.type,
+
+      fromModel: body.fromModel,
+      fromId: body.fromId,
+
+      toModel: body.toModel,
+      toId: body.toId,
+
+      refModel: body.refModel,
+      refId: body.refId
+    };
 
     const query = req.db.model('notification').create(data);
 
