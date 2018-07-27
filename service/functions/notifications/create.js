@@ -22,7 +22,7 @@ module.exports.handler = async event => {
   try {
     await req.db.connect();
 
-    const authData = req.getAuthData();
+    const authData = await req.getAuthData();
 
     if (!authData) {
       return new Forbidden();
