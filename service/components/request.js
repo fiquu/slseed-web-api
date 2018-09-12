@@ -126,9 +126,9 @@ class Request {
   }
 
   /**
-   * Retrieves the authorization Monitor object.
+   * Retrieves the authorization data object.
    *
-   * @return {Object} The Monitor object.
+   * @return {Object} The User's data object.
    */
   async getAuthData() {
     try {
