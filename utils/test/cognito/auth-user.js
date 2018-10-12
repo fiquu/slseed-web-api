@@ -71,6 +71,16 @@ module.exports = async credentials => {
     });
   });
 
+  console.log('DATA');
+  console.dir(data, {
+    colors: true
+  });
+
+  console.log('SESSION');
+  console.dir(session, {
+    colors: true
+  });
+
   const json = JSON.stringify({
     ...data,
     ...session

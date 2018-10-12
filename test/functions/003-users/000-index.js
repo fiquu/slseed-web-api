@@ -25,6 +25,8 @@ describe('users', function() {
   it('should respond OK (200) with valid context', async function() {
     const data = await auth.getData();
 
+    console.dir(data, { colors: true });
+
     const res = await wrapped.run({
       requestContext: {
         authorizer: {
