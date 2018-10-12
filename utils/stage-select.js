@@ -12,12 +12,12 @@ module.exports = async env => {
   const { profile } = await inquirer.prompt({
     name: 'profile',
     type: 'list',
-    message: 'Select target profile:',
+    message: 'Select target stage:',
     choices: Object.keys(profiles)
   });
 
   if (env) {
-    process.env.AWS_PROFILE = profile;
+    process.env.AWS_PROFILE = profiles[profile];
     process.env.NODE_ENV = profile;
   }
 

@@ -67,7 +67,7 @@ const package = require('../package.json');
         MfaConfiguration: 'OFF',
         Policies: {
           PasswordPolicy: {
-            MinimumLength: 8,
+            MinimumLength: 10,
             RequireLowercase: false,
             RequireNumbers: false,
             RequireSymbols: false,

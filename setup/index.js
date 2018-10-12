@@ -13,8 +13,6 @@ const AWS = require('aws-sdk');
 const ora = require('ora');
 
 const package = require('../package.json');
-const template = require('./template');
-const values = require('./values');
 
 (async () => {
   console.log(`\n${chalk.cyan.bold('AWS CloudFormation Main Stack Script')}`);
@@ -34,6 +32,9 @@ const values = require('./values');
 
   const cfm = new AWS.CloudFormation();
   const spinner = ora();
+
+  const template = require('./template');
+  const values = require('./values');
 
   try {
     const answers = await inquirer.prompt(values());
