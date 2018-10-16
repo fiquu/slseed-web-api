@@ -14,7 +14,7 @@ module.exports = {
       Name: `/${package.group.name}/${process.env.NODE_ENV}/api-endpoint`,
       Description: `${package.group.title} Database URI [${process.env.NODE_ENV}]`,
       Type: 'String',
-      Value: ''
+      Value: 'EMPTY'
     }
   }
 };

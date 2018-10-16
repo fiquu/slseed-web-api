@@ -68,8 +68,6 @@ module.exports = async () => {
     spinner.succeed('Stack created!');
 
     spinner.info(StackId);
-
-    process.exit(0);
   } catch (err) {
     spinner.fail(err.message);
 

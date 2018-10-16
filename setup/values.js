@@ -9,38 +9,38 @@ const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
 
+const package = require('../package.json');
+
 const values = [
   {
     name: 'db-uri',
-    type: 'password',
+    type: 'input',
     message: `Database Connection URI:`,
-    validate: val => val.length > 1,
-    mask: '*'
+    validate: val => /^mongodb:\/\/[-\w\d@:.,%/?&=]+$/.test(val)
   },
   {
     name: 'api-endpoint',
     type: 'input',
     message: `API Endpoint URI:`,
-    validate: val => val.length > 1
+    validate: val => /^(https?):\/\/[-\w\d@:.,%/?&=]+$/.test(val)
   },
   {
     name: 'mailer-api-key',
-    type: 'password',
+    type: 'input',
     message: `Mailer API Key:`,
-    validate: val => val.length > 1,
-    mask: '*'
+    validate: val => val.length > 1
   },
   {
     name: 'mailer-sender',
     type: 'input',
     message: `Mailer Sender:`,
-    validate: val => val.length > 1
+    validate: val => /^.+\s<[^@]+@.+>$/.test(val)
   },
   {
     name: 'mailer-domain',
     type: 'input',
     message: `Mailer Domain:`,
-    validate: val => val.length > 1
+    validate: val => /^[^.]+\.[\w]{2,}$/.test(val)
   }
 ];
 
@@ -59,7 +59,7 @@ module.exports = async () => {
 
       await new Promise((resolve, reject) => {
         const params = {
-          Name: value.name,
+          Name: `/${package.group.name}/${process.env.NODE_ENV}/${value.name}`,
           Type: 'String',
           Value: answers[value.name],
           Overwrite: true
@@ -72,9 +72,9 @@ module.exports = async () => {
           }
 
           if (data.Version > 1) {
-            spinner.succeed(`Parameter updated to version ${data.Version}!`);
+            spinner.succeed(`[${value.name}] Parameter updated to version ${data.Version}!`);
           } else {
-            spinner.succeed(`Parameter created!`);
+            spinner.succeed(`[${value.name}] Parameter created!`);
           }
 
           resolve();
@@ -83,8 +83,6 @@ module.exports = async () => {
     }
 
     spinner.succeed('Stack created!');
-
-    process.exit(0);
   } catch (err) {
     spinner.fail(err.message);
 
