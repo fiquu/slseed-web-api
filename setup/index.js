@@ -1,27 +1,22 @@
 /**
- * Cognito user pool create script.
+ * Setup script.
  *
- * Creates a user pool, creates the identity pool, assigns the user pool to the identity pool and creates the
- * corresponding SSM parameters.
+ * Sets the environment up.
  *
- * @example $ NODE_ENV=local node scripts/cognito-user-pool-create.js
+ * @example $ node setup
  */
 
-const inquirer = require('inquirer');
 const chalk = require('chalk');
-const AWS = require('aws-sdk');
-const ora = require('ora');
 
 const package = require('../package.json');
+const AWS = require('aws-sdk');
 
 (async () => {
-  console.log(`\n${chalk.cyan.bold('AWS CloudFormation Main Stack Script')}`);
+  console.log(`\n${chalk.cyan.bold('Application Setup Script')}\n`);
   console.log(`${chalk.bold('Group Title: ')} ${package.group.title}`);
   console.log(`${chalk.bold('Group Name:  ')} ${package.group.name}\n`);
 
   await require('../utils/stage-select')(true); // Set proper stage ENV
-
-  console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}\n`);
 
   AWS.config.update({
     region: 'us-east-1',
@@ -30,61 +25,27 @@ const package = require('../package.json');
     })
   });
 
-  const cfm = new AWS.CloudFormation();
-  const spinner = ora();
+  console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}`);
 
-  const template = require('./template');
-  const values = require('./values');
+  const inquirer = require('inquirer');
 
-  try {
-    const answers = await inquirer.prompt(values());
+  let answers = await inquirer.prompt({
+    message: 'Setup CloudFormation stack?',
+    name: 'confirm',
+    type: 'confirm'
+  });
 
-    const params = {
-      StackName: `${package.name}-${process.env.NODE_ENV}-stack`,
-      EnableTerminationProtection: true,
-      TemplateBody: JSON.stringify(template(answers))
-    };
+  if (answers.confirm) {
+    await require('./stack')();
+  }
 
-    spinner.text = 'Validating CloudFormation Stack...';
-    spinner.start();
+  answers = await inquirer.prompt({
+    message: 'Setup Stack values?',
+    name: 'confirm',
+    type: 'confirm'
+  });
 
-    await new Promise((resolve, reject) => {
-      const { TemplateBody } = params;
-
-      cfm.validateTemplate({ TemplateBody }, err => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve();
-      });
-    });
-
-    spinner.text = 'Creating CloudFormation Stack...';
-    spinner.start();
-
-    const { StackId } = await new Promise((resolve, reject) => {
-      cfm.createStack(params, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve(data);
-      });
-    });
-
-    spinner.succeed('Stack created');
-
-    spinner.info(StackId);
-
-    process.exit(0);
-  } catch (err) {
-    spinner.fail(err.message);
-
-    console.error(err);
-
-    process.exit(1);
+  if (answers.confirm) {
+    await require('./values')();
   }
 })();
