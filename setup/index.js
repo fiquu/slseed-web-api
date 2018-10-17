@@ -30,7 +30,10 @@ const package = require('../package.json');
 
   // Initialize params
   const params = {
-    StackName: `${package.name}-${process.env.NODE_ENV}-stack`
+    StackName: `${package.name}-${process.env.NODE_ENV}-stack`,
+    Capabilities: ['CAPABILITY_NAMED_IAM'],
+    TemplateBody: null,
+    Parameters: null
   };
 
   console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}`);
