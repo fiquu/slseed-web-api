@@ -153,7 +153,8 @@ class Request {
       }
 
       return result;
-    } catch (ex) {
+    } catch (err) {
+      console.error(err);
       return null;
     }
   }
