@@ -13,12 +13,6 @@ module.exports = inquirer.prompt([
     message: `Database Connection URI:`,
     validate: val => /^mongodb:\/\/[-\w\d@:.,%/?&=]+$/.test(val)
   },
-  // {
-  //   name: 'api-endpoint',
-  //   type: 'input',
-  //   message: `API Endpoint URI:`,
-  //   validate: val => /^(https?):\/\/[-\w\d@:.,%/?&=]+$/.test(val)
-  // },
   {
     name: 'mailer-api-key',
     type: 'input',
