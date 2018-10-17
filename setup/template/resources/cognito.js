@@ -1,5 +1,7 @@
 module.exports = {
-  // Cognito User Pool
+  /**
+   * Cognito User Pool.
+   */
   CognitoUserPool: {
     Type: 'AWS::Cognito::UserPool',
     Properties: {
@@ -30,7 +32,9 @@ module.exports = {
     }
   },
 
-  // Cognito User Pool Client
+  /**
+   * Cognito User Pool Client.
+   */
   CognitoUserPoolClient: {
     Type: 'AWS::Cognito::UserPoolClient',
     DependsOn: ['CognitoUserPool'],
@@ -46,7 +50,9 @@ module.exports = {
     }
   },
 
-  // Cognito Identity Pool
+  /**
+   * Cognito Identity Pool.
+   */
   CognitoIdentityPool: {
     Type: 'AWS::Cognito::IdentityPool',
     DependsOn: ['CognitoUserPool', 'CognitoUserPoolClient'],
@@ -68,7 +74,32 @@ module.exports = {
     }
   },
 
-  // Cognito User Pool Id SSM Parameter
+  /**
+   * Cognito Identity Pool IAM Roles Attachment.
+   *
+   * @see iam.js
+   */
+  CognitoIdentityPoolRolesAttachment: {
+    Type: 'AWS::Cognito::IdentityPoolRoleAttachment',
+    DependsOn: ['CognitoIdentityPool', 'CognitoIdentityPoolUnauthRole', 'CognitoIdentityPoolAuthRole'],
+    Properties: {
+      IdentityPoolId: {
+        Ref: 'CognitoIdentityPool'
+      },
+      Roles: {
+        unauthenticated: {
+          'Fn::GetAtt': ['CognitoIdentityPoolUnauthRole', 'Arn']
+        },
+        authenticated: {
+          'Fn::GetAtt': ['CognitoIdentityPoolAuthRole', 'Arn']
+        }
+      }
+    }
+  },
+
+  /**
+   * Cognito User Pool Id SSM Parameter.
+   */
   CognitoUserPoolIdParam: {
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPool'],
@@ -86,7 +117,9 @@ module.exports = {
     }
   },
 
-  // Cognito User Pool ARN SSM Parameter
+  /**
+   * Cognito User Pool ARN SSM Parameter.
+   */
   CognitoUserPoolArnParam: {
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPool'],
@@ -104,7 +137,9 @@ module.exports = {
     }
   },
 
-  // Cognito User Pool Client Id SSM Parameter
+  /**
+   * Cognito User Pool Client Id SSM Parameter.
+   */
   CognitoUserPoolClientParam: {
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPoolClient'],
@@ -122,7 +157,9 @@ module.exports = {
     }
   },
 
-  // Cognito Identity Pool Id SSM Parameter
+  /**
+   * Cognito Identity Pool Id SSM Parameter.
+   */
   CognitoIdentityPoolParam: {
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoIdentityPool'],

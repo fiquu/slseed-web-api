@@ -1,5 +1,7 @@
 module.exports = {
-  // Database URI SSM parameter
+  /**
+   * Database URI SSM parameter.
+   */
   DatabaseUriParam: {
     Type: 'AWS::SSM::Parameter',
     Properties: {

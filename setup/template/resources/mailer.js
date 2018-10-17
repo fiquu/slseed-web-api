@@ -1,5 +1,7 @@
 module.exports = {
-  // Mailer API Key SSM Parameter
+  /**
+   * Mailer API Key SSM Parameter.
+   */
   MailerApiKeyParam: {
     Type: 'AWS::SSM::Parameter',
     Properties: {
@@ -16,7 +18,9 @@ module.exports = {
     }
   },
 
-  // Mailer Sender SSM Parameter
+  /**
+   * Mailer Sender SSM Parameter.
+   */
   MailerSenderParam: {
     Type: 'AWS::SSM::Parameter',
     Properties: {
@@ -33,7 +37,9 @@ module.exports = {
     }
   },
 
-  // Mailer Domain SSM Parameter
+  /**
+   * Mailer Domain SSM Parameter.
+   */
   MailerDomainParam: {
     Type: 'AWS::SSM::Parameter',
     Properties: {

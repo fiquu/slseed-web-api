@@ -1,11 +1,15 @@
 module.exports = {
-  // Public Assets S3 Bucket
-  PublicAssetsBucket: {
+  /**
+   * Public Assets S3 Bucket.
+   */
+  PublicAssetsS3Bucket: {
     Type: 'AWS::S3::Bucket'
   },
 
-  // Public Assets CloudFront Origin Access Identity
-  PublicAssetsBucketAccess: {
+  /**
+   * Public Assets CloudFront Origin Access Identity.
+   */
+  PublicAssetsS3BucketAccess: {
     Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
     Properties: {
       CloudFrontOriginAccessIdentityConfig: {
@@ -16,10 +20,12 @@ module.exports = {
     }
   },
 
-  // Public Assets CloudFront Distribution
+  /**
+   * Public Assets CloudFront Distribution.
+   */
   PublicAssetsDist: {
     Type: 'AWS::CloudFront::Distribution',
-    DependsOn: ['PublicAssetsBucket', 'PublicAssetsBucketAccess'],
+    DependsOn: ['PublicAssetsS3Bucket', 'PublicAssetsS3BucketAccess'],
     Properties: {
       DistributionConfig: {
         PriceClass: 'PriceClass_All',
@@ -30,14 +36,14 @@ module.exports = {
         Origins: [
           {
             DomainName: {
-              'Fn::GetAtt': ['PublicAssetsBucket', 'DomainName']
+              'Fn::GetAtt': ['PublicAssetsS3Bucket', 'DomainName']
             },
             Id: {
-              Ref: 'PublicAssetsBucket'
+              Ref: 'PublicAssetsS3Bucket'
             },
             S3OriginConfig: {
               OriginAccessIdentity: {
-                'Fn::Sub': 'origin-access-identity/cloudfront/${PublicAssetsBucketAccess}'
+                'Fn::Sub': 'origin-access-identity/cloudfront/${PublicAssetsS3BucketAccess}'
               }
             }
           }
@@ -49,7 +55,7 @@ module.exports = {
             QueryString: false
           },
           TargetOriginId: {
-            Ref: 'PublicAssetsBucket'
+            Ref: 'PublicAssetsS3Bucket'
           }
         }
       }
