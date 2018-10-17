@@ -8,7 +8,7 @@ module.exports = {
       RoleName: {
         'Fn::Sub': 'cognito-${GroupName}-${Environment}-unauth-role'
       },
-      AssumeRolePolicyDocument: {
+      AssumeRolePolicyDocument: JSON.stringify({
         Version: '2012-10-17',
         Statement: [
           {
@@ -17,7 +17,7 @@ module.exports = {
             Effect: 'Allow'
           }
         ]
-      }
+      })
     }
   },
 
@@ -30,7 +30,7 @@ module.exports = {
       RoleName: {
         'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-role'
       },
-      AssumeRolePolicyDocument: {
+      AssumeRolePolicyDocument: JSON.stringify({
         Version: '2012-10-17',
         Statement: [
           {
@@ -39,7 +39,7 @@ module.exports = {
             Effect: 'Allow'
           }
         ]
-      }
+      })
     }
   }
 };
