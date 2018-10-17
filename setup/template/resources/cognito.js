@@ -1,21 +1,13 @@
-/**
- * Main Stack Cognito Template.
- *
- * @module setup/template/cognito
- */
-
-const AWS = require('aws-sdk');
-
-const package = require('../../package.json');
-
-module.exports = () => ({
+module.exports = {
   // Cognito User Pool
   CognitoUserPool: {
     Type: 'AWS::Cognito::UserPool',
     Properties: {
-      UserPoolName: `${process.env.NODE_ENV}-${package.group.name}`,
       AutoVerifiedAttributes: ['email'],
       UsernameAttributes: ['email'],
+      UserPoolName: {
+        'Fn::Sub': '${GroupName}-${Environment}'
+      },
       AdminCreateUserConfig: {
         AllowAdminCreateUserOnly: true
       },
@@ -43,9 +35,11 @@ module.exports = () => ({
     Type: 'AWS::Cognito::UserPoolClient',
     DependsOn: ['CognitoUserPool'],
     Properties: {
-      ClientName: `${process.env.NODE_ENV}-${package.group.name}`,
       ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
       GenerateSecret: false,
+      ClientName: {
+        'Fn::Sub': '${GroupName}-${Environment}-app-client'
+      },
       UserPoolId: {
         Ref: 'CognitoUserPool'
       }
@@ -57,22 +51,14 @@ module.exports = () => ({
     Type: 'AWS::Cognito::IdentityPool',
     DependsOn: ['CognitoUserPool', 'CognitoUserPoolClient'],
     Properties: {
-      IdentityPoolName: `${process.env.NODE_ENV} ${package.group.name}`,
       AllowUnauthenticatedIdentities: false,
+      IdentityPoolName: {
+        'Fn::Sub': '${GroupName} ${Environment}'
+      },
       CognitoIdentityProviders: [
         {
           ProviderName: {
-            'Fn::Join': [
-              '',
-              [
-                'cognito-idp.',
-                AWS.config.region,
-                '.amazonaws.com/',
-                {
-                  Ref: 'CognitoUserPool'
-                }
-              ]
-            ]
+            'Fn::Sub': 'cognito-idp.${AwsRegion}.amazonaws.com/${CognitoUserPool}'
           },
           ClientId: {
             Ref: 'CognitoUserPoolClient'
@@ -87,9 +73,13 @@ module.exports = () => ({
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPool'],
     Properties: {
-      Name: `/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-id`,
-      Description: `${package.group.title} Cognito User Pool Id [${process.env.NODE_ENV}]`,
       Type: 'String',
+      Name: {
+        'Fn::Sub': '/${GroupName}/${Environment}/cognito-user-pool-id'
+      },
+      Description: {
+        'Fn::Sub': '${GroupTitle} Cognito User Pool Id [${Environment}]'
+      },
       Value: {
         Ref: 'CognitoUserPool'
       }
@@ -101,9 +91,13 @@ module.exports = () => ({
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPool'],
     Properties: {
-      Name: `/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-arn`,
-      Description: `${package.group.title} Cognito User Pool ARN [${process.env.NODE_ENV}]`,
       Type: 'String',
+      Name: {
+        'Fn::Sub': '/${GroupName}/${Environment}/cognito-user-pool-arn'
+      },
+      Description: {
+        'Fn::Sub': '${GroupTitle} Cognito User Pool ARN [${Environment}]'
+      },
       Value: {
         'Fn::GetAtt': ['CognitoUserPool', 'Arn']
       }
@@ -115,9 +109,13 @@ module.exports = () => ({
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoUserPoolClient'],
     Properties: {
-      Name: `/${package.group.name}/${process.env.NODE_ENV}/cognito-user-pool-client-id`,
-      Description: `${package.group.title} Cognito User Pool Client Id [${process.env.NODE_ENV}]`,
       Type: 'String',
+      Name: {
+        'Fn::Sub': '/${GroupName}/${Environment}/cognito-user-pool-client-id'
+      },
+      Description: {
+        'Fn::Sub': '${GroupTitle} Cognito User Pool Client Id [${Environment}]'
+      },
       Value: {
         Ref: 'CognitoUserPoolClient'
       }
@@ -129,12 +127,16 @@ module.exports = () => ({
     Type: 'AWS::SSM::Parameter',
     DependsOn: ['CognitoIdentityPool'],
     Properties: {
-      Name: `/${package.group.name}/${process.env.NODE_ENV}/cognito-identity-pool-id`,
-      Description: `${package.group.title} Cognito Identity Pool Id [${process.env.NODE_ENV}]`,
       Type: 'String',
+      Name: {
+        'Fn::Sub': '/${GroupName}/${Environment}/cognito-identity-pool-id'
+      },
+      Description: {
+        'Fn::Sub': '${GroupTitle} Cognito Identity Pool Id [${Environment}]'
+      },
       Value: {
         Ref: 'CognitoIdentityPool'
       }
     }
   }
-});
+};

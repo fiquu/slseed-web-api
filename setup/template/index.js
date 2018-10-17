@@ -6,18 +6,12 @@
 
 const package = require('../../package.json');
 
-const database = require('./database');
-const cognito = require('./cognito');
-const mailer = require('./mailer');
-const public = require('./public');
+const Parameters = require('./parameters');
+const Resources = require('./resources');
 
-module.exports = values => ({
+module.exports = {
   Description: `${package.description} Stack [${process.env.NODE_ENV}]`,
   AWSTemplateFormatVersion: '2010-09-09',
-  Resources: {
-    ...database(values),
-    ...cognito(values),
-    ...mailer(values),
-    ...public(values)
-  }
-});
+  Parameters,
+  Resources
+};

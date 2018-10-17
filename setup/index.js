@@ -6,7 +6,6 @@
  * @example $ node setup
  */
 
-const inquirer = require('inquirer');
 const chalk = require('chalk');
 const AWS = require('aws-sdk');
 const ora = require('ora');
@@ -42,15 +41,30 @@ const package = require('../package.json');
   const cfm = new AWS.CloudFormation();
   const spinner = ora();
 
-  const template = require('./template');
-  const values = require('./values');
-
   try {
-    spinner.stop();
+    const values = await require('./values');
+    const template = require('./template');
 
-    const answers = await inquirer.prompt(values);
+    params.TemplateBody = JSON.stringify(template);
 
-    params.TemplateBody = JSON.stringify(template(answers));
+    params.Parameters = [
+      {
+        ParameterKey: 'DatabaseUri',
+        ParameterValue: values['db-uri']
+      },
+      {
+        ParameterKey: 'MailerApiKey',
+        ParameterValue: values['mailer-api-key']
+      },
+      {
+        ParameterKey: 'MailerSender',
+        ParameterValue: values['mailer-sender']
+      },
+      {
+        ParameterKey: 'MailerDomain',
+        ParameterValue: values['mailer-domain']
+      }
+    ];
 
     spinner.text = 'Validating CloudFormation Stack Template...';
     spinner.start();

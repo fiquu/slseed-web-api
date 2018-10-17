@@ -4,7 +4,9 @@
  * @module setup/values
  */
 
-module.exports = [
+const inquirer = require('inquirer');
+
+module.exports = inquirer.prompt([
   {
     name: 'db-uri',
     type: 'input',
@@ -35,4 +37,4 @@ module.exports = [
     message: `Mailer Domain:`,
     validate: val => /^([^.]+\.)?[^.]+\.[\w]{2,}$/.test(val)
   }
-];
+]);

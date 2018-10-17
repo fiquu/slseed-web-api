@@ -1,12 +1,4 @@
-/**
- * Main Stack Public Template.
- *
- * @module setup/template/public
- */
-
-const package = require('../../package.json');
-
-module.exports = () => ({
+module.exports = {
   // Public Assets S3 Bucket
   PublicAssetsBucket: {
     Type: 'AWS::S3::Bucket'
@@ -17,7 +9,9 @@ module.exports = () => ({
     Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
     Properties: {
       CloudFrontOriginAccessIdentityConfig: {
-        Comment: `${package.group.title} Public Assets Access Origin Identity [${process.env.NODE_ENV}]`
+        Comment: {
+          'Fn::Sub': '${GroupTitle} Public Assets Access Origin Identity [${Environment}]'
+        }
       }
     }
   },
@@ -28,9 +22,11 @@ module.exports = () => ({
     DependsOn: ['PublicAssetsBucket', 'PublicAssetsBucketAccess'],
     Properties: {
       DistributionConfig: {
-        Comment: `${package.group.title} Public Assets [${process.env.NODE_ENV}]`,
         PriceClass: 'PriceClass_All',
         Enabled: true,
+        Comment: {
+          'Fn::Sub': '${GroupTitle} Public Assets [${Environment}]'
+        },
         Origins: [
           {
             DomainName: {
@@ -59,4 +55,4 @@ module.exports = () => ({
       }
     }
   }
-});
+};
