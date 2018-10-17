@@ -1,6 +1,6 @@
 module.exports = {
   DatabaseUri: {
-    AllowedPattern: '^mongodb:\\/\\/[-\\w\\d@:.,%/?&=]+$',
+    AllowedPattern: '^mongodb(\\+srv)?:\\/\\/[-\\w\\d@:.,%/?&=]+$',
     Description: 'Instance database connection URI',
     Type: 'String',
     NoEcho: true

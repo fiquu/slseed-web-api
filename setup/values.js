@@ -11,7 +11,7 @@ module.exports = inquirer.prompt([
     name: 'db-uri',
     type: 'input',
     message: `Database Connection URI:`,
-    validate: val => /^mongodb:\/\/[-\w\d@:.,%/?&=]+$/.test(val)
+    validate: val => /^mongodb(\+srv)?:\/\/[-\w\d@:.,%/?&=]+$/.test(val)
   },
   {
     name: 'mailer-api-key',
