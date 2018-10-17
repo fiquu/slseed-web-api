@@ -10,16 +10,14 @@ const database = require('./database');
 const cognito = require('./cognito');
 const mailer = require('./mailer');
 const public = require('./public');
-const api = require('./api');
 
-module.exports = {
+module.exports = values => ({
   Description: `${package.description} Stack [${process.env.NODE_ENV}]`,
   AWSTemplateFormatVersion: '2010-09-09',
   Resources: {
-    ...database,
-    ...cognito,
-    ...mailer,
-    ...public,
-    ...api
+    ...database(values),
+    ...cognito(values),
+    ...mailer(values),
+    ...public(values)
   }
-};
+});

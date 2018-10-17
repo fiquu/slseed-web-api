@@ -8,7 +8,7 @@ const AWS = require('aws-sdk');
 
 const package = require('../../package.json');
 
-module.exports = {
+module.exports = () => ({
   // Cognito User Pool
   CognitoUserPool: {
     Type: 'AWS::Cognito::UserPool',
@@ -137,4 +137,4 @@ module.exports = {
       }
     }
   }
-};
+});

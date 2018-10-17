@@ -6,7 +6,7 @@
 
 const package = require('../../package.json');
 
-module.exports = {
+module.exports = () => ({
   // Database URI SSM parameter
   ApiEndpointParam: {
     Type: 'AWS::SSM::Parameter',
@@ -17,4 +17,4 @@ module.exports = {
       Value: 'EMPTY'
     }
   }
-};
+});

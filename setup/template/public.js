@@ -6,7 +6,7 @@
 
 const package = require('../../package.json');
 
-module.exports = {
+module.exports = () => ({
   // Public Assets S3 Bucket
   PublicAssetsBucket: {
     Type: 'AWS::S3::Bucket'
@@ -59,4 +59,4 @@ module.exports = {
       }
     }
   }
-};
+});

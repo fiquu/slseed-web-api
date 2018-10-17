@@ -6,7 +6,7 @@
 
 const package = require('../../package.json');
 
-module.exports = {
+module.exports = values => ({
   // Database URI SSM parameter
   DatabaseUriParam: {
     Type: 'AWS::SSM::Parameter',
@@ -14,7 +14,7 @@ module.exports = {
       Name: `/${package.group.name}/${process.env.NODE_ENV}/db-uri`,
       Description: `${package.group.title} Database URI [${process.env.NODE_ENV}]`,
       Type: 'String',
-      Value: 'EMPTY'
+      Value: values['db-uri']
     }
   }
-};
+});

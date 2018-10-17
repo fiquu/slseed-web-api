@@ -6,7 +6,7 @@
 
 const package = require('../../package.json');
 
-module.exports = {
+module.exports = values => ({
   // Mailer API Key SSM Parameter
   MailerApiKeyParam: {
     Type: 'AWS::SSM::Parameter',
@@ -14,7 +14,7 @@ module.exports = {
       Name: `/${package.group.name}/${process.env.NODE_ENV}/mailer-api-key`,
       Description: `${package.group.title} Mailer API Key [${process.env.NODE_ENV}]`,
       Type: 'String',
-      Value: 'EMPTY'
+      Value: values['mailer-api-key']
     }
   },
 
@@ -25,7 +25,7 @@ module.exports = {
       Name: `/${package.group.name}/${process.env.NODE_ENV}/mailer-sender`,
       Description: `${package.group.title} Mailer Sender [${process.env.NODE_ENV}]`,
       Type: 'String',
-      Value: 'EMPTY'
+      Value: values['mailer-sender']
     }
   },
 
@@ -36,7 +36,7 @@ module.exports = {
       Name: `/${package.group.name}/${process.env.NODE_ENV}/mailer-domain`,
       Description: `${package.group.title} Mailer Domain [${process.env.NODE_ENV}]`,
       Type: 'String',
-      Value: 'EMPTY'
+      Value: values['mailer-domain']
     }
   }
-};
+});
