@@ -5,6 +5,9 @@ module.exports = {
   CognitoIdentityPoolUnauthRole: {
     Type: 'AWS::IAM::Role',
     Properties: {
+      RoleName: {
+        'Fn::Sub': 'cognito-${GroupName}-${Environment}-unauth-role'
+      },
       AssumeRolePolicyDocument: {
         Version: '2012-10-17',
         Statement: [
@@ -14,9 +17,6 @@ module.exports = {
             Effect: 'Allow'
           }
         ]
-      },
-      RoleName: {
-        'Fn::Sub': 'cognito-${GroupName}-${Environment}-unauth-role'
       }
     }
   },
@@ -27,6 +27,9 @@ module.exports = {
   CognitoIdentityPoolAuthRole: {
     Type: 'AWS::IAM::Role',
     Properties: {
+      RoleName: {
+        'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-role'
+      },
       AssumeRolePolicyDocument: {
         Version: '2012-10-17',
         Statement: [
@@ -36,9 +39,6 @@ module.exports = {
             Effect: 'Allow'
           }
         ]
-      },
-      RoleName: {
-        'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-role'
       }
     }
   }
