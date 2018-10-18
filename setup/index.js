@@ -50,24 +50,10 @@ const package = require('../package.json');
 
     params.TemplateBody = JSON.stringify(template);
 
-    params.Parameters = [
-      {
-        ParameterKey: 'DatabaseUri',
-        ParameterValue: values['db-uri']
-      },
-      {
-        ParameterKey: 'MailerApiKey',
-        ParameterValue: values['mailer-api-key']
-      },
-      {
-        ParameterKey: 'MailerSender',
-        ParameterValue: values['mailer-sender']
-      },
-      {
-        ParameterKey: 'MailerDomain',
-        ParameterValue: values['mailer-domain']
-      }
-    ];
+    params.Parameters = Object.keys(values).map(key => ({
+      ParameterValue: values[key],
+      ParameterKey: key
+    }));
 
     spinner.text = 'Validating CloudFormation Stack Template...';
     spinner.start();
