@@ -56,6 +56,7 @@ module.exports = {
    */
   CognitoIdentityPoolAuthRole: {
     Type: 'AWS::IAM::Role',
+    DependsOn: ['CognitoIdentityPool'],
     Properties: {
       RoleName: {
         'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-role'
