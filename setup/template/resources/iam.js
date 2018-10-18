@@ -4,20 +4,50 @@ module.exports = {
    */
   CognitoIdentityPoolUnauthRole: {
     Type: 'AWS::IAM::Role',
+    DependsOn: ['CognitoIdentityPool'],
     Properties: {
       RoleName: {
         'Fn::Sub': 'cognito-${GroupName}-${Environment}-unauth-role'
       },
-      AssumeRolePolicyDocument: JSON.stringify({
+      AssumeRolePolicyDocument: {
         Version: '2012-10-17',
         Statement: [
           {
-            Action: ['mobileanalytics:PutEvents', 'cognito-sync:*'],
-            Resource: ['*'],
-            Effect: 'Allow'
+            Action: 'sts:AssumeRoleWithWebIdentity',
+            Effect: 'Allow',
+            Principal: {
+              Federated: 'cognito-identity.amazonaws.com'
+            },
+            Condition: {
+              'ForAnyValue:StringLike': {
+                'cognito-identity.amazonaws.com:amr': 'unauthenticated'
+              },
+              StringEquals: {
+                'cognito-identity.amazonaws.com:aud': {
+                  Ref: 'CognitoIdentityPool'
+                }
+              }
+            }
           }
         ]
-      })
+      },
+      Policies: [
+        {
+          PolicyName: {
+            'Fn::Sub': 'cognito-${GroupName}-${Environment}-unauth-default-role-policy'
+          },
+          PolicyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Action: ['mobileanalytics:PutEvents', 'cognito-sync:*', 'cognito-identity:*'],
+                Resource: ['*']
+              }
+            ]
+          }
+        }
+      ]
     }
   },
 
@@ -30,16 +60,45 @@ module.exports = {
       RoleName: {
         'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-role'
       },
-      AssumeRolePolicyDocument: JSON.stringify({
+      AssumeRolePolicyDocument: {
         Version: '2012-10-17',
         Statement: [
           {
-            Action: ['mobileanalytics:PutEvents', 'cognito-sync:*'],
-            Resource: ['*'],
-            Effect: 'Allow'
+            Action: 'sts:AssumeRoleWithWebIdentity',
+            Effect: 'Allow',
+            Principal: {
+              Federated: 'cognito-identity.amazonaws.com'
+            },
+            Condition: {
+              'ForAnyValue:StringLike': {
+                'cognito-identity.amazonaws.com:amr': 'authenticated'
+              },
+              StringEquals: {
+                'cognito-identity.amazonaws.com:aud': {
+                  Ref: 'CognitoIdentityPool'
+                }
+              }
+            }
           }
         ]
-      })
+      },
+      Policies: [
+        {
+          PolicyName: {
+            'Fn::Sub': 'cognito-${GroupName}-${Environment}-auth-default-role-policy'
+          },
+          PolicyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Action: ['mobileanalytics:PutEvents', 'cognito-sync:*', 'cognito-identity:*'],
+                Resource: ['*']
+              }
+            ]
+          }
+        }
+      ]
     }
   }
 };
