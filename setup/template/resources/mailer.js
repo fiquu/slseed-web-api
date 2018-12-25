@@ -7,10 +7,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${GroupName}/${Environment}/mailer-api-key'
+        'Fn::Sub': '/${ProjectName}/${Environment}/mailer-api-key'
       },
       Description: {
-        'Fn::Sub': '${GroupTitle} Mailer API Key [${Environment}]'
+        'Fn::Sub': '${ProjectTitle} Mailer API Key [${Environment}]'
       },
       Value: {
         Ref: 'MailerApiKey'
@@ -26,10 +26,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${GroupName}/${Environment}/mailer-sender'
+        'Fn::Sub': '/${ProjectName}/${Environment}/mailer-sender'
       },
       Description: {
-        'Fn::Sub': '${GroupTitle} Mailer Sender [${Environment}]'
+        'Fn::Sub': '${ProjectTitle} Mailer Sender [${Environment}]'
       },
       Value: {
         Ref: 'MailerSender'
@@ -45,10 +45,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${GroupName}/${Environment}/mailer-domain'
+        'Fn::Sub': '/${ProjectName}/${Environment}/mailer-domain'
       },
       Description: {
-        'Fn::Sub': '${GroupTitle} Mailer Domain [${Environment}]'
+        'Fn::Sub': '${ProjectTitle} Mailer Domain [${Environment}]'
       },
       Value: {
         Ref: 'MailerDomain'

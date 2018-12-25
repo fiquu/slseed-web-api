@@ -7,10 +7,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${GroupName}/${Environment}/db-uri'
+        'Fn::Sub': '/${ProjectName}/${Environment}/db-uri'
       },
       Description: {
-        'Fn::Sub': '${GroupTitle} Database URI [${Environment}]'
+        'Fn::Sub': '${ProjectTitle} Database URI [${Environment}]'
       },
       Value: {
         Ref: 'DatabaseUri'

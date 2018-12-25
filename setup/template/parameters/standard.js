@@ -16,16 +16,16 @@ module.exports = {
     Default: process.env.NODE_ENV,
     Type: 'String'
   },
-  GroupName: {
+  ProjectName: {
     Description: 'Instance group name',
-    AllowedValues: [package.group.name],
-    Default: package.group.name,
+    AllowedValues: [package.name],
+    Default: package.name,
     Type: 'String'
   },
-  GroupTitle: {
+  ProjectTitle: {
     Description: 'Instance group title',
-    AllowedValues: [package.group.title],
-    Default: package.group.title,
+    AllowedValues: [package.title],
+    Default: package.title,
     Type: 'String'
   }
 };

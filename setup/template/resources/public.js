@@ -14,7 +14,7 @@ module.exports = {
     Properties: {
       CloudFrontOriginAccessIdentityConfig: {
         Comment: {
-          'Fn::Sub': '${GroupTitle} Public Assets Access Origin Identity [${Environment}]'
+          'Fn::Sub': '${ProjectTitle} Public Assets Access Origin Identity [${Environment}]'
         }
       }
     }
@@ -31,7 +31,7 @@ module.exports = {
         PriceClass: 'PriceClass_All',
         Enabled: true,
         Comment: {
-          'Fn::Sub': '${GroupTitle} Public Assets [${Environment}]'
+          'Fn::Sub': '${ProjectTitle} Public Assets [${Environment}]'
         },
         Origins: [
           {
