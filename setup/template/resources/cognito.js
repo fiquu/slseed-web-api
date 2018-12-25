@@ -59,7 +59,7 @@ module.exports = {
     Properties: {
       AllowUnauthenticatedIdentities: false,
       IdentityPoolName: {
-        'Fn::Sub': '${ProjectName} ${Environment}'
+        'Fn::Sub': '${ProjectNameClean} ${Environment}'
       },
       CognitoIdentityProviders: [
         {

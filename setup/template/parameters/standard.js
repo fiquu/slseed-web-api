@@ -16,6 +16,12 @@ module.exports = {
     Default: process.env.NODE_ENV,
     Type: 'String'
   },
+  ProjectNameClean: {
+    Description: 'Instance group name',
+    AllowedValues: [package.name.replace(/\W+/gi, ' ').replace(/\s+/, ' ')],
+    Default: package.name.replace(/\W+/gi, ' ').replace(/\s+/, ' '),
+    Type: 'String'
+  },
   ProjectName: {
     Description: 'Instance group name',
     AllowedValues: [package.name],

@@ -39,8 +39,7 @@ const package = require('../package.json');
 
     console.log(`\n${chalk.bold('Stack Name:  ')} ${params.StackName}\n`);
 
-    spinner.text = 'Checking for current CloudFormation Stack...';
-    spinner.start();
+    spinner.start('Checking for current CloudFormation Stack...');
 
     const current = await new Promise(resolve => {
       const { StackName } = params;
@@ -110,8 +109,7 @@ const package = require('../package.json');
       return param;
     });
 
-    spinner.text = 'Validating CloudFormation Stack Template...';
-    spinner.start();
+    spinner.start('Validating CloudFormation Stack Template...');
 
     await new Promise((resolve, reject) => {
       const { TemplateBody } = params;
@@ -130,8 +128,7 @@ const package = require('../package.json');
 
     const { StackId } = await new Promise((resolve, reject) => {
       if (current) {
-        spinner.text = 'Updating CloudFormation Stack...';
-        spinner.start();
+        spinner.start('Updating CloudFormation Stack...');
 
         cfm.updateStack(params, (err, data) => {
           if (err) {
@@ -139,7 +136,7 @@ const package = require('../package.json');
             return;
           }
 
-          spinner.succeed('Stack updated!');
+          spinner.succeed('Stack update initiated.');
 
           resolve(data);
         });
@@ -147,8 +144,7 @@ const package = require('../package.json');
         return;
       }
 
-      spinner.text = 'Creating CloudFormation Stack...';
-      spinner.start();
+      spinner.start('Creating CloudFormation Stack...');
 
       params.EnableTerminationProtection = true;
 
@@ -158,13 +154,58 @@ const package = require('../package.json');
           return;
         }
 
-        spinner.succeed('Stack created!');
+        spinner.succeed('Stack creation initiated.');
 
         resolve(data);
       });
     });
 
-    spinner.info(StackId);
+    spinner.info(`Stack Id: ${StackId}`);
+
+    spinner.start('Checking CloudFormation Stack status (this may take several minutes)...');
+    spinner.info('You can skip this step if you wish by pressing [CTRL+C].');
+
+    await new Promise((resolve, reject) => {
+      const { StackName } = params;
+
+      const onDescribeStacks = (err, data) => {
+        if (err) {
+          reject();
+          return;
+        }
+
+        const [Stack] = data.Stacks;
+        const { StackStatus } = Stack;
+
+        switch (StackStatus) {
+          case 'CREATE_IN_PROGRESS':
+          case 'UPDATE_IN_PROGRESS':
+            doCheck();
+            break;
+
+          case 'CREATE_COMPLETE':
+          case 'UPDATE_COMPLETE':
+            spinner.succeed(`Stack successfully ${current ? 'updated' : 'created'}!`);
+            resolve();
+            break;
+
+          default:
+            spinner.warn(
+              `Stack ${
+                current ? 'update' : 'creation'
+              } failed: ${StackStatus}. Please check the AWS console (https://console.aws.amazon.com/cloudformation/home).`
+            );
+            reject();
+            break;
+        }
+
+        resolve();
+      };
+
+      const doCheck = () => setTimeout(() => cfm.describeStacks({ StackName }, onDescribeStacks), 10000);
+
+      doCheck();
+    });
   } catch (err) {
     spinner.fail(err.message);
 
