@@ -1,5 +1,6 @@
 {
   "name": "fi-slseed-api",
+  "title": "Fi Slseed API",
   "description": "Serveless Seed API project",
   "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
   "version": "1.0.0",
