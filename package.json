@@ -37,34 +37,34 @@
     "check": "npm-check -u && npm-check"
   },
   "dependencies": {
-    "ably": "^1.0.18",
-    "jsonwebtoken": "^8.3.0",
-    "jwk-to-pem": "^2.0.0",
+    "ably": "^1.0.20",
+    "jsonwebtoken": "^8.4.0",
+    "jwk-to-pem": "^2.0.1",
     "mailgun.js": "^2.0.1",
-    "moment": "^2.22.2",
-    "mongoose": "^5.3.4",
+    "moment": "^2.23.0",
+    "mongoose": "^5.4.0",
     "pug": "^2.0.3",
     "request": "^2.88.0",
-    "validator": "^10.8.0"
+    "validator": "^10.10.0"
   },
   "devDependencies": {
     "amazon-cognito-identity-js-node": "0.0.3",
-    "aws-sdk": "^2.336.0",
-    "eslint": "^5.7.0",
-    "eslint-config-prettier": "^3.1.0",
-    "fi-is": "^1.2.0",
-    "inquirer": "^6.2.0",
+    "aws-sdk": "^2.382.0",
+    "eslint": "^5.11.0",
+    "eslint-config-prettier": "^3.3.0",
+    "fi-is": "^1.3.1",
+    "inquirer": "^6.2.1",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "ora": "^3.0.0",
-    "serverless": "^1.32.0",
-    "serverless-domain-manager": "^2.6.5",
+    "serverless": "^1.35.1",
+    "serverless-domain-manager": "^2.6.10",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
-    "serverless-offline": "^3.27.0",
-    "serverless-plugin-split-stacks": "^1.6.0",
-    "slug": "^0.9.1",
+    "serverless-offline": "^3.31.3",
+    "serverless-plugin-split-stacks": "^1.7.0",
+    "slug": "^0.9.3",
     "titleize": "^1.0.1",
-    "walk-sync": "^0.3.3",
-    "yargs": "^12.0.2"
+    "walk-sync": "^1.0.1",
+    "yargs": "^12.0.5"
   }
 }
