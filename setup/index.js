@@ -162,8 +162,8 @@ const package = require('../package.json');
 
     spinner.info(`Stack Id: ${StackId}`);
 
+    spinner.info('You can skip the check process if you wish by pressing [CTRL+C].');
     spinner.start('Checking CloudFormation Stack status (this may take several minutes)...');
-    spinner.info('You can skip this step if you wish by pressing [CTRL+C].');
 
     await new Promise((resolve, reject) => {
       const { StackName } = params;
