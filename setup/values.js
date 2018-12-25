@@ -1,9 +1,3 @@
-/**
- * Main Stack Values.
- *
- * @module setup/values
- */
-
 const inquirer = require('inquirer');
 
 module.exports = inquirer.prompt([

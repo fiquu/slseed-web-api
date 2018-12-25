@@ -1,13 +1,7 @@
-/**
- * Setup script.
- *
- * Sets the instance environment up.
- *
- * @example $ node setup
- */
-
+const inquirer = require('inquirer');
 const chalk = require('chalk');
 const AWS = require('aws-sdk');
+const is = require('fi-is');
 const ora = require('ora');
 
 const package = require('../package.json');
@@ -28,16 +22,7 @@ const package = require('../package.json');
     })
   });
 
-  // Initialize params
-  const params = {
-    StackName: `${package.name}-${process.env.NODE_ENV}-stack`,
-    Capabilities: ['CAPABILITY_NAMED_IAM'],
-    TemplateBody: null,
-    Parameters: null
-  };
-
-  console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}`);
-  console.log(`${chalk.bold('Stack Name:  ')} ${params.StackName}\n`);
+  console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}\n`);
 
   // -----------------------------------------------------------------
 
@@ -45,15 +30,85 @@ const package = require('../package.json');
   const spinner = ora();
 
   try {
-    const values = await require('./values');
+    const params = {
+      StackName: `${package.group.name}-${process.env.NODE_ENV}-base-stack`,
+      Capabilities: ['CAPABILITY_NAMED_IAM'],
+      TemplateBody: null,
+      Parameters: null
+    };
+
+    console.log(`\n${chalk.bold('Stack Name:  ')} ${params.StackName}\n`);
+
+    spinner.text = 'Checking for current CloudFormation Stack...';
+    spinner.start();
+
+    const current = await new Promise(resolve => {
+      const { StackName } = params;
+
+      cfm.describeStacks({ StackName }, (err, data) => {
+        if (err) {
+          resolve();
+          return;
+        }
+
+        spinner.warn('Template already exists.');
+
+        resolve(data);
+      });
+    });
+
+    spinner.stop();
+
+    if (current) {
+      const { confirm } = await inquirer.prompt({
+        message: 'Proceed with stack update?',
+        name: 'confirm',
+        type: 'confirm',
+        default: true
+      });
+
+      if (!confirm) {
+        spinner.info('Update cancelled.');
+        process.exit();
+      }
+    }
+
     const template = require('./template');
+    const values = require('./values');
+
+    const cfmParamPrompts = [];
+
+    if (current) {
+      const previous = chalk.reset.dim(' (empty for previous)');
+
+      for (let value of values) {
+        value.message += previous;
+      }
+    }
+
+    for (let value of values) {
+      cfmParamPrompts.push({
+        ...value,
+        message: `${value.message}:`,
+        validate: val => (current && is.empty(val)) || value.validate(val)
+      });
+    }
+
+    const cfmParamValues = await inquirer.prompt(cfmParamPrompts);
 
     params.TemplateBody = JSON.stringify(template);
 
-    params.Parameters = Object.keys(values).map(key => ({
-      ParameterValue: values[key],
-      ParameterKey: key
-    }));
+    params.Parameters = Object.keys(cfmParamValues).map(ParameterKey => {
+      const param = { ParameterKey };
+
+      if (current && is.empty(cfmParamValues[ParameterKey])) {
+        param.UsePreviousValue = true;
+      } else {
+        param.ParameterValue = cfmParamValues[ParameterKey];
+      }
+
+      return param;
+    });
 
     spinner.text = 'Validating CloudFormation Stack Template...';
     spinner.start();
@@ -73,10 +128,28 @@ const package = require('../package.json');
       });
     });
 
-    spinner.text = 'Creating CloudFormation Stack...';
-    spinner.start();
-
     const { StackId } = await new Promise((resolve, reject) => {
+      if (current) {
+        spinner.text = 'Updating CloudFormation Stack...';
+        spinner.start();
+
+        cfm.updateStack(params, (err, data) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          spinner.succeed('Stack updated!');
+
+          resolve(data);
+        });
+
+        return;
+      }
+
+      spinner.text = 'Creating CloudFormation Stack...';
+      spinner.start();
+
       params.EnableTerminationProtection = true;
 
       cfm.createStack(params, (err, data) => {
@@ -85,11 +158,11 @@ const package = require('../package.json');
           return;
         }
 
+        spinner.succeed('Stack created!');
+
         resolve(data);
       });
     });
-
-    spinner.succeed('Stack created!');
 
     spinner.info(StackId);
   } catch (err) {

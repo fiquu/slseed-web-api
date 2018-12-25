@@ -1,9 +1,3 @@
-/**
- * Main Stack Template.
- *
- * @module setup/template
- */
-
 const package = require('../../package.json');
 
 const Parameters = require('./parameters');
