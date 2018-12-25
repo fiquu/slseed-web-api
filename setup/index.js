@@ -178,6 +178,7 @@ const package = require('../package.json');
         const { StackStatus } = Stack;
 
         switch (StackStatus) {
+          case 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS':
           case 'CREATE_IN_PROGRESS':
           case 'UPDATE_IN_PROGRESS':
             doCheck();
