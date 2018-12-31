@@ -7,7 +7,7 @@
 const mongoose = require('mongoose');
 
 const { uri, options } = require('../configs/database');
-const schemas = require('./schemas');
+const Schemas = require('./schemas');
 
 /* Do not log queries on production */
 mongoose.set('debug', process.env.NODE_ENV !== 'production');
@@ -21,16 +21,26 @@ mongoose.set('debug', process.env.NODE_ENV !== 'production');
  */
 class Database {
   /**
-   * Creates a connection to the database.
+   * Creates a connection to the database or reuses it if present.
    */
   async connect() {
-    if (mongoose.connection.readyState === 1) {
-      return;
+    const { connection } = mongoose;
+
+    switch (connection.readyState) {
+      case connection.states.connecting:
+      case connection.states.connected:
+        break;
+
+      default:
+        await mongoose.connect(
+          uri,
+          options
+        );
+
+        Schemas.register();
     }
 
-    await mongoose.connect(uri, options);
-
-    schemas.register(mongoose);
+    return connection;
   }
 
   /**
@@ -41,6 +51,7 @@ class Database {
       await mongoose.disconnect();
     } catch (err) {
       /* Here you could handle a disconnection error more graciously */
+      /* istanbul ignore next */
       console.error(err);
     }
   }

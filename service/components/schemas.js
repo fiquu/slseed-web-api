@@ -4,6 +4,7 @@
  * @module components/schemas
  */
 
+const mongoose = require('mongoose');
 const path = require('path');
 
 const config = require('../configs/schemas');
@@ -16,17 +17,15 @@ const config = require('../configs/schemas');
 class Schemas {
   /**
    * Registers all schemas into the connection.
-   *
-   * @param {Object} db The database instance object.
    */
-  static register(db) {
+  static register() {
     for (let name of config.schemas) {
       const relative = path.join(config.basedir, name);
       const full = path.resolve(path.normalize(relative));
 
       const schema = require(full);
 
-      db.model(name, schema);
+      mongoose.model(name, schema);
     }
   }
 }
