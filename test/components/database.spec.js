@@ -41,7 +41,7 @@ describe('Database Component', function() {
 
   it('should load a model', () => {
     expect(db.model('gender')).to.be.a('function');
-    expect(db.model('ad')).to.be.a('function');
+    expect(db.model('user')).to.be.a('function');
   });
 
   it('should disconnect from the database', async () => {

@@ -11,28 +11,28 @@ const Database = require('../../service/components/database');
 
 mongoose.set('debug', false);
 
-describe('User Schema', function() {
-  const users = new Set();
+describe('Gender Schema', function() {
+  const genders = new Set();
 
-  let db, User;
+  let db, Gender;
 
   before(async () => {
     db = new Database();
 
     await db.connect();
 
-    User = db.model('user');
+    Gender = db.model('gender');
   });
 
-  it('should register the User schema', () => {
-    expect(db.model('user')).to.be.a('function');
+  it('should register the Gender schema', () => {
+    expect(db.model('gender')).to.be.a('function');
   });
 
   /* Add create, update, delete, middlewares, etc, tests... */
 
   after(async () => {
-    for (let user of users) {
-      await User.deleteOne({ _id: user._id });
+    for (let gender of genders) {
+      await Gender.deleteOne({ _id: gender._id });
     }
 
     await db.disconnect();
