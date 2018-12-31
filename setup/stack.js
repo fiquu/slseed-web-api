@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const is = require('fi-is');
 const ora = require('ora');
 
-const package = require('../../package.json');
+const package = require('../package.json');
 
 (async () => {
   console.log(`\n${chalk.cyan.bold('Application Setup Script')}\n`);
@@ -12,7 +12,7 @@ const package = require('../../package.json');
   console.log(`${chalk.bold('Group Name:  ')} ${package.group.name}\n`);
 
   // Set proper stage ENV
-  await require('../../utils/stage-select')(true);
+  await require('../utils/stage-select')(true);
 
   // Set AWS config
   AWS.config.update({
@@ -72,8 +72,8 @@ const package = require('../../package.json');
       }
     }
 
-    const template = require('./template');
-    const values = require('./values');
+    const template = require('./stack/template');
+    const values = require('./stack/values');
 
     const cfmParamPrompts = [];
 
