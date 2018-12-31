@@ -6,14 +6,11 @@
  * @example $ NODE_ENV=local node scripts/db-indexes.js
  */
 
-const awsProfile = require('../utils/aws-profile');
-
-awsProfile.update();
-
 const inquirer = require('inquirer');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const chalk = require('chalk');
-const AWS = require('aws-sdk');
+const path = require('path');
 const ora = require('ora');
 
 (async () => {
@@ -21,19 +18,14 @@ const ora = require('ora');
 
   await require('../utils/stage-select')(true); // Set proper stage ENV
 
-  const schemas = require('../service/components/schemas');
-  const ssmr = require('../utils/ssm-params-resolve');
+  dotenv.config({
+    path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
+  });
 
+  const schemas = require('../service/components/schemas');
   const spinner = ora('');
 
   mongoose.set('debug', true);
-
-  AWS.config.update({
-    region: 'us-east-1',
-    apiVersions: {
-      ssm: '2014-11-06'
-    }
-  });
 
   try {
     const questions = [
@@ -56,54 +48,38 @@ const ora = require('ora');
       process.exit();
     }
 
-    spinner.text = 'Resolving SSM parameters...';
+    spinner.start('Connecting to the database...');
 
-    spinner.start();
-
-    await ssmr(['db-uri'], true);
-
-    spinner.succeed('SSM parameters resolved.');
-
-    spinner.text = 'Connecting to the database...';
-
-    spinner.start();
-
-    const config = require('../service/configs/database');
+    const { uri, options } = require('../service/configs/database');
 
     await mongoose.connect(
-      config.uri,
-      config.options
+      uri,
+      options
     );
 
     spinner.succeed('Connected to the database.');
 
-    spinner.info(`${chalk.bold('Target:')} ${process.env.DB_URI.replace(/^mongodb:\/\/([^:]+:[^@]+@)?(.+)/, '$2')}`);
+    spinner.info(
+      `${chalk.bold('Target:')} ${process.env.DB_URI.replace(/^mongodb(\+srv)?:\/\/([^:]+:[^@]+@)?(.+)/, '$3')}`
+    );
 
-    spinner.text = 'Registering schemas...';
-
-    spinner.start();
+    spinner.start('Registering schemas...');
 
     schemas.register(mongoose);
 
     spinner.succeed('Schemas registered.');
 
-    if (!answers.drop) {
-      return null;
+    if (answers.drop) {
+      spinner.start('Dropping indexes...');
+
+      for (let name of Object.keys(mongoose.models)) {
+        await mongoose.model(name).collection.dropIndexes();
+      }
+
+      spinner.succeed('Indexes dropped!');
     }
 
-    spinner.text = 'Dropping indexes...';
-
-    spinner.start();
-
-    for (let name of Object.keys(mongoose.models)) {
-      await mongoose.model(name).collection.dropIndexes();
-    }
-
-    spinner.succeed('Indexes dropped!');
-
-    spinner.text = 'Ensuring indexes...';
-
-    spinner.start();
+    spinner.start('Ensuring indexes...');
 
     for (let name of Object.keys(mongoose.models)) {
       await mongoose.model(name).ensureIndexes();
