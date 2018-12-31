@@ -57,9 +57,10 @@
   },
   "scripts": {
     "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
+    "test:unit": "npm run test:components && npm run test:schemas && npm run test:functions",
     "test:functions": "sls invoke test --stage local --path test/functions",
-    "test:schemas": "sls invoke test --stage local --path test/schemas",
-    "test:unit": "npm run test:schemas && npm run test:functions",
+    "test:components": "NODE_ENV=local mocha test/components",
+    "test:schemas": "NODE_ENV=local mocha test/schemas",
     "test": "nyc npm run test:unit",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
