@@ -3,13 +3,29 @@
   "title": "Fi Slseed API",
   "description": "Serveless Seed API project",
   "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
+  "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
+  "main": "npm start",
   "version": "1.0.0",
   "license": "MIT",
   "private": false,
-  "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
+  "bugs": {
+    "url": "https://github.com/FinalDevStudio/fi-slseed-api/issues"
+  },
+  "directories": {
+    "test": "test"
+  },
   "contributors": [
     "Santiago G. Marín <santiago@finaldevstudio.com> (https://github.com/stgogm)",
     "JT Guzman <jtguzman@finaldevstudio.com> (https://github.com/jtguzman)"
+  ],
+  "keywords": [
+    "fi",
+    "slseed",
+    "serverless",
+    "sls",
+    "api",
+    "seed",
+    "project"
   ],
   "group": {
     "title": "Fi Slseed",
@@ -29,9 +45,22 @@
     "node": ">= 8.0.0",
     "npm": ">= 6.0.0"
   },
+  "nyc": {
+    "reporter": [
+      "html"
+    ],
+    "include": [
+      "service"
+    ],
+    "cache": true,
+    "all": true
+  },
   "scripts": {
     "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
-    "test": "nyc --reporter=html sls invoke test --stage local",
+    "test:functions": "sls invoke test --stage local --path test/functions",
+    "test:schemas": "sls invoke test --stage local --path test/schemas",
+    "test:unit": "npm run test:schemas && npm run test:functions",
+    "test": "nyc npm run test:unit",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
     "check": "npm-check -u && npm-check",
@@ -45,7 +74,7 @@
     "jwk-to-pem": "^2.0.1",
     "mailgun.js": "^2.0.1",
     "moment": "^2.23.0",
-    "mongoose": "^5.4.0",
+    "mongoose": "^5.4.1",
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "validator": "^10.10.0"
@@ -53,7 +82,7 @@
   "devDependencies": {
     "amazon-cognito-identity-js-node": "0.0.3",
     "aws-sdk": "^2.382.0",
-    "eslint": "^5.11.0",
+    "eslint": "^5.11.1",
     "eslint-config-prettier": "^3.3.0",
     "fi-is": "^1.3.1",
     "inquirer": "^6.2.1",
