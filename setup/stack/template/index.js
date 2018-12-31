@@ -1,4 +1,4 @@
-const package = require('../../package.json');
+const package = require('../../../package.json');
 
 const Parameters = require('./parameters');
 const Resources = require('./resources');

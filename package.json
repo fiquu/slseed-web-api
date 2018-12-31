@@ -35,7 +35,8 @@
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
     "check": "npm-check -u && npm-check",
-    "env": "node setup/env",
+    "setup:stack": "node setup/stack",
+    "setup:env": "node setup/env",
     "setup": "node setup"
   },
   "dependencies": {
