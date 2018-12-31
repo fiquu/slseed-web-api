@@ -7,7 +7,7 @@
 module.exports = {
   package: '${file(./package.json)}',
   authorizer: {
-    arn: '${ssm:/${self:custom.package.name}/${self:provider.stage}/cognito-user-pool-arn~true}'
+    arn: '${env:COGNITO_USER_POOL_ARN}'
   },
   customDomain: {
     certificateName: 'example.com',

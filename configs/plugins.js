@@ -4,7 +4,7 @@
  * @module configs/plugins
  */
 
-const plugins = ['serverless-plugin-split-stacks'];
+const plugins = ['serverless-plugin-split-stacks', 'serverless-dotenv-plugin'];
 
 /* Set per-stage plugins */
 switch (process.env.NODE_ENV) {

@@ -4,8 +4,7 @@
  * @module configs/provider
  */
 
-const environment = require('./environment');
-const profiles = require('./profiles');
+const { profiles } = require('./aws');
 
 module.exports = {
   name: 'aws',
@@ -15,7 +14,5 @@ module.exports = {
 
   logRetentionInDays: process.env.NODE_ENV === 'production' ? 14 : 7,
   memorySize: 512,
-  timeout: 30,
-
-  environment
+  timeout: 30
 };

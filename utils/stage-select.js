@@ -7,7 +7,7 @@
 const inquirer = require('inquirer');
 
 module.exports = async env => {
-  const profiles = require('../configs/profiles');
+  const { profiles } = require('../configs/aws');
 
   const { profile } = await inquirer.prompt({
     name: 'profile',

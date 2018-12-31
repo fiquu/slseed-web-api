@@ -6,7 +6,7 @@
 
 const argv = require('yargs').argv;
 
-const profiles = require('./configs/profiles');
+const { profiles } = require('./configs/aws');
 
 /* Force NODE_ENV to equal Serverless' stage */
 process.env.NODE_ENV = argv.stage;

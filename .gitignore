@@ -1,5 +1,6 @@
-# Testing data
-test/jwt-token.json
+# Local env files
+.env.**
+.env
 
 # Serverless
 .serverless

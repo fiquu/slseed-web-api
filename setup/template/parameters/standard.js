@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const profiles = require('../../../configs/profiles');
+const { profiles } = require('../../../configs/aws');
 const package = require('../../../package.json');
 
 module.exports = {

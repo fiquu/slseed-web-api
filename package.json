@@ -31,10 +31,12 @@
   },
   "scripts": {
     "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
-    "test": "nyc --reporter=html sls invoke test --stage local --path test/functions",
+    "test": "nyc --reporter=html sls invoke test --stage local",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
-    "check": "npm-check -u && npm-check"
+    "check": "npm-check -u && npm-check",
+    "env": "node setup/env",
+    "setup": "node setup"
   },
   "dependencies": {
     "ably": "^1.0.20",
@@ -59,6 +61,7 @@
     "ora": "^3.0.0",
     "serverless": "^1.35.1",
     "serverless-domain-manager": "^2.6.10",
+    "serverless-dotenv-plugin": "^2.0.1",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
     "serverless-offline": "^3.31.3",
     "serverless-plugin-split-stacks": "^1.7.0",
