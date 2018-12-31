@@ -71,8 +71,6 @@
   },
   "dependencies": {
     "ably": "^1.0.20",
-    "jsonwebtoken": "^8.4.0",
-    "jwk-to-pem": "^2.0.1",
     "mailgun.js": "^2.0.1",
     "moment": "^2.23.0",
     "mongoose": "^5.4.1",
