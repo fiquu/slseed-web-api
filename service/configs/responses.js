@@ -1,5 +1,5 @@
 /**
- * Responses Config module.
+ * Responses config module.
  *
  * @module configs/responses
  */

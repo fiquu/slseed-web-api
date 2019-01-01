@@ -1,5 +1,5 @@
 /**
- * Serverless resources configuration.
+ * Serverless resources configuration module.
  *
  * @module configs/resources
  */

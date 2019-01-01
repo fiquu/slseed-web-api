@@ -2,10 +2,14 @@ const mochaPlugin = require('serverless-mocha-plugin');
 
 const { expect } = mochaPlugin.chai;
 
-const wrapped = mochaPlugin.getWrapper('test', '/service/functions/test', 'handler');
-
 describe('Test Function', function() {
   this.timeout(30000);
+
+  let wrapped;
+
+  before(() => {
+    wrapped = mochaPlugin.getWrapper('test', '/service/functions/test', 'handler');
+  });
 
   it('should respond 204 (NoContent)', async () => {
     const res = await wrapped.run({});

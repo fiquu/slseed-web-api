@@ -1,5 +1,5 @@
 /**
- * Serverless SSM env params configuration.
+ * Serverless SSM env params configuration module.
  *
  * @module configs/ssm.env
  */

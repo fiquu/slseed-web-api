@@ -1,5 +1,5 @@
 /**
- * API Gateway responses resource configuration.
+ * API Gateway responses resource configuration module.
  *
  * This responses needed for auth CORS.
  *

@@ -1,5 +1,5 @@
 /**
- * Auth Component module.
+ * Auth component module.
  *
  * @module components/auth
  */
@@ -7,9 +7,14 @@
 const config = require('../configs/auth');
 
 class Auth {
-  getConfig() {
+  /**
+   * Returns current config.
+   *
+   * @returns The current Auth config.
+   */
+  static getConfig() {
     return config;
   }
 }
 
-module.exports = new Auth();
+module.exports = Auth;

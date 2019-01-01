@@ -1,12 +1,12 @@
 /**
- * Mailer Config module.
+ * Mailer config module.
  *
  * @module configs/mailer
  */
 
 module.exports = {
+  testMode: process.env.NODE_ENV === 'testing',
   sender: process.env.MAILER_SENDER,
   domain: process.env.MAILER_DOMAIN,
-  key: process.env.MAILER_API_KEY,
-  username: 'api' // Shouldn't change
+  apiKey: process.env.MAILER_API_KEY
 };

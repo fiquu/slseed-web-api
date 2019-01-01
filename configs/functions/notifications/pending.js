@@ -1,5 +1,5 @@
 /**
- * Notifications Pending function configuration.
+ * Notifications Pending function configuration module.
  *
  * @module configs/functions/notifications/pending
  */

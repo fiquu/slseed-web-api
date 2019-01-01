@@ -1,20 +1,8 @@
-const chaiAspromised = require('chai-as-promised');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const path = require('path');
-const chai = require('chai');
+require('../helpers/defaults'); // Set test defaults
 
-const { expect } = chai;
-
-chai.use(chaiAspromised);
-
-dotenv.config({
-  path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
-});
+const { expect } = require('chai');
 
 const Database = require('../../service/components/database');
-
-mongoose.set('debug', false);
 
 describe('Database Component', function() {
   let db;

@@ -1,5 +1,5 @@
 /**
- * Serverless functions configuration.
+ * Serverless functions configuration module.
  *
  * @module configs/functions
  */

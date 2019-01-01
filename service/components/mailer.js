@@ -1,75 +1,79 @@
 /**
- * Mailer Component module.
+ * Mailer component module.
  *
  * @module components/mailer
  */
 
-const mailgun = require('mailgun.js');
+const mailgun = require('mailgun-js');
 const path = require('path');
 
 const config = require('../configs/mailer');
 const views = require('./views');
 
 /**
- * Sends the message.
+ * Mailer class.
  *
- * @param {Object} message The message data to send.
- *
- * @returns {Promise} The send promise.
+ * @class Mailer
  */
-function send(message) {
-  const data = Object.assign({}, message);
+class Mailer {
+  /**
+   * Sends the message.
+   *
+   * @param {Object} message The message data to send.
+   *
+   * @returns {Promise} The send promise.
+   */
+  static async send(message) {
+    const data = { ...message }; // Clone source
 
-  const mailer = mailgun.client({
-    username: config.username,
-    key: config.key
-  });
+    if (!message.from) {
+      data.from = config.sender;
+    }
 
-  if (!message.from) {
-    data.from = config.sender;
-  }
+    if (!Array.isArray(message.to)) {
+      data.to = [data.to];
+    }
 
-  if (!Array.isArray(message.to)) {
-    data.to = [data.to];
-  }
+    try {
+      const res = await mailgun(config)
+        .messages()
+        .send(config.domain, data);
 
-  return mailer.messages.create(config.domain, data).then(
-    res => {
       console.log(`${data.from} --> ${data.to}`, res);
+
       return res;
-    },
-    err => {
+    } catch (err) {
       console.error(err);
       throw err;
     }
-  );
+  }
+
+  /**
+   * Sends a message to the target email address.
+   *
+   * This is an example on how to send an email template.
+   *
+   * @param {Object} recipient The recipient's data.
+   *
+   * @returns {Promise} The Mailgun send promise.
+   */
+  static async sendMessage(recipient) {
+    const template = path.join('emails', 'default');
+
+    // TODO: Localize!
+    const message = {
+      subject: `Hello, ${recipient.name}!`,
+      from: config.sender,
+      to: recipient.email,
+      html: views.render(template, {
+        data: {
+          ...recipient // Never pass raw data
+        }
+      })
+    };
+
+    return await this.send(message);
+  }
 }
 
-/**
- * Sends a welcome message to the user.
- *
- * This is an example on how to send an email template.
- *
- * @param {Object} user The User data.
- *
- * @returns {Promise} The Mailgun send promise.
- */
-function sendWelcome(user) {
-  const template = path.join('emails', 'confirmation'); // It actually doesn't exists
-  const data = Object.assign({}, { data: user }); // Never pass raw data
-
-  // TODO: Localize!
-  const message = {
-    subject: `Hello, ${user.name}!`,
-    from: config.sender,
-    to: user.citizen.email,
-    html: views.render(template, data)
-  };
-
-  return send(message);
-}
-
-module.exports = {
-  sendWelcome,
-  send
-};
+module.exports = Mailer;

@@ -1,5 +1,5 @@
 /**
- * Notifications Dismiss function configuration.
+ * Notifications Dismiss function configuration module.
  *
  * @module configs/functions/notifications/dismiss
  */

@@ -1,5 +1,5 @@
 /**
- * Templates Component module.
+ * Templates component module.
  *
  * @module components/templates
  */
@@ -13,12 +13,21 @@ const options = {
 };
 
 /**
- * Compiles a template relative.
+ * Templates component class.
  *
- * @param {String} rel The view's template relative path.
+ * @class Templates
  */
-function get(rel) {
-  return pug.compileFile(`${path.join(options.basedir, rel)}.pug`, options);
+class Templates {
+  /**
+   * Compiles a Pug template to a render function.
+   *
+   * @param {String} rel The view's template relative path.
+   *
+   * @returns {Function} The template's render function.
+   */
+  static get(rel) {
+    return pug.compileFile(`${path.join(options.basedir, rel)}.pug`, options);
+  }
 }
 
-module.exports.get = get;
+module.exports = Templates;

@@ -1,11 +1,11 @@
 /**
- * Test function configuration.
+ * Test function configuration module.
  *
  * @module configs/functions/test
  */
 
 module.exports = {
-  description: 'Users index function.',
+  description: 'Test function.',
   handler: 'service/functions/test.handler',
   events: [
     {

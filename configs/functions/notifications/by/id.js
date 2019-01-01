@@ -1,5 +1,5 @@
 /**
- * Notification By Id function configuration.
+ * Notification By Id function configuration module.
  *
  * @module configs/functions/notifications/by/id
  */

@@ -1,5 +1,5 @@
 /**
- * Serverless custom configuration.
+ * Serverless custom configuration module.
  *
  * @module configs/custom
  */

@@ -1,5 +1,5 @@
 /**
- * Serverless package configuration.
+ * Serverless package configuration module.
  *
  * @module configs/package
  */

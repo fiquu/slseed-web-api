@@ -1,5 +1,5 @@
 /**
- * Auth Config module.
+ * Auth config module.
  *
  * @module configs/auth
  */
@@ -9,7 +9,6 @@ if (!process.env.COGNITO_USER_POOL_ID) {
 }
 
 module.exports = {
-  issuer: `https://cognito-idp.us-east-1.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}`,
   model: 'user', // The model to resolve data from
   pipeline: [] // Mongo aggregate pipeline to resolve additional data
 };

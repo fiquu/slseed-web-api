@@ -1,7 +1,7 @@
 /**
- * Serverless example index function configuration.
+ * Serverless Users Index function configuration module.
  *
- * @module configs/functions/example/index
+ * @module configs/functions/users/index
  */
 
 module.exports = {

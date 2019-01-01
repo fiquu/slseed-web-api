@@ -14,17 +14,27 @@ for (let view of config.views) {
 }
 
 /**
- * Renders a template.
+ * Views component class.
  *
- * @param {String} path The view's path name to render.
- * @param {Object} locals The locals object.
- *
- * @returns {String} The rendered HTML string.
+ * @class Views
  */
-function render(path, locals) {
-  return views[path]({ ...config.locals, ...locals });
+class Views {
+  /**
+   * Renders a template into an HTML string.
+   *
+   * @param {String} path The view's path name to render.
+   * @param {Object} locals The template's locals object.
+   *
+   * @returns {String} The rendered HTML string.
+   */
+  static render(path, locals) {
+    const fn = views[path];
+
+    return fn({
+      ...config.locals,
+      ...locals
+    });
+  }
 }
 
-module.exports = {
-  render
-};
+module.exports = Views;

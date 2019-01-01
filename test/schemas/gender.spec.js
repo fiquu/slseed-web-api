@@ -1,15 +1,8 @@
-const mongoose = require('mongoose');
-const { expect } = require('chai');
-const dotenv = require('dotenv');
-const path = require('path');
+require('../helpers/defaults'); // Set test defaults
 
-dotenv.config({
-  path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
-});
+const { expect } = require('chai');
 
 const Database = require('../../service/components/database');
-
-mongoose.set('debug', false);
 
 describe('Gender Schema', function() {
   const genders = new Set();

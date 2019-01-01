@@ -1,5 +1,5 @@
 /**
- * Database Config module.
+ * Database config module.
  *
  * @module configs/database
  */
@@ -11,7 +11,7 @@ module.exports = {
     connectTimeoutMS: 30000, // Match default HTTP timeout
     socketTimeoutMS: 30000, // Match default HTTP timeout
     useNewUrlParser: true,
-    autoIndex: false, // You should use the db-indexes script to create the database indexes
+    autoIndex: false, // You should use the db-indexes setup script to create the database indexes
     poolSize: 1 // We don't need more for each function
   }
 };

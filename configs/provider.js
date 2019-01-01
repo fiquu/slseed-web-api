@@ -1,5 +1,5 @@
 /**
- * Serverless provider configuration.
+ * Serverless provider configuration module.
  *
  * @module configs/provider
  */

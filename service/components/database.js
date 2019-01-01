@@ -1,5 +1,5 @@
 /**
- * Database Component module.
+ * Database component module.
  *
  * @module components/database
  */
@@ -9,19 +9,21 @@ const mongoose = require('mongoose');
 const { uri, options } = require('../configs/database');
 const Schemas = require('./schemas');
 
-/* Do not log queries on production */
-mongoose.set('debug', process.env.NODE_ENV !== 'production');
+/* Do not log queries on production or testing environments */
+mongoose.set('debug', ['production', 'testing'].indexOf(process.env.NODE_ENV) < 0);
 
 /**
- * Database Class.
+ * Database component class.
  *
- * Handles the database connection during the function's life cycle.
+ * Handles the database connection and schemas.
  *
  * @class Database
  */
 class Database {
   /**
    * Creates a connection to the database or reuses it if present.
+   *
+   * @returns {Object} The Mongoose connection object.
    */
   async connect() {
     const { connection } = mongoose;
@@ -57,9 +59,7 @@ class Database {
   }
 
   /**
-   * Creates the model for the current database connection.
-   *
-   * @returns {Object} The model.
+   * Proxy for the Mongoose `model` method.
    */
   model(...args) {
     return mongoose.model(...args);

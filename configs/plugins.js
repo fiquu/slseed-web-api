@@ -1,5 +1,5 @@
 /**
- * Serverless plugins configuration.
+ * Serverless plugins configuration module.
  *
  * @module configs/plugins
  */

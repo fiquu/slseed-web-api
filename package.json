@@ -55,6 +55,18 @@
     "cache": true,
     "all": true
   },
+  "app": {
+    "name": "Web API - Fi Slseed",
+    "short": "Fi Slseed",
+    "description": "Serveless Seed Web API project.",
+    "domain": "example.com",
+    "subdomain": "www",
+    "home": "https://www.example.com",
+    "display": "standalone",
+    "background": "#f7f6f6",
+    "color": "#b9de3b",
+    "ogImage": "https://www.example.com/static/images/og-image.jpg"
+  },
   "scripts": {
     "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
     "test:unit": "npm run test:components && npm run test:schemas && npm run test:functions",
@@ -71,7 +83,7 @@
   },
   "dependencies": {
     "ably": "^1.0.20",
-    "mailgun.js": "^2.0.1",
+    "mailgun-js": "^0.22.0",
     "moment": "^2.23.0",
     "mongoose": "^5.4.1",
     "pug": "^2.0.3",
