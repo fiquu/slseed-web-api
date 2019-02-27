@@ -12,7 +12,22 @@ Serveless Seed API project.
 - Mailing integration with Mailgun.
 - Simplified email template rendering.
 
-## Usage
+## Getting started
+
+1. Run `npm i`.
+1. Run `npm run setup`, select `stack`, select stage and define stack values.
+1. Wait for it to finish...
+1. Run `npm run setup`, select `env` and select stage.
+1. Run `npm start`.
+
+That's it. Your API should be running wherever it says it's running.
+
+## Deploying
+
+1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup`, selecting the stage and checking if the `.env.[stage]` exists.
+1. Run `npm run deploy` and select stage.
+
+## Using as seed
 
 1. Create a repo.
 1. Add remote as slseed:
