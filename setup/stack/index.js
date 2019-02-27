@@ -95,6 +95,18 @@ const package = require('../../package.json');
 
     const cfmParamValues = await inquirer.prompt(cfmParamPrompts);
 
+    const { confirm } = await inquirer.prompt({
+      message: 'Confirm values?',
+      name: 'confirm',
+      type: 'confirm',
+      default: true
+    });
+
+    if (!confirm) {
+      spinner.warn('Values not confirmed. Cancelled.');
+      process.exit();
+    }
+
     params.TemplateBody = JSON.stringify(template);
 
     params.Parameters = Object.keys(cfmParamValues).map(ParameterKey => {
