@@ -68,7 +68,6 @@
     "ogImage": "https://www.example.com/static/images/og-image.jpg"
   },
   "scripts": {
-    "deploy": "node deploy-stage && sls deploy --stage $(cat .deploy-stage) && rm .deploy-stage",
     "test:unit": "npm run test:components && npm run test:schemas && npm run test:functions",
     "test:functions": "sls invoke test --stage local --path test/functions",
     "test:components": "NODE_ENV=local mocha test/components",
@@ -79,6 +78,7 @@
     "check": "npm-check -u && npm-check",
     "setup:stack": "node setup/stack",
     "setup:env": "node setup/env",
+    "deploy": "node utils/deploy",
     "setup": "node setup"
   },
   "dependencies": {
