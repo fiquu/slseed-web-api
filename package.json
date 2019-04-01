@@ -75,8 +75,8 @@
     "test": "nyc npm run test:unit",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
-    "check": "npm-check -u && npm-check",
     "setup:stack": "node setup/stack",
+    "check": "npm-check --update",
     "setup:env": "node setup/env",
     "deploy": "node utils/deploy",
     "setup": "node setup"
@@ -94,7 +94,7 @@
     "amazon-cognito-identity-js-node": "0.0.3",
     "aws-sdk": "^2.432.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^5.15.3",
+    "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.1.0",
     "fi-is": "^1.3.1",
     "inquirer": "^6.2.2",
@@ -105,9 +105,9 @@
     "serverless-domain-manager": "^3.2.1",
     "serverless-dotenv-plugin": "^2.0.1",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
-    "serverless-offline": "^4.9.2",
-    "slug": "^1.0.0",
-    "titleize": "^2.0.0",
+    "serverless-offline": "^4.9.3",
+    "slug": "^1.1.0",
+    "titleize": "^2.1.0",
     "walk-sync": "^1.1.3",
     "yargs": "^13.2.2"
   }
