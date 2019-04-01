@@ -72,6 +72,7 @@
     "test:functions": "sls invoke test --stage local --path test/functions",
     "test:components": "NODE_ENV=local mocha test/components",
     "test:schemas": "NODE_ENV=local mocha test/schemas",
+    "postversion": "git push --tags",
     "test": "nyc npm run test:unit",
     "domain": "sls create_domain --stage production",
     "start": "sls offline start --stage local",
