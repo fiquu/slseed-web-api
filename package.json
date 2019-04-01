@@ -5,7 +5,7 @@
   "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
   "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
   "main": "npm start",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "private": false,
   "bugs": {
