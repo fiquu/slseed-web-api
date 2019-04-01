@@ -38,7 +38,7 @@ const pkg = require('../package.json');
     for (let ssmPath of ssmEnv) {
       const promise = new Promise((resolve, reject) => {
         const params = {
-          Name: path.join('/', pkg.name, process.env.NODE_ENV, ssmPath),
+          Name: path.posix.join('/', pkg.name, process.env.NODE_ENV, ssmPath),
           WithDecryption: true
         };
 
