@@ -4,28 +4,28 @@ const { expect } = require('chai');
 
 const Database = require('../../service/components/database');
 
-describe('Gender Schema', function() {
-  const genders = new Set();
+describe('Notification Schema', function() {
+  const notifications = new Set();
 
-  let db, Gender;
+  let db, Notification;
 
   before(async () => {
     db = new Database();
 
     await db.connect();
 
-    Gender = db.model('gender');
+    Notification = db.model('notification');
   });
 
-  it('should register the Gender schema', () => {
-    expect(db.model('gender')).to.be.a('function');
+  it('should register the Notification schema', () => {
+    expect(db.model('notification')).to.be.a('function');
   });
 
   /* Add create, update, delete, middlewares, etc, tests... */
 
   after(async () => {
-    for (let gender of genders) {
-      await Gender.deleteOne({ _id: gender._id });
+    for (let notification of notifications) {
+      await Notification.deleteOne({ _id: notification._id });
     }
 
     await db.disconnect();
