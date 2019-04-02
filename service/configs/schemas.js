@@ -10,5 +10,5 @@ const path = require('path');
 /* You can use paths too relative to the `schemas` folder */
 module.exports = {
   basedir: path.join(__dirname, '..', 'schemas'),
-  schemas: ['gender', 'user']
+  schemas: ['user', 'notification']
 };
