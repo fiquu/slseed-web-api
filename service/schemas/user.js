@@ -13,12 +13,6 @@ const schema = new Schema(
       type: String,
       required: true,
       unique: true
-    },
-
-    gender: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: 'gender'
     }
   },
   {

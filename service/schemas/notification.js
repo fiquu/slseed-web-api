@@ -6,15 +6,13 @@
 
 const { Schema } = require('mongoose');
 
-const CONSTS = require('../components/consts');
-
 const schema = new Schema(
   {
     type: {
       type: String,
       required: true,
       index: true,
-      enum: CONSTS.NOTIFICATIONS
+      enum: ['NOTIFICATIONS.UPDATE', 'NOTIFICATIONS.ALERT']
     },
 
     fromModel: {
