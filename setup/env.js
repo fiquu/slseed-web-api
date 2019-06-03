@@ -13,7 +13,7 @@ const fs = require('fs');
 
 const { apiVersions, region } = require('../configs/aws');
 const ssmEnv = require('../configs/ssm.env');
-const pkg = require('../package.json');
+const { name } = require('../package.json');
 
 (async () => {
   try {
@@ -38,7 +38,7 @@ const pkg = require('../package.json');
     for (let ssmPath of ssmEnv) {
       const promise = new Promise((resolve, reject) => {
         const params = {
-          Name: path.posix.join('/', pkg.name, process.env.NODE_ENV, ssmPath),
+          Name: path.posix.join('/', name, process.env.NODE_ENV, ssmPath),
           WithDecryption: true
         };
 

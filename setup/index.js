@@ -9,8 +9,8 @@ const fs = require('fs');
       .filter(file => path.extname(file) === '.js' && path.basename(file, '.js') !== 'index')
       .map(file => file.replace('.js', '')),
     message: 'Select setup',
-    type: 'list',
-    name: 'setup'
+    name: 'setup',
+    type: 'list'
   });
 
   require(`./${setup}`);
