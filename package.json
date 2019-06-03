@@ -86,7 +86,7 @@
     "ably": "^1.1.11",
     "mailgun-js": "^0.22.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.5.12",
+    "mongoose": "^5.4.23",
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "validator": "^11.0.0"
