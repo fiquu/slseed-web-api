@@ -82,6 +82,7 @@ const package = require('../../package.json');
 
       for (let value of values) {
         value.message += previous;
+        value.default = undefined;
       }
     }
 
