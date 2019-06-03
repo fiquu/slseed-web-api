@@ -83,13 +83,13 @@
     "setup": "node setup"
   },
   "dependencies": {
-    "ably": "^1.1.10",
+    "ably": "^1.1.11",
     "mailgun-js": "^0.22.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.23",
+    "mongoose": "^5.5.12",
     "pug": "^2.0.3",
     "request": "^2.88.0",
-    "validator": "^10.11.0"
+    "validator": "^11.0.0"
   },
   "devDependencies": {
     "amazon-cognito-identity-js-node": "0.0.3",
