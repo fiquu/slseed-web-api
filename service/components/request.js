@@ -4,12 +4,11 @@
  * @module components/request
  */
 
-const { Response, Ok, InternalServerError } = require('./responses');
+const { Response, InternalServerError } = require('./responses');
 const Database = require('./database');
 
 const config = require('../configs/request');
 const auth = require('../components/auth');
-const views = require('./views');
 
 /**
  * Request handler class.
@@ -198,32 +197,6 @@ class Request {
 
     /* Process unknown response objects as Internal Server Error (500) */
     return new InternalServerError(res.body, res.headers);
-  }
-
-  /**
-   * Renders a view and sends it to the client.
-   *
-   * @param {String} view The view name to render.
-   * @param {Object} data The data object.
-   */
-  render(view, data) {
-    const headers = {
-      'Content-Type': 'text/html'
-    };
-
-    const locals = {
-      pictures: process.env.PICTURES_HOST,
-      assets: process.env.ASSETS_HOST,
-      version: process.env.VERSION,
-
-      host: this.getHeader('Host'),
-
-      data
-    };
-
-    const body = views.render(view, locals);
-
-    return new Ok(body, headers);
   }
 }
 

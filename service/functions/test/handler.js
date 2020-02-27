@@ -1,4 +1,4 @@
-const { Ok } = require('../../components/responses');
+const { NoContent } = require('../../components/responses');
 
 const Request = require('../../components/request');
 
@@ -13,7 +13,7 @@ module.exports.handler = async event => {
   try {
     await req.db.connect();
 
-    return new Ok(auth);
+    return new NoContent();
   } catch (error) {
     return req.send(error);
   }

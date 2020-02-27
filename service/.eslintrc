@@ -1,4 +1,4 @@
 {
-  "extends": "@fiquu",
+  "extends": "../.eslintrc",
   "root": true
 }

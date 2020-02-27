@@ -27,7 +27,6 @@ describe('Database Component', function() {
   });
 
   it('should load a model', () => {
-    expect(db.model('notification')).to.be.a('function');
     expect(db.model('user')).to.be.a('function');
   });
 

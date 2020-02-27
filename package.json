@@ -82,10 +82,10 @@
   },
   "dependencies": {
     "aws-sdk": "^2.627.0",
-    "mongoose": "^5.9.2"
+    "mongoose": "^5.9.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@fiquu/eslint-config": "^2.0.0",
     "amazon-cognito-identity-js-node": "0.0.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

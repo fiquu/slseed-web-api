@@ -1,14 +1,18 @@
-const mochaPlugin = require('serverless-mocha-plugin');
+const { getWrapper } = require('serverless-mocha-plugin');
 
-const { expect } = mochaPlugin.chai;
+const { expect } = require('chai');
 
-describe('Test Function', function() {
+const Database = require('../../service/components/database');
+
+const db = new Database();
+
+describe('Test Function', function () {
   this.timeout(30000);
 
   let wrapped;
 
   before(() => {
-    wrapped = mochaPlugin.getWrapper('test', '/service/functions/test', 'handler');
+    wrapped = getWrapper('test', '/service/functions/test/handler', 'handler');
   });
 
   it('should respond 204 (NoContent)', async () => {
@@ -17,5 +21,10 @@ describe('Test Function', function() {
     expect(res).to.not.be.empty;
     expect(res.statusCode).to.equal(204);
     expect(res.body).to.be.empty;
+  });
+
+
+  after(async () => {
+    await db.disconnect();
   });
 });
