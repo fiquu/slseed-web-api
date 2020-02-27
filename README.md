@@ -1,4 +1,4 @@
-# Fi Slseed API
+# @fiquu/slseed-web-api
 
 Serveless Seed API project.
 
@@ -9,18 +9,21 @@ Serveless Seed API project.
 - Simplified authorization handling.
 - Simplified database connection management with Mongoose.
 - Simplified HTTP response handling.
-- Mailing integration with Mailgun.
-- Simplified email template rendering.
+- Mailing integration with AWS SES.
 
 ## Getting started
 
-1. Run `npm i`.
-1. Run `npm run setup`, select `stack`, select stage and define stack values.
-1. Wait for it to finish...
-1. Run `npm run setup`, select `env` and select stage.
+1. Configure your AWS profiles on `configs/aws.js` for each stage.
+1. Run `npm i` and update as needed.
+1. Set the input values to use on the CloudFormation template on `setup/stack/values.js`.
+1. Configure your CloudFormation template on the `setup/stack/template/` folder.
+1. Run `npm run setup`, select `stack`, select stage and enter the template values.
+1. Wait for it to finish (it may take a while)...
+1. Configure your SSM to `.env` values on `configs/ssm.env.js` (these are the SSM param names only).
+1. Run `npm run setup`, select `env` and select stage to set your `.env.{stage}` file.
 1. Run `npm start`.
 
-That's it. Your API should be running wherever it says it's running.
+That's it. Your App should be running wherever it says it's running.
 
 ## Deploying
 
