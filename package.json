@@ -25,10 +25,6 @@
     "seed",
     "project"
   ],
-  "group": {
-    "title": "Slseed",
-    "name": "slseed"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:fiquu/slseed-web-api.git"

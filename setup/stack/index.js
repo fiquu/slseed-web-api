@@ -4,14 +4,12 @@ const AWS = require('aws-sdk');
 const is = require('fi-is');
 const ora = require('ora');
 
-const { group, name, title } = require('../../package.json');
+const { name, title } = require('../../package.json');
 
 (async () => {
   console.log(`\n${chalk.cyan.bold('Application Setup Script')}\n`);
   console.log(`${chalk.bold('Project Title:')} ${title}`);
   console.log(`${chalk.bold('Project Name:')}  ${name}\n`);
-  console.log(`${chalk.bold('Group Title:')}   ${group.title}`);
-  console.log(`${chalk.bold('Group Name:')}    ${group.name}\n`);
 
   // Set proper stage ENV
   await require('../../utils/stage-select')(true);
@@ -35,7 +33,7 @@ const { group, name, title } = require('../../package.json');
 
   try {
     const nameSlug = name.replace(/\W+/g, ' ').trim().replace(/\s+/g, '-');
-    const StackName = `${group.name}-${nameSlug}-${NODE_ENV}-base-stack`;
+    const StackName = `${nameSlug}-${NODE_ENV}-base-stack`;
 
     console.log(`${chalk.bold('Stack Name:')}  ${StackName}\n`);
 
