@@ -4,23 +4,39 @@
  * @module configs/functions
  */
 
-const walk = require('walk-sync');
-const path = require('path');
+const { posix, join, resolve, sep } = require('path');
+const glob = require('glob');
 const slug = require('slug');
+const is = require('fi-is');
 
-/* Resolve base dir */
-const basedir = path.resolve(path.join(__dirname, 'functions'));
+const { SERVICE_NAME } = process.env;
 
-/* Get paths relative to basedir */
-const paths = walk(basedir);
+const pattern = join(process.cwd(), 'services', (SERVICE_NAME || '**'), 'functions', '**', 'config.js');
+const files = glob.sync(resolve(pattern));
 
-/* Define and declare each found function */
-for (let value of paths) {
-  if (path.extname(value) === '.js') {
-    const name = slug(value.replace(/\.js/gi, '').replace(/\//g, '-'), {
-      lower: true
-    });
+for (const file of files) {
+  const name = slug(file.replace(/^.+\/services\/(.+)\/functions\/(.+)\/config\.js$/, '$1-$2'), {
+    lower: true,
+    charmap: {
+      ...slug.charmap,
+      [sep]: '-'
+    }
+  });
 
-    module.exports[name] = require(path.join(basedir, value));
+  const basePath = file.replace(/^.+\/services\/(.+)\/functions\/.+\/config\.js$/, '$1');
+  const path = file.replace(process.cwd(), '').replace(/^\/(.+)\/config\.js$/, '$1');
+  const config = require(file);
+
+  if (is.empty(SERVICE_NAME)) {
+    for (const { http } of config.events) {
+      if (is.not.empty(http)) {
+        http.path = posix.normalize(posix.join('/', basePath, http.path));
+      }
+    }
   }
+
+  config.handler = `${join(path, 'handler')}.handler`;
+  config.name = name;
+
+  module.exports[name] = config;
 }

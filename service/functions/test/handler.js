@@ -1,9 +1,9 @@
-const { Forbidden, Ok } = require('../components/responses');
+const { Ok } = require('../../components/responses');
 
-const Request = require('../components/request');
+const Request = require('../../components/request');
 
 /**
- * Session handler function.
+ * Test handler function.
  *
  * @returns {Object|Error} The response.
  */
@@ -12,12 +12,6 @@ module.exports.handler = async event => {
 
   try {
     await req.db.connect();
-
-    const auth = await req.getAuthData();
-
-    if (!auth) {
-      return new Forbidden();
-    }
 
     return new Ok(auth);
   } catch (error) {

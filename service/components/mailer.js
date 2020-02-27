@@ -4,76 +4,69 @@
  * @module components/mailer
  */
 
-const mailgun = require('mailgun-js');
-const path = require('path');
+const AWS = require('aws-sdk');
+const log = require('./logger')('Mailer');
 
 const config = require('../configs/mailer');
-const views = require('./views');
+
+AWS.config.update({ region: config.region });
 
 /**
- * Mailer class.
+ * Sends the message.
  *
- * @class Mailer
+ * @param {Object} message The message data to send.
+ *
+ * @returns {Promise} The send promise.
  */
-class Mailer {
-  /**
-   * Sends the message.
-   *
-   * @param {Object} message The message data to send.
-   *
-   * @returns {Promise} The send promise.
-   */
-  static async send(message) {
-    const data = { ...message }; // Clone source
+async function send (message) {
+  const data = { ...message }; // Clone source
 
-    if (!message.from) {
-      data.from = config.sender;
-    }
-
-    if (!Array.isArray(message.to)) {
-      data.to = [data.to];
-    }
-
-    try {
-      const res = await mailgun(config)
-        .messages()
-        .send(config.domain, data);
-
-      console.log(`${data.from} --> ${data.to}`, res);
-
-      return res;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+  if (!data.from) {
+    data.from = [config.sender];
   }
 
-  /**
-   * Sends a message to the target email address.
-   *
-   * This is an example on how to send an email template.
-   *
-   * @param {Object} recipient The recipient's data.
-   *
-   * @returns {Promise} The Mailgun send promise.
-   */
-  static async sendMessage(recipient) {
-    const template = path.join('emails', 'default');
+  if (!Array.isArray(data.to)) {
+    data.to = [data.to];
+  }
 
-    // TODO: Localize!
-    const message = {
-      subject: `Hello, ${recipient.name}!`,
-      from: config.sender,
-      to: recipient.email,
-      html: views.render(template, {
-        data: {
-          ...recipient // Never pass raw data
+  // Create sendEmail params
+  const params = {
+    ReplyToAddresses: data.from,
+    Source: config.sender,
+    Destination: {
+      CcAddresses: data.cc || [],
+      ToAddresses: data.to
+    },
+    Message: {
+      Body: {
+        Text: {
+          Charset: 'UTF-8',
+          Data: data.body
         }
-      })
-    };
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: data.subject
+      }
+    }
+  };
 
-    return await this.send(message);
+  const ses = new AWS.SES({
+    apiVersion: '2010-12-01'
+  });
+
+  try {
+    const res = await ses.sendEmail(params).promise();
+
+    log.debug(`Sent message from "${data.from}" to "${data.to}" with ID "${data.MessageId}"`);
+
+    return res;
+  } catch (err) {
+    log.error(err);
+    throw err;
   }
 }
 
-module.exports = Mailer;
+module.exports = {
+  send
+};

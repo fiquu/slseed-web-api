@@ -5,6 +5,6 @@
  */
 
 module.exports = {
-  exclude: ['**/**', '!node_modules/**'],
+  exclude: ['**/**', '!node_modules/**', 'service/functions/**/config.js'],
   include: ['service/**']
 };

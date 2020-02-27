@@ -6,6 +6,7 @@
 
 module.exports = {
   package: '${file(./package.json)}',
+  cors: true,
   authorizer: {
     arn: '${env:COGNITO_USER_POOL_ARN}'
   },
@@ -18,5 +19,9 @@ module.exports = {
   },
   'serverless-offline': {
     port: 8080
+  },
+  prune: {
+    automatic: true,
+    number: 2
   }
 };

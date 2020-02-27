@@ -4,7 +4,10 @@
  * @module configs/plugins
  */
 
-const plugins = ['serverless-dotenv-plugin'];
+const plugins = [
+  'serverless-dotenv-plugin',
+  'serverless-prune-plugin'
+];
 
 /* Set per-stage plugins */
 switch (process.env.NODE_ENV) {

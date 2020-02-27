@@ -2,7 +2,7 @@ const { Forbidden, NoContent, Ok } = require('../../components/responses');
 const Request = require('../../components/request');
 
 /**
- * Users index handler function.
+ * Users handler function.
  *
  * @param {Object} event Call event object.
  *

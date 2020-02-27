@@ -8,9 +8,7 @@ module.exports = [
   'cognito-user-pool-arn',
   'cognito-user-pool-id',
 
-  'mailer-api-key',
   'mailer-sender',
-  'mailer-domain',
 
   'db-uri'
 ];

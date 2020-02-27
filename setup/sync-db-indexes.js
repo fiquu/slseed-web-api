@@ -1,7 +1,5 @@
 /**
- * Database indexes script.
- *
- * Drops and ensures indexes are created appropriately.
+ * Database index sync script.
  *
  * @example $ NODE_ENV=local node scripts/db-indexes.js
  */
@@ -16,7 +14,7 @@ const ora = require('ora');
 (async () => {
   console.log(`\n${chalk.cyan.bold('Database Indexes Script')}\n`);
 
-  await require('../utils/stage-select')(true); // Set proper stage ENV
+  await require('../utils/stage-select')(); // Set proper stage ENV
 
   dotenv.config({
     path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
@@ -30,14 +28,9 @@ const ora = require('ora');
   try {
     const questions = [
       {
-        name: 'drop',
-        type: 'confirm',
-        message: 'Drop indexes first?'
-      },
-      {
         name: 'confirm',
         type: 'confirm',
-        message: 'Proceed with indexing?'
+        message: 'Proceed with index syncing?'
       }
     ];
 
@@ -69,23 +62,13 @@ const ora = require('ora');
 
     spinner.succeed('Schemas registered.');
 
-    if (answers.drop) {
-      spinner.start('Dropping indexes...');
-
-      for (let name of Object.keys(mongoose.models)) {
-        await mongoose.model(name).collection.dropIndexes();
-      }
-
-      spinner.succeed('Indexes dropped!');
-    }
-
-    spinner.start('Ensuring indexes...');
+    spinner.start('Syncing indexes...');
 
     for (let name of Object.keys(mongoose.models)) {
-      await mongoose.model(name).ensureIndexes();
+      await mongoose.model(name).syncIndexes();
     }
 
-    spinner.succeed('Indexes ensured!');
+    spinner.succeed('Indexes synced!');
 
     await mongoose.disconnect();
 

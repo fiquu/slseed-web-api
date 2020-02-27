@@ -1,25 +1,23 @@
 {
-  "name": "fi-slseed-api",
-  "title": "Fi Slseed API",
-  "description": "Serveless Seed API project",
-  "author": "Final Development Studio <sorcery@finaldevstudio.com> (http://finaldevstudio.com)",
-  "homepage": "https://github.com/FinalDevStudio/fi-slseed-api",
+  "name": "@fiquu/slseed-web-api",
+  "title": "Slseed Web API",
+  "description": "Serveless Seed Web API project",
+  "author": "fiquu <hi@fiquu.dev> (https://github.com/fiquu)",
+  "homepage": "https://github.com/fiquu/slseed-web-api",
   "main": "npm start",
   "version": "1.1.2",
   "license": "MIT",
   "private": false,
   "bugs": {
-    "url": "https://github.com/FinalDevStudio/fi-slseed-api/issues"
+    "url": "https://github.com/fiquu/slseed-web-api/issues"
   },
   "directories": {
     "test": "test"
   },
   "contributors": [
-    "Santiago G. Marín <santiago@finaldevstudio.com> (https://github.com/stgogm)",
-    "JT Guzman <jtguzman@finaldevstudio.com> (https://github.com/jtguzman)"
+    "Santiago G. Marín <santiago.marin@final.cl> (https://github.com/stgogm)"
   ],
   "keywords": [
-    "fi",
     "slseed",
     "serverless",
     "sls",
@@ -28,12 +26,12 @@
     "project"
   ],
   "group": {
-    "title": "Fi Slseed",
+    "title": "Slseed",
     "name": "slseed"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:FinalDevStudio/fi-slseed-api.git"
+    "url": "git@github.com:fiquu/slseed-web-api.git"
   },
   "os": [
     "linux"
@@ -42,7 +40,7 @@
     "x64"
   ],
   "engines": {
-    "node": ">= 8.0.0",
+    "node": ">= 12.0.0",
     "npm": ">= 6.0.0"
   },
   "nyc": {
@@ -57,14 +55,14 @@
   },
   "app": {
     "name": "Web API - Fi Slseed",
-    "short": "Fi Slseed",
+    "short": "Slseed Web API",
     "description": "Serveless Seed Web API project.",
     "domain": "example.com",
     "subdomain": "www",
     "home": "https://www.example.com",
     "display": "standalone",
     "background": "#f7f6f6",
-    "color": "#b9de3b",
+    "color": "#b5cc18",
     "ogImage": "https://www.example.com/static/images/og-image.jpg"
   },
   "scripts": {
@@ -83,13 +81,9 @@
     "setup": "node setup"
   },
   "dependencies": {
-    "ably": "^1.1.11",
-    "mailgun-js": "^0.22.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.5",
-    "pug": "^2.0.3",
-    "request": "^2.88.0",
-    "validator": "^11.0.0"
+    "pug": "^2.0.3"
   },
   "devDependencies": {
     "amazon-cognito-identity-js-node": "0.0.3",
@@ -107,6 +101,7 @@
     "serverless-dotenv-plugin": "^2.1.1",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
     "serverless-offline": "^5.0.1",
+    "serverless-prune-plugin": "^1.4.2",
     "slug": "^1.1.0",
     "titleize": "^2.1.0",
     "walk-sync": "^1.1.3",

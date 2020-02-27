@@ -9,7 +9,7 @@ const { profiles } = require('./aws');
 module.exports = {
   name: 'aws',
   profile: profiles[process.env.NODE_ENV],
-  runtime: 'nodejs8.10',
+  runtime: 'nodejs12',
   stage: '${opt:stage}',
 
   logRetentionInDays: process.env.NODE_ENV === 'production' ? 14 : 7,
