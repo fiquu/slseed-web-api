@@ -7,7 +7,7 @@ module.exports = {
     DependsOn: ['CognitoIdentityPool'],
     Properties: {
       RoleName: {
-        'Fn::Sub': 'cognito-${ProjectName}-${Environment}-unauth-role'
+        'Fn::Sub': 'cognito-${GroupName}-${ProjectName}-${Environment}-unauth-role'
       },
       AssumeRolePolicyDocument: {
         Version: '2012-10-17',
@@ -34,7 +34,7 @@ module.exports = {
       Policies: [
         {
           PolicyName: {
-            'Fn::Sub': 'cognito-${ProjectName}-${Environment}-unauth-default-role-policy'
+            'Fn::Sub': 'cognito-${GroupName}-${ProjectName}-${Environment}-unauth-default-role-policy'
           },
           PolicyDocument: {
             Version: '2012-10-17',
@@ -59,7 +59,7 @@ module.exports = {
     DependsOn: ['CognitoIdentityPool'],
     Properties: {
       RoleName: {
-        'Fn::Sub': 'cognito-${ProjectName}-${Environment}-auth-role'
+        'Fn::Sub': 'cognito-${GroupName}-${ProjectName}-${Environment}-auth-role'
       },
       AssumeRolePolicyDocument: {
         Version: '2012-10-17',
@@ -86,7 +86,7 @@ module.exports = {
       Policies: [
         {
           PolicyName: {
-            'Fn::Sub': 'cognito-${ProjectName}-${Environment}-auth-default-role-policy'
+            'Fn::Sub': 'cognito-${GroupName}-${ProjectName}-${Environment}-auth-default-role-policy'
           },
           PolicyDocument: {
             Version: '2012-10-17',

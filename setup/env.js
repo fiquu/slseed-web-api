@@ -27,9 +27,8 @@ const ssmEnv = require('../configs/ssm.env');
       region
     });
 
-    const nameSlug = name.replace(/\W+/g, '-').replace(/-+/g, '-').trim();
+    const nameSlug = name.replace(/\W+/g, ' ').trim().replace(/\s+/g, '-');
     const ssm = new AWS.SSM();
-
     const spinner = ora();
 
     spinner.start(`Setting env file for [${process.env.NODE_ENV}]...`);

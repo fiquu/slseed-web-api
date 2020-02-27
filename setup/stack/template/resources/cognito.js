@@ -8,7 +8,7 @@ module.exports = {
       AutoVerifiedAttributes: ['email'],
       UsernameAttributes: ['email'],
       UserPoolName: {
-        'Fn::Sub': '${ProjectName}-${Environment}'
+        'Fn::Sub': '${GroupName}-${ProjectName}-${Environment}'
       },
       AdminCreateUserConfig: {
         AllowAdminCreateUserOnly: true
@@ -42,7 +42,7 @@ module.exports = {
       ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
       GenerateSecret: false,
       ClientName: {
-        'Fn::Sub': '${ProjectName}-${Environment}-app-client'
+        'Fn::Sub': '${GroupName}-${ProjectName}-${Environment}-app-client'
       },
       UserPoolId: {
         Ref: 'CognitoUserPool'
@@ -59,7 +59,7 @@ module.exports = {
     Properties: {
       AllowUnauthenticatedIdentities: false,
       IdentityPoolName: {
-        'Fn::Sub': '${ProjectNameClean} ${Environment}'
+        'Fn::Sub': '${GroupName} ${ProjectNameClean} ${Environment}'
       },
       CognitoIdentityProviders: [
         {
@@ -106,7 +106,7 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${ProjectName}/${Environment}/cognito-user-pool-id'
+        'Fn::Sub': '/${GroupName}/${ProjectName}/${Environment}/cognito-user-pool-id'
       },
       Description: {
         'Fn::Sub': '${ProjectTitle} Cognito User Pool Id [${Environment}]'
@@ -126,10 +126,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${ProjectName}/${Environment}/cognito-user-pool-arn'
+        'Fn::Sub': '/${GroupName}/${ProjectName}/${Environment}/cognito-user-pool-arn'
       },
       Description: {
-        'Fn::Sub': '${ProjectTitle} Cognito User Pool ARN [${Environment}]'
+        'Fn::Sub': '${GroupTitle} ${ProjectTitle} Cognito User Pool ARN [${Environment}]'
       },
       Value: {
         'Fn::GetAtt': ['CognitoUserPool', 'Arn']
@@ -146,10 +146,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${ProjectName}/${Environment}/cognito-user-pool-client-id'
+        'Fn::Sub': '/${GroupName}/${ProjectName}/${Environment}/cognito-user-pool-client-id'
       },
       Description: {
-        'Fn::Sub': '${ProjectTitle} Cognito User Pool Client Id [${Environment}]'
+        'Fn::Sub': '${GroupTitle} ${ProjectTitle} Cognito User Pool Client Id [${Environment}]'
       },
       Value: {
         Ref: 'CognitoUserPoolClient'
@@ -166,10 +166,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${ProjectName}/${Environment}/cognito-identity-pool-id'
+        'Fn::Sub': '/${GroupName}/${ProjectName}/${Environment}/cognito-identity-pool-id'
       },
       Description: {
-        'Fn::Sub': '${ProjectTitle} Cognito Identity Pool Id [${Environment}]'
+        'Fn::Sub': '${GroupTitle} ${ProjectTitle} Cognito Identity Pool Id [${Environment}]'
       },
       Value: {
         Ref: 'CognitoIdentityPool'

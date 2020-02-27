@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const { name, title, group } = require('../../../package.json');
 const { profiles } = require('../../../configs/aws');
 const nameClean = name.replace(/\W+/g, ' ').replace(/\s+/g, ' ').trim();
-const nameSlug = name.replace(/\W+/g, '-').replace(/-+/g, '-').trim();
+const nameSlug = name.replace(/\W+/g, ' ').trim().replace(/\s+/g, '-');
 
 module.exports = {
   AwsRegion: {

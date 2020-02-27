@@ -7,10 +7,10 @@ module.exports = {
     Properties: {
       Type: 'String',
       Name: {
-        'Fn::Sub': '/${ProjectName}/${Environment}/mailer-sender'
+        'Fn::Sub': '/${GroupName}/${ProjectName}/${Environment}/mailer-sender'
       },
       Description: {
-        'Fn::Sub': '${ProjectTitle} Mailer Sender [${Environment}]'
+        'Fn::Sub': '${GroupTitle} ${ProjectTitle} Mailer Sender [${Environment}]'
       },
       Value: {
         Ref: 'MailerSender'
