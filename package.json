@@ -49,18 +49,6 @@
     "cache": true,
     "all": true
   },
-  "app": {
-    "name": "Web API - Fi Slseed",
-    "short": "Slseed Web API",
-    "description": "Serveless Seed Web API project.",
-    "domain": "example.com",
-    "subdomain": "www",
-    "home": "https://www.example.com",
-    "display": "standalone",
-    "background": "#f7f6f6",
-    "color": "#b5cc18",
-    "ogImage": "https://www.example.com/static/images/og-image.jpg"
-  },
   "scripts": {
     "test:unit": "npm run test:components && npm run test:schemas && npm run test:functions",
     "test:functions": "sls invoke test --stage local --path test/functions",
