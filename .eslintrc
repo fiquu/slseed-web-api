@@ -1,15 +1,12 @@
 {
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": "eslint:recommended",
   "root": true,
   "env": {
     "node": true,
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 8,
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 10
   },
   "rules": {
     "no-console": 0

@@ -12,13 +12,13 @@ const ora = require('ora');
 const fs = require('fs');
 
 const { apiVersions, region } = require('../configs/aws');
+const { name, group } = require('../package.json');
 const ssmEnv = require('../configs/ssm.env');
-const { name } = require('../package.json');
 
 (async () => {
   try {
     // Set proper stage ENV
-    await require('../utils/stage-select')(true);
+    await require('../utils/stage-select')();
 
     let env = `NODE_ENV=${process.env.NODE_ENV}`;
 
@@ -27,6 +27,7 @@ const { name } = require('../package.json');
       region
     });
 
+    const nameSlug = name.replace(/\W+/g, '-').replace(/-+/g, '-').trim();
     const ssm = new AWS.SSM();
 
     const spinner = ora();
@@ -38,18 +39,18 @@ const { name } = require('../package.json');
     for (let ssmPath of ssmEnv) {
       const promise = new Promise((resolve, reject) => {
         const params = {
-          Name: path.posix.join('/', name, process.env.NODE_ENV, ssmPath),
+          Name: path.posix.join('/', group.name, nameSlug, process.env.NODE_ENV, ssmPath),
           WithDecryption: true
         };
 
         ssm.getParameter(params, (err, data) => {
           if (err) {
             spinner.fail(`${err.code}: ${params.Name}`);
-            reject();
+            reject(err);
             return;
           }
 
-          const name = ssmPath.toUpperCase().replace(/[^A-Z]+/g, '_');
+          const name = ssmPath.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
 
           spinner.info(`${name}=[ssm:${data.Parameter.Name}]`);
 

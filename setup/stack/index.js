@@ -8,21 +8,23 @@ const { group, name } = require('../../package.json');
 
 (async () => {
   console.log(`\n${chalk.cyan.bold('Application Setup Script')}\n`);
-  console.log(`${chalk.bold('Group Title: ')} ${group.title}`);
-  console.log(`${chalk.bold('Group Name:  ')} ${group.name}\n`);
+  console.log(`${chalk.bold('Group Title:')} ${group.title}`);
+  console.log(`${chalk.bold('Group Name:')}  ${group.name}\n`);
 
   // Set proper stage ENV
   await require('../../utils/stage-select')(true);
+
+  const { AWS_PROFILE, NODE_ENV } = process.env;
 
   // Set AWS config
   AWS.config.update({
     region: 'us-east-1',
     credentials: new AWS.SharedIniFileCredentials({
-      profile: process.env.AWS_PROFILE
+      profile: AWS_PROFILE
     })
   });
 
-  console.log(`\n${chalk.bold('AWS Profile: ')} ${process.env.AWS_PROFILE}\n`);
+  console.log(`\n${chalk.bold('AWS Profile:')} ${AWS_PROFILE}`);
 
   // -----------------------------------------------------------------
 
@@ -30,20 +32,14 @@ const { group, name } = require('../../package.json');
   const spinner = ora();
 
   try {
-    const params = {
-      StackName: `${group.name}-${name}-${process.env.NODE_ENV}-base-stack`,
-      Capabilities: ['CAPABILITY_NAMED_IAM'],
-      TemplateBody: null,
-      Parameters: null
-    };
+    const nameSlug = `${group.name}-${name}`.replace(/\W+/g, '-').replace(/-+/g, '-').trim();
+    const StackName = `${nameSlug}-${NODE_ENV}-base-stack`;
 
-    console.log(`\n${chalk.bold('Stack Name:  ')} ${params.StackName}\n`);
+    console.log(`${chalk.bold('Stack Name:')}  ${StackName}\n`);
 
     spinner.start('Checking for current CloudFormation Stack...');
 
     const current = await new Promise(resolve => {
-      const { StackName } = params;
-
       cfm.describeStacks({ StackName }, (err, data) => {
         if (err) {
           resolve();
@@ -80,7 +76,7 @@ const { group, name } = require('../../package.json');
     if (current) {
       const previous = chalk.reset.dim(' (empty for previous)');
 
-      for (let value of values) {
+      for (const value of values) {
         value.message += previous;
         value.default = undefined;
       }
@@ -108,19 +104,30 @@ const { group, name } = require('../../package.json');
       process.exit();
     }
 
-    params.TemplateBody = JSON.stringify(template);
+    // Add values as template params
+    for (const param of Object.keys(cfmParamValues)) {
+      template.Parameters[param] = {
+        Description: cfmParamValues.message,
+        Type: 'String'
+      };
+    }
 
-    params.Parameters = Object.keys(cfmParamValues).map(ParameterKey => {
-      const param = { ParameterKey };
+    const params = {
+      StackName,
+      Capabilities: ['CAPABILITY_NAMED_IAM'],
+      TemplateBody: JSON.stringify(template),
+      Parameters: Object.keys(cfmParamValues).map(ParameterKey => {
+        const param = { ParameterKey };
 
-      if (current && is.empty(cfmParamValues[ParameterKey])) {
-        param.UsePreviousValue = true;
-      } else {
-        param.ParameterValue = cfmParamValues[ParameterKey];
-      }
+        if (current && is.empty(cfmParamValues[ParameterKey])) {
+          param.UsePreviousValue = true;
+        } else {
+          param.ParameterValue = cfmParamValues[ParameterKey];
+        }
 
-      return param;
-    });
+        return param;
+      })
+    };
 
     spinner.start('Validating CloudFormation Stack Template...');
 
@@ -178,53 +185,38 @@ const { group, name } = require('../../package.json');
     spinner.info('You can skip the check process if you wish by pressing [CTRL+C].');
     spinner.start('Checking CloudFormation Stack status (this may take several minutes)...');
 
-    await new Promise((resolve, reject) => {
-      const { StackName } = params;
+    const describeStacks = () => cfm.describeStacks({ StackName }, (err, data) => {
+      if (err) {
+        throw err;
+      }
 
-      const onDescribeStacks = (err, data) => {
-        if (err) {
-          reject();
-          return;
-        }
+      const [Stack] = data.Stacks;
+      const { StackStatus, Outputs } = Stack;
 
-        const [Stack] = data.Stacks;
-        const { StackStatus } = Stack;
+      switch (StackStatus) {
+        case 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS':
+        case 'CREATE_IN_PROGRESS':
+        case 'UPDATE_IN_PROGRESS':
+          setTimeout(describeStacks, 5000);
+          break;
 
-        switch (StackStatus) {
-          case 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS':
-          case 'CREATE_IN_PROGRESS':
-          case 'UPDATE_IN_PROGRESS':
-            doCheck();
-            break;
+        case 'CREATE_COMPLETE':
+        case 'UPDATE_COMPLETE':
+          spinner.succeed(`Stack successfully ${current ? 'updated' : 'created'}!`);
+          console.info(Outputs);
+          process.exit(0);
+          break;
 
-          case 'CREATE_COMPLETE':
-          case 'UPDATE_COMPLETE':
-            spinner.succeed(`Stack successfully ${current ? 'updated' : 'created'}!`);
-            resolve();
-            break;
-
-          default:
-            spinner.warn(
-              `Stack ${
-                current ? 'update' : 'creation'
-              } failed: ${StackStatus}. Please check the AWS console (https://console.aws.amazon.com/cloudformation/home).`
-            );
-            reject();
-            break;
-        }
-
-        resolve();
-      };
-
-      const doCheck = () => setTimeout(() => cfm.describeStacks({ StackName }, onDescribeStacks), 10000);
-
-      doCheck();
+        default:
+          spinner.fail(`Stack ${current ? 'update' : 'creation'} failed: ${StackStatus}. Please check the AWS console (https://console.aws.amazon.com/cloudformation/home).`);
+          throw err;
+      }
     });
+
+    describeStacks();
   } catch (err) {
     spinner.fail(err.message);
-
     console.error(err);
-
     process.exit(1);
   }
 })();
