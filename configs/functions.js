@@ -9,13 +9,11 @@ const glob = require('glob');
 const slug = require('slug');
 const is = require('fi-is');
 
-const { SERVICE_NAME } = process.env;
-
-const pattern = join(process.cwd(), 'services', (SERVICE_NAME || '**'), 'functions', '**', 'config.js');
+const pattern = join(process.cwd(), 'service', 'functions', '**', 'config.js');
 const files = glob.sync(resolve(pattern));
 
 for (const file of files) {
-  const name = slug(file.replace(/^.+\/services\/(.+)\/functions\/(.+)\/config\.js$/, '$1-$2'), {
+  const name = slug(file.replace(/^.+\/services\/functions\/(.+)\/config\.js$/, '$1-$2'), {
     lower: true,
     charmap: {
       ...slug.charmap,
@@ -23,15 +21,13 @@ for (const file of files) {
     }
   });
 
-  const basePath = file.replace(/^.+\/services\/(.+)\/functions\/.+\/config\.js$/, '$1');
-  const path = file.replace(process.cwd(), '').replace(/^\/(.+)\/config\.js$/, '$1');
+  const basePath = file.replace(/^.+\/service\/functions\/.+\/config\.js$/, '');
+  const path = file.replace(process.cwd(), '').replace(/^\/config\.js$/, '');
   const config = require(file);
 
-  if (is.empty(SERVICE_NAME)) {
-    for (const { http } of config.events) {
-      if (is.not.empty(http)) {
-        http.path = posix.normalize(posix.join('/', basePath, http.path));
-      }
+  for (const { http } of config.events) {
+    if (is.not.empty(http)) {
+      http.path = posix.normalize(posix.join('/', basePath, http.path));
     }
   }
 
