@@ -1,17 +1,14 @@
+const { basename } = require('path');
 const inquirer = require('inquirer');
-const path = require('path');
-const fs = require('fs');
+const glob = require('glob');
 
 (async () => {
-  const { setup } = await inquirer.prompt({
-    choices: fs
-      .readdirSync('./setup')
-      .filter(file => path.extname(file) === '.js' && path.basename(file, '.js') !== 'index')
-      .map(file => file.replace('.js', '')),
-    message: 'Select setup',
-    name: 'setup',
-    type: 'list'
+  const { file } = await inquirer.prompt({
+    choices: glob.sync('./setup/!(index).js').map(file => basename(file, '.js')),
+    message: 'Select setup to run',
+    type: 'list',
+    name: 'file'
   });
 
-  require(`./${setup}`);
+  require(`./${file}`);
 })();

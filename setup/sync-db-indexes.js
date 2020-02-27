@@ -4,7 +4,7 @@
  * @example $ NODE_ENV=local node scripts/db-indexes.js
  */
 
-const inquirer = require('inquirer');
+const { prompt } = require('inquirer');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
@@ -34,7 +34,7 @@ const ora = require('ora');
       }
     ];
 
-    const answers = await inquirer.prompt(questions);
+    const answers = await prompt(questions);
 
     if (!answers.confirm) {
       console.log(chalk.bold.yellow('\nCanceled\n'));

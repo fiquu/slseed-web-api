@@ -4,13 +4,13 @@
  * @module utils/stage-select
  */
 
-const inquirer = require('inquirer');
+const { prompt } = require('inquirer');
 const AWS = require('aws-sdk');
 
 module.exports = async env => {
   const { region, profiles } = require('../configs/aws');
 
-  const { profile } = await inquirer.prompt({
+  const { profile } = await prompt({
     name: 'profile',
     type: 'list',
     message: 'Select target stage:',

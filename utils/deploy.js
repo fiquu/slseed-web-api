@@ -5,12 +5,12 @@
  */
 
 const { spawn } = require('child_process');
-const inquirer = require('inquirer');
+const { prompt } = require('inquirer');
 
 (async () => {
   const { profiles } = require('../configs/aws');
 
-  const { profile } = await inquirer.prompt({
+  const { profile } = await prompt({
     name: 'profile',
     type: 'list',
     message: 'Select deployment target profile:',
