@@ -36,7 +36,7 @@ See the `"scripts"` section on the `package.json` for more commands.
 
 1. Create a repo.
 1. Add remote as slseed:
-    - `git remote add slseed git@github.com:fiquu/fi-slseed-api.git`
+    - `git remote add slseed git@github.com:fiquu/slseed-web-api.git`
 1. Disable pushing:
     - `git remote set-url --push slseed DISABLED`
 1. Fetch the latest changes:
