@@ -65,7 +65,7 @@
     "setup": "node setup"
   },
   "dependencies": {
-    "aws-sdk": "^2.627.0",
+    "aws-sdk": "^2.630.0",
     "mongoose": "^5.9.2",
     "winston": "^3.2.1"
   },
@@ -75,11 +75,11 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^6.8.0",
     "fi-is": "^4.0.0",
-    "inquirer": "^7.0.4",
+    "inquirer": "^7.0.5",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "ora": "^4.0.3",
-    "serverless": "^1.64.1",
+    "serverless": "^1.65.0",
     "serverless-domain-manager": "^3.3.1",
     "serverless-dotenv-plugin": "^2.3.2",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
