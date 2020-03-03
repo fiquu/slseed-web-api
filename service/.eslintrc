@@ -1,4 +1,7 @@
 {
-  "extends": "../.eslintrc",
-  "root": true
+  "root": true,
+  "extends": "@fiquu",
+  "parserOptions": {
+    "sourceType": "module"
+  }
 }

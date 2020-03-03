@@ -1,9 +1,3 @@
-/**
- * Serverless custom configuration module.
- *
- * @module configs/custom
- */
-
 module.exports = {
   package: '${file(./package.json)}',
   cors: true,

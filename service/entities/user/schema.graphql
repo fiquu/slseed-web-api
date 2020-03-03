@@ -1,0 +1,13 @@
+type Label {
+  _id: ID!
+  sub: String!
+}
+
+type Query {
+  users(skip: Int, limit: Int): [User!]!
+  user: User!
+}
+
+type Mutation {
+  createUser(sub: String!): User!
+}

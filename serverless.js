@@ -4,33 +4,26 @@
  * @see https://serverless.com/framework/docs/providers/aws/
  */
 
-const argv = require('yargs').argv;
+require('typescript-require'); // Allows `require` of TypeScript files
 
+const argv = require('yargs').argv;
+const slug = require('url-slug');
+
+const { name } = require('./package.json');
 const { profiles } = require('./configs/aws');
 
-/* Force NODE_ENV to equal Serverless' stage */
+// Force NODE_ENV to equal Serverless' stage
 process.env.NODE_ENV = argv.stage;
 
-/* Set proper AWS stage profile */
+// Set proper AWS stage profile
 process.env.AWS_PROFILE = profiles[argv.stage] || 'default';
 
-/* Service Name */
-module.exports.service = require('./package.json').name;
-
-/* Provider specification */
-module.exports.provider = require('./configs/provider');
-
-/* Package specification */
-module.exports.package = require('./configs/package');
-
-/* Plugins definition */
-module.exports.plugins = require('./configs/plugins');
-
-/* Custom values definition */
-module.exports.custom = require('./configs/custom');
-
-/* Provider resources configuration */
-module.exports.resources = require('./configs/resources');
-
-/* Service functions declaration */
-module.exports.functions = require('./configs/functions');
+module.exports = {
+  service: slug(name),
+  provider: require('./configs/provider'),
+  package: require('./configs/package'),
+  plugins: require('./configs/plugins'),
+  custom: require('./configs/custom'),
+  resources: require('./configs/resources'),
+  functions: require('./configs/functions')
+};

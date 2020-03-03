@@ -1,11 +1,3 @@
-/**
- * API Gateway responses resource configuration module.
- *
- * This responses needed for auth CORS.
- *
- * @module configs/resources/responses
- */
-
 module.exports = {
   // Unauthorized
   GatewayResponse: {

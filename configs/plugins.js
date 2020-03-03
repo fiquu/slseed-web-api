@@ -1,9 +1,3 @@
-/**
- * Serverless plugins configuration module.
- *
- * @module configs/plugins
- */
-
 const plugins = [
   'serverless-dotenv-plugin',
   'serverless-prune-plugin'
