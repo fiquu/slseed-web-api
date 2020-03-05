@@ -5,7 +5,7 @@ import { createLogger } from '@fiquu/logger';
 
 import config from '../../configs/http-event';
 
-const log = createLogger('HTTP /api/my-path');
+const log = createLogger('functions/test');
 
 /**
  * Test handler function.
@@ -14,16 +14,17 @@ const log = createLogger('HTTP /api/my-path');
  *
  * @returns {object} The API Gateway response object.
  */
-export function handler(event: APIGatewayProxyEvent): APIGatewayProxyResult {
+export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const { req, res } = createHTTPEvent(event, config);
 
-  log.debug(req.headers);
-  log.debug(req.params);
-  log.debug(req.query);
-  log.debug('Body:', req.body);
+  log.debug('Test Request', req);
 
   try {
-    return res.send(noContent());
+    const _res = noContent();
+
+    log.debug('Test Response', { res: _res });
+
+    return res.send(_res);
   } catch (err) {
     log.error('It failed...', { err });
 

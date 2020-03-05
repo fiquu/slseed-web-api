@@ -61,7 +61,7 @@
     "domain": "sls create_domain --stage production",
     "clean": "rimraf .build/",
     "prestart": "npm run clean",
-    "start": "sls offline start --stage local",
+    "start": "LOG_LEVEL=debug sls offline start --stage local",
     "setup:stack": "slseed-utils --do setup-stack",
     "setup:env": "slseed-utils --do setup-env",
     "setup": "slseed-utils",
