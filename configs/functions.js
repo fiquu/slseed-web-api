@@ -13,7 +13,5 @@ for (const file of files) {
   config.handler = `${join(dirname(path), 'handler')}.handler`;
   config.name = name;
 
-  console.info(config);
-
   module.exports[name] = config;
 }

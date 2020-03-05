@@ -1,10 +1,10 @@
 const { profiles } = require('./aws');
 
 module.exports = {
-  name: 'aws',
   profile: profiles[String(process.env.NODE_ENV)],
-  runtime: 'nodejs12',
+  runtime: 'nodejs12.x',
   stage: '${opt:stage}',
+  name: 'aws',
 
   logRetentionInDays: process.env.NODE_ENV === 'production' ? 14 : 7,
   memorySize: 512,

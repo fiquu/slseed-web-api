@@ -1,13 +1,12 @@
 export default {
   // No need to set the `handler` as the function loader does it
-  description: 'Dummy test function.',
+  description: 'Session resolver function.',
   events: [
     {
       http: {
         method: 'get',
-        path: '/test',
-        cors: '${self:custom.cors}',
-        authorizer: '${self:custom.authorizer}'
+        path: '/session',
+        cors: '${self:custom.cors}'
       }
     }
   ]

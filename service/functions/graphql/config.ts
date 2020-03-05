@@ -1,4 +1,5 @@
 export default {
+  // No need to set the `handler` as the function loader does it
   description: 'GraphQL endpoint handler.',
   events: [
     {

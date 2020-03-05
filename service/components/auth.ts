@@ -24,7 +24,7 @@ import config from '../configs/auth';
  * @throws ERR_NO_AUTH_DATA If the provided subject has no data registered.
  */
 export default async (context: APIGatewayProxyEvent): Promise<any> => {
-  const sub = op.get(context, 'requestContext.authorizer.claims.sub', {});
+  const sub = op.get(context, 'requestContext.authorizer.claims.sub', null);
   const conn = await db.connect('default');
 
   if (is.empty(sub)) {

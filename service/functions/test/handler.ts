@@ -9,8 +9,12 @@ const log = createLogger('HTTP /api/my-path');
 
 /**
  * Test handler function.
+ *
+ * @param {object} event The API Gateway request object.
+ *
+ * @returns {object} The API Gateway response object.
  */
-export default function handler(event: APIGatewayProxyEvent): APIGatewayProxyResult {
+export function handler(event: APIGatewayProxyEvent): APIGatewayProxyResult {
   const { req, res } = createHTTPEvent(event, config);
 
   log.debug(req.headers);
@@ -22,6 +26,7 @@ export default function handler(event: APIGatewayProxyEvent): APIGatewayProxyRes
     return res.send(noContent());
   } catch (err) {
     log.error('It failed...', { err });
+
     return res.handle(err);
   }
 }

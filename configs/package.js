@@ -1,4 +1,4 @@
 module.exports = {
-  exclude: ['**/**', '!node_modules/**', 'service/functions/**/config.js'],
-  include: ['service/**']
+  exclude: ['**/**', '!node_modules/**'],
+  include: ['service/**/*.js', 'service/**/*.graphql']
 };

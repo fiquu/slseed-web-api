@@ -1,12 +1,15 @@
+# Built files
+.build/
+
 # Local env files
 .env.**
 .env
 
 # Serverless
-.serverless
+.serverless/
 
 # Mongo dumps
-dump
+dump/
 
 # Logs
 selenium-debug.log
