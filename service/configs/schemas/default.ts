@@ -10,4 +10,4 @@ const options: SchemaLoaderOptions = {
 
 schemas.set('user', user);
 
-export default { schemas, options }
+export default { schemas, options };
