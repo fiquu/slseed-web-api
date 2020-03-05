@@ -64,6 +64,7 @@
     "start": "sls offline start --stage local",
     "setup:stack": "slseed-utils --do setup-stack",
     "setup:env": "slseed-utils --do setup-env",
+    "setup": "slseed-utils",
     "predeploy": "npm run clean",
     "deploy": "slseed-utils --do deploy",
     "check": "npm-check --update"
