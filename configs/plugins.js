@@ -1,4 +1,5 @@
 const plugins = [
+  'serverless-plugin-typescript',
   'serverless-dotenv-plugin',
   'serverless-prune-plugin'
 ];

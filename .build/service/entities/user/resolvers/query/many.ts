@@ -4,13 +4,13 @@ import db from '../../../../components/database';
 import auth from '../../../../components/auth';
 
 /**
- * Labels resolver function.
+ * Users resolver function.
  *
  * @param {object} parent The GraphQL parent.
  * @param {object} params The GraphQL query params.
  * @param {object} context The request context.
  *
- * @returns {object} The matched query results.
+ * @returns {Array} The matched query results.
  */
 export default async (parent: any, params: any, context: APIGatewayProxyEvent): Promise<any> => {
   try {
@@ -18,16 +18,20 @@ export default async (parent: any, params: any, context: APIGatewayProxyEvent): 
 
     await auth(context);
 
-    const User = conn.model('user');
-    const query = User.findOne()
-      .where('_id').equals(params._id)
-      .select({
-        sub: true
-      });
+    const User = conn.model('label');
+    const query = User.find();
 
-    const result = await query;
+    if (params.skip) {
+      query.skip(params.skip);
+    }
 
-    return result;
+    if (params.limit) {
+      query.limit(params.limit);
+    }
+
+    const results = await query;
+
+    return results;
   } catch (err) {
     throw new Error(err);
   }

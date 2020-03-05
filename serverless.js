@@ -6,11 +6,11 @@
 
 require('typescript-require'); // Allows `require` of TypeScript files
 
-const argv = require('yargs').argv;
+const { argv } = require('yargs');
 const slug = require('url-slug');
 
-const { name } = require('./package.json');
 const { profiles } = require('./configs/aws');
+const { name } = require('./package.json');
 
 // Force NODE_ENV to equal Serverless' stage
 process.env.NODE_ENV = argv.stage;
