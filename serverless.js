@@ -16,14 +16,15 @@ const { name } = require('./package.json');
 process.env.NODE_ENV = argv.stage;
 
 // Set proper AWS stage profile
-process.env.AWS_PROFILE = profiles[argv.stage] || 'default';
+process.env.AWS_PROFILE = profiles[String(argv.stage)];
 
 module.exports = {
   service: slug(name),
-  provider: require('./configs/provider'),
-  package: require('./configs/package'),
-  plugins: require('./configs/plugins'),
-  custom: require('./configs/custom'),
-  resources: require('./configs/resources'),
-  functions: require('./configs/functions')
+
+  resources: require('./configs/serverless/resources'),
+  functions: require('./configs/serverless/functions'),
+  provider: require('./configs/serverless/provider'),
+  package: require('./configs/serverless/package'),
+  plugins: require('./configs/serverless/plugins'),
+  custom: require('./configs/serverless/custom')
 };

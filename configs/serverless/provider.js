@@ -1,4 +1,4 @@
-const { profiles } = require('./aws');
+const { profiles } = require('../aws');
 
 module.exports = {
   profile: profiles[String(process.env.NODE_ENV)],
