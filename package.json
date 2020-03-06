@@ -7,7 +7,7 @@
   "main": "npm start",
   "version": "0.0.0",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "bugs": {
     "url": "https://github.com/fiquu/slseed-web-api/issues"
   },
