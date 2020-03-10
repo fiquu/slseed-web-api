@@ -74,11 +74,11 @@
     "@fiquu/lambda-http-event-handler": "^1.0.0",
     "@fiquu/logger": "^1.0.1",
     "@fiquu/schema-loader-mongoose": "^1.0.0",
-    "aws-sdk": "^2.633.0",
+    "aws-sdk": "^2.636.0",
     "graphql": "^14.6.0",
     "graphql-yoga": "^1.18.3",
     "merge-graphql-schemas": "^1.7.6",
-    "mongoose": "^5.9.3",
+    "mongoose": "^5.9.4",
     "object-path": "^0.11.4",
     "winston": "^3.2.1"
   },
@@ -94,12 +94,12 @@
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "fi-is": "^4.0.0",
-    "inquirer": "^7.0.6",
+    "inquirer": "^7.1.0",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "ora": "^4.0.3",
     "rimraf": "^3.0.2",
-    "serverless": "^1.65.0",
+    "serverless": "^1.66.0",
     "serverless-domain-manager": "^3.3.1",
     "serverless-dotenv-plugin": "^2.3.2",
     "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
@@ -111,6 +111,6 @@
     "typescript-require": "^0.2.10",
     "url-slug": "^2.3.0",
     "walk-sync": "^2.0.2",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.0"
   }
 }
