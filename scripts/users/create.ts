@@ -65,12 +65,12 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
   console.log(`${chalk.cyan.bold('Create User Script')}\n`);
 
   try {
-    const userSchema: any = await import('../../service/entities/user/schema.db');
+    const userSchema = (await import('../../service/entities/user/schema.db')).default; // ?;
     const User = mongoose.model('user', userSchema);
 
     spinner.start('Connecting to the database...');
 
-    const db: any = await import('../../service/components/database');
+    const db = (await import('../../service/components/database')).default; // ?;
 
     await db.connect();
 
