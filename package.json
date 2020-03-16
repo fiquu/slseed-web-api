@@ -74,7 +74,7 @@
     "@fiquu/lambda-http-event-handler": "^1.0.0",
     "@fiquu/logger": "^1.0.1",
     "@fiquu/schema-loader-mongoose": "^1.0.0",
-    "aws-sdk": "^2.638.0",
+    "aws-sdk": "^2.640.0",
     "graphql": "^14.6.0",
     "graphql-yoga": "^1.18.3",
     "merge-graphql-schemas": "^1.7.6",
@@ -83,9 +83,10 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@fiquu/eslint-config": "^2.0.0",
+    "@fiquu/eslint-config": "^2.1.0",
+    "@fiquu/slseed-web-utils": "^1.0.2",
     "@types/aws-lambda": "^8.10.46",
-    "@types/chai": "^4.2.10",
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/ws": "^7.2.2",
     "amazon-cognito-identity-js-node": "0.0.3",
@@ -111,6 +112,6 @@
     "typescript-require": "^0.2.10",
     "url-slug": "^2.3.0",
     "walk-sync": "^2.0.2",
-    "yargs": "^15.3.0"
+    "yargs": "^15.3.1"
   }
 }
