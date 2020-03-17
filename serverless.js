@@ -1,10 +1,5 @@
-/**
- * Serverless configuration.
- *
- * @see https://serverless.com/framework/docs/providers/aws/
- */
-
-require('typescript-require'); // Allows `require` of TypeScript files
+/* eslint-disable node/no-unpublished-require */
+require('ts-node').register();  // Allows `require` of TypeScript files
 
 const { argv } = require('yargs');
 const slug = require('url-slug');

@@ -4,7 +4,7 @@ import db from '../../../../components/database';
 import auth from '../../../../components/auth';
 
 /**
- * Labels resolver function.
+ * User resolver function.
  *
  * @param {object} parent The GraphQL parent.
  * @param {object} params The GraphQL query params.
@@ -19,11 +19,7 @@ export default async (parent: any, params: any, context: APIGatewayProxyEvent): 
     await auth(context);
 
     const User = conn.model('user');
-    const query = User.findOne()
-      .where('_id').equals(params._id)
-      .select({
-        sub: true
-      });
+    const query = User.findById(params._id);
 
     const result = await query;
 

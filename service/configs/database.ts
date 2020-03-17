@@ -1,11 +1,3 @@
-/**
- * Database config module.
- *
- * @see https://mongoosejs.com/docs/lambda.html
- *
- * @module configs/database
- */
-
 import { DatabaseClientConfig } from '@fiquu/database-manager-mongoose';
 import mongoose from 'mongoose';
 
@@ -13,6 +5,11 @@ const { NODE_ENV } = process.env;
 
 mongoose.set('debug', !['production', 'testing'].includes(NODE_ENV));
 
+/**
+ * Defaults have been set according to the official recommendations.
+ *
+ * @see https://mongoosejs.com/docs/lambda.html
+ */
 const config: DatabaseClientConfig = {
   uri: process.env.DB_URI,
   options: {

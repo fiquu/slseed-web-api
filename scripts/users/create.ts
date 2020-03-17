@@ -1,12 +1,12 @@
+/* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
+
 /**
  * Create User script.
  *
  * Creates a Cognito user and the user reference in the database.
  *
- * @example $ node scripts/create-user.js
+ * @example $ node scripts/users/create.js
  */
-
-/* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
 
 import inquirer from 'inquirer';
 import mongoose from 'mongoose';

@@ -1,11 +1,3 @@
-/**
- * Auth config module.
- *
- * @see https://mongoosejs.com/docs/lambda.html
- *
- * @module configs/auth
- */
-
 const config = new Map();
 
 config.set('model', 'user');

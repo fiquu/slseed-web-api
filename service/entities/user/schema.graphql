@@ -1,6 +1,7 @@
 type User {
   _id: ID!
   sub: String!
+  name: String!
 }
 
 type Query {

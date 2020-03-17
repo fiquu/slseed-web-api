@@ -1,9 +1,3 @@
-/**
- * Schemas config module.
- *
- * @module configs/schemas
- */
-
 import { SchemasMap, SchemaLoaderOptions } from '@fiquu/schema-loader-mongoose';
 
 import _default from './default';

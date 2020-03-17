@@ -4,4 +4,4 @@ module.exports = {
   staging: 'error',
   testing: 'none',
   local: 'debug'
-}
+};

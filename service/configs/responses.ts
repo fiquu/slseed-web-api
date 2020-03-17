@@ -1,9 +1,3 @@
-/**
- * Responses config module.
- *
- * @module configs/responses
- */
-
 export default {
   default: {
     headers: {

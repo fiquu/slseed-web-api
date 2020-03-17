@@ -1,9 +1,3 @@
-/**
- * Database component module.
- *
- * @module components/database
- */
-
 import { createDatabaseManager } from '@fiquu/database-manager-mongoose';
 import { Connection } from 'mongoose';
 

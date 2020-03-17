@@ -1,12 +1,5 @@
-/**
- * Auth component module.
- *
- * @module components/auth
- */
-
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import op from 'object-path';
-import is from 'fi-is';
 
 import db from './database';
 
@@ -27,7 +20,7 @@ export default async (context: APIGatewayProxyEvent): Promise<any> => {
   const sub = op.get(context, 'requestContext.authorizer.claims.sub', null);
   const conn = await db.connect('default');
 
-  if (is.empty(sub)) {
+  if (typeof sub !== 'string' || sub.length < 1) {
     throw 'ERR_NO_AUTH_SUBJECT';
   }
 
@@ -38,13 +31,13 @@ export default async (context: APIGatewayProxyEvent): Promise<any> => {
 
   query.match({ sub });
 
-  if (is.array(pipeline) && is.not.empty(pipeline)) {
+  if (Array.isArray(pipeline) && pipeline.length > 0) {
     query.append(pipeline);
   }
 
   const [result] = await query;
 
-  if (is.any.empty(result, result._id)) {
+  if (!result || !result._id) {
     throw 'ERR_NO_AUTH_DATA_FOUND';
   }
 
