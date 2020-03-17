@@ -19,7 +19,8 @@ export default async (parent: any, params: any, context: APIGatewayProxyEvent): 
     await auth(context);
 
     const User = conn.model('user');
-    const query = User.findById(params._id);
+    const query = User.findById(params._id)
+      .lean();
 
     const result = await query;
 

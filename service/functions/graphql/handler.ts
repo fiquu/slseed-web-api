@@ -7,6 +7,8 @@ import {
 
 import { resolvers, typeDefs } from '../../components/graphql';
 
+console.info(resolvers, typeDefs);
+
 /**
  * Document create handler function.
  *

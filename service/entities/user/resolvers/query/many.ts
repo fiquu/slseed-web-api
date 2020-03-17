@@ -18,8 +18,9 @@ export default async (parent: any, params: any, context: APIGatewayProxyEvent): 
 
     await auth(context);
 
-    const User = conn.model('label');
-    const query = User.find();
+    const User = conn.model('user');
+    const query = User.find()
+      .lean();
 
     if (params.skip) {
       query.skip(params.skip);

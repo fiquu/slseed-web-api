@@ -5,11 +5,25 @@ type User {
 }
 
 type Query {
-  users(skip: Int, limit: Int): [User!]!
-  user: User!
+  user(
+    _id: ID!
+  ): User
+
+  users(
+    skip: Int
+    limit: Int
+  ): [User]!
 }
 
 type Mutation {
-  createUser(sub: String!): User
-  updateUser(_id: ID!, sub: String!)
+  createUser(
+    sub: String!
+    name: String!
+  ): User
+
+  updateUser(
+    _id: ID!
+    sub: String
+    name: String
+  ): User
 }
