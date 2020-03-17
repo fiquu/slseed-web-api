@@ -14,5 +14,12 @@ module.exports = [
     message: 'Mailer Sender',
     default: '"Name" <name@example.com>',
     validate: val => /^"[^"]+"\s<[^@]+@.+>$/.test(val)
+  },
+  {
+    name: 'AppOrigin',
+    type: 'input',
+    message: 'App Origin (CORS)',
+    default: '*',
+    validate: val => /^https?:\/\/[-_\w.]+(\:\d+)?|\*$/.test(val)
   }
 ];

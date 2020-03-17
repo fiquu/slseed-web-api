@@ -4,5 +4,7 @@ module.exports = [
 
   'mailer-sender',
 
+  'app-origin',
+
   'db-uri'
 ];
