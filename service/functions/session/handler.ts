@@ -27,7 +27,9 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
   try {
     const conn = await db.connect('default');
-    const user = await conn.model('user').findOne({ sub });
+    const user = await conn.model('user')
+      .findOne({ sub })
+      .lean();
 
     return res.send(ok({
       body: user
