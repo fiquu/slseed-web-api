@@ -1,7 +1,12 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
 import db from '../../../../components/database';
 import auth from '../../../../components/auth';
+
+interface Params {
+  limit: number;
+  skip: number;
+}
 
 /**
  * Users resolver function.
@@ -12,28 +17,20 @@ import auth from '../../../../components/auth';
  *
  * @returns {Array} The matched query results.
  */
-export default async (parent: any, params: any, context: APIGatewayProxyEvent): Promise<any> => {
-  try {
-    const conn = await db.connect('default');
+export default async (parent: object, { skip = 0, limit = 50 }: Params, context: Context): Promise<object[]> => {
+  const conn = await db.connect('default');
 
-    await auth(context);
+  await auth(context);
 
-    const User = conn.model('user');
-    const query = User.find()
-      .lean();
+  const query = conn.model('user').find();
 
-    if (params.skip) {
-      query.skip(params.skip);
-    }
-
-    if (params.limit) {
-      query.limit(params.limit);
-    }
-
-    const results = await query;
-
-    return results;
-  } catch (err) {
-    throw new Error(err);
+  if (skip > -1) {
+    query.skip(skip);
   }
+
+  if (limit > 0) {
+    query.limit(limit);
+  }
+
+  return await query.lean();
 };

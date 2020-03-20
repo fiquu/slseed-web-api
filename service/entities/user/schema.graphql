@@ -17,13 +17,11 @@ type Query {
 
 type Mutation {
   createUser(
-    sub: String!
     name: String!
-  ): User
+  ): User!
 
   updateUser(
     _id: ID!
-    sub: String
     name: String
-  ): User
+  ): User!
 }

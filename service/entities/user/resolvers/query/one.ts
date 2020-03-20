@@ -1,7 +1,11 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
 import db from '../../../../components/database';
 import auth from '../../../../components/auth';
+
+interface Params {
+  _id: string;
+}
 
 /**
  * User resolver function.
@@ -12,20 +16,12 @@ import auth from '../../../../components/auth';
  *
  * @returns {object} The matched query results.
  */
-export default async (parent: any, params: any, context: APIGatewayProxyEvent): Promise<any> => {
-  try {
-    const conn = await db.connect('default');
+export default async (parent: object, { _id }: Params, context: Context): Promise<object> => {
+  const conn = await db.connect('default');
 
-    await auth(context);
+  await auth(context);
 
-    const User = conn.model('user');
-    const query = User.findById(params._id)
-      .lean();
+  const query = conn.model('user').findById(_id);
 
-    const result = await query;
-
-    return result;
-  } catch (err) {
-    throw new Error(err);
-  }
+  return await query.lean();
 };

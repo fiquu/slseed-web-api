@@ -1,7 +1,9 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
 import db from '../../../../components/database';
 import auth from '../../../../components/auth';
+
+type Params = Record<string, string>;
 
 /**
  * User create resolver function.
@@ -12,17 +14,12 @@ import auth from '../../../../components/auth';
  *
  * @returns {object} The matched query results.
  */
-export default async (parent: any, params: any, context: APIGatewayProxyEvent): Promise<any> => {
-  try {
-    const conn = await db.connect('default');
+export default async (parent: object, params: Params, context: Context): Promise<object> => {
+  const conn = await db.connect('default');
 
-    await auth(context);
+  await auth(context);
 
-    const User = conn.model('user');
-    const result = User.create({ ...params });
-
-    return result;
-  } catch (err) {
-    throw new Error(err);
-  }
+  return await conn.model('user').create({
+    ...params
+  });
 };

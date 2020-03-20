@@ -1,8 +1,13 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
 import db from '../../../../components/database';
 import auth from '../../../../components/auth';
 import { QueryUpdateOptions } from 'mongoose';
+
+interface Params {
+  _id: string;
+  [key: string]: string;
+}
 
 /**
  * User update resolver function.
@@ -13,32 +18,28 @@ import { QueryUpdateOptions } from 'mongoose';
  *
  * @returns {object} The matched query results.
  */
-export default async (parent: any, params: any, context: APIGatewayProxyEvent): Promise<void> => {
-  try {
-    const conn = await db.connect('default');
+export default async (parent: object, params: Params, context: Context): Promise<object> => {
+  const conn = await db.connect('default');
 
-    await auth(context);
+  await auth(context);
 
-    const User = conn.model('user');
+  const conditions = {
+    _id: params._id
+  };
 
-    const conditions = {
-      _id: params._id
-    };
+  const $set = {
+    ...params
+  };
 
-    const $set = {
-      ...params
-    };
+  const options: QueryUpdateOptions = {
+    runValidators: true
+  };
 
-    const options: QueryUpdateOptions = {
-      runValidators: true
-    };
+  const { nModified } = await conn.model('user').updateOne({ ...conditions }, { $set }, options);
 
-    const { nModified } = await User.updateOne(conditions, { $set }, options);
-
-    if (nModified !== 1) {
-      throw 'No document modified.';
-    }
-  } catch (err) {
-    throw new Error(err);
+  if (nModified !== 1) {
+    throw Error('ERR_NONE_MODIFIED');
   }
+
+  return conn.model('user').findById(params._id);
 };

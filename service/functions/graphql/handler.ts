@@ -2,27 +2,42 @@ import { GraphQLServerLambda } from 'graphql-yoga';
 import {
   APIGatewayProxyEvent as Event,
   APIGatewayEventRequestContext as Context,
-  APIGatewayProxyCallback as Callback
+  APIGatewayProxyResult as Result
 } from 'aws-lambda';
 
 import { resolvers, typeDefs } from '../../components/graphql';
 
-console.info(resolvers, typeDefs);
-
 /**
- * Document create handler function.
+ * GraphQL handler function.
  *
  * @param {object} event Call event object.
  * @param {object} context Context object.
- * @param {Function} callback Callback function.
+ *
+ * @returns {Promise} A promise to the response.
  */
-export function handler(event: Event, context: Context, callback: Callback): void {
-  const { graphqlHandler } = new GraphQLServerLambda({
-    context: (): Event => event,
-    resolvers: { ...resolvers },
-    typeDefs: String(typeDefs)
-  });
+export function handler(event: Event, context: Context): Promise<Result> {
+  try {
+    const { graphqlHandler } = new GraphQLServerLambda({
+      context: (): Event => event,
+      resolvers: { ...resolvers },
+      typeDefs: String(typeDefs)
+    });
 
-  // Can't use async because it would call the callback twice.
-  graphqlHandler(event, context, callback);
+    return new Promise(resolve => {
+      graphqlHandler(event, context, (err: Error, result: Result): void => {
+        if (err) {
+          console.error(err);
+        }
+
+        resolve(result);
+      });
+    });
+  } catch (err) {
+    console.error(err);
+
+    return Promise.resolve({
+      statusCode: 500,
+      body: ''
+    });
+  }
 }
