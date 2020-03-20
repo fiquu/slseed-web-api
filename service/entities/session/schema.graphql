@@ -1,0 +1,4 @@
+type Query {
+  # Retrieves the current session data if any.
+  session: User
+}
