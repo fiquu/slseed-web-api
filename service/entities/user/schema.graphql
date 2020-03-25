@@ -10,18 +10,17 @@ type Query {
   ): User
 
   users(
-    skip: Int
-    limit: Int
+    pagination: PaginationInput
   ): [User]!
 }
 
-type Mutation {
-  createUser(
-    name: String!
-  ): User!
+input UpdateUserInput {
+  name: String!
+}
 
+type Mutation {
   updateUser(
     _id: ID!
-    name: String
+    input: UpdateUserInput!
   ): User!
 }

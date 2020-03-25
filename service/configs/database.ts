@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const { NODE_ENV } = process.env;
 
-mongoose.set('debug', !['production', 'testing'].includes(NODE_ENV));
+mongoose.set('debug', ['local', 'development'].includes(NODE_ENV));
 
 /**
  * Defaults have been set according to the official recommendations.

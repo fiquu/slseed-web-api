@@ -1,5 +1,4 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
-import op from 'object-path';
+import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
 import db from './database';
 
@@ -8,21 +7,27 @@ import config from '../configs/auth';
 /**
  * Authorizes the request user if required.
  *
- * @param {APIGatewayProxyEvent} context The request event context.
+ * @param {Context} context The request event context.
  *
- * @returns {object|null} The user data or null if not required and no subject
- * is present.
+ * @returns {Promise<object>} A promise to the User data.
  *
  * @throws ERR_NO_AUTH_SUBJECT If there's no subject to authorize.
  * @throws ERR_NO_AUTH_DATA If the provided subject has no data registered.
  */
-export default async (context: APIGatewayProxyEvent): Promise<any> => {
-  const sub = op.get(context, 'requestContext.authorizer.claims.sub', null);
-  const conn = await db.connect('default');
+export default async ({ requestContext }: Context): Promise<any> => {
+  let sub: string;
 
-  if (typeof sub !== 'string' || sub.length < 1) {
-    throw 'ERR_NO_AUTH_SUBJECT';
+  try {
+    sub = requestContext.authorizer.claims.sub;
+
+    if (typeof sub !== 'string' || sub.length < 1) {
+      throw new Error();
+    }
+  } catch (err) {
+    throw new Error('ERR_NO_AUTH_SUBJECT');
   }
+
+  const conn = await db.connect('default');
 
   const pipeline = config.get('pipeline');
   const model = config.get('model');
@@ -38,7 +43,7 @@ export default async (context: APIGatewayProxyEvent): Promise<any> => {
   const [result] = await query;
 
   if (!result || !result._id) {
-    throw 'ERR_NO_AUTH_DATA_FOUND';
+    throw new Error('ERR_NO_AUTH_DATA_FOUND');
   }
 
   return result;

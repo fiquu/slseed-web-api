@@ -3,5 +3,9 @@
   "extends": "@fiquu/eslint-config/typescript",
   "parserOptions": {
     "sourceType": "module"
+  },
+  "rules": {
+    "node/no-unpublished-import": "off",
+    "max-lines-per-function": "off"
   }
 }

@@ -3,21 +3,27 @@ import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 import db from '../../../../components/database';
 import auth from '../../../../components/auth';
 
+type Result = Promise<object[]>;
+
 interface Params {
-  limit: number;
-  skip: number;
+  pagination: {
+    limit: number;
+    skip: number;
+  };
 }
 
 /**
  * Users resolver function.
  *
- * @param {object} parent The GraphQL parent.
+ * @param {object} root The GraphQL parent.
  * @param {object} params The GraphQL query params.
  * @param {object} context The request context.
  *
  * @returns {Array} The matched query results.
  */
-export default async (parent: object, { skip = 0, limit = 50 }: Params, context: Context): Promise<object[]> => {
+export default async (root: object, { pagination }: Params, context: Context): Result => {
+  const { skip = 0, limit = 50 } = pagination || {};
+
   const conn = await db.connect('default');
 
   await auth(context);

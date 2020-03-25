@@ -1,13 +1,8 @@
 {
-  "include": [
-    "service/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
   "compilerOptions": {
     "outDir": ".build",
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "module": "commonjs",
     "target": "es2019",
     "lib": [
@@ -17,5 +12,11 @@
       "types",
       "node_modules/@types"
     ]
-  }
+  },
+  "include": [
+    "service/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

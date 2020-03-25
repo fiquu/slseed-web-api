@@ -1,11 +1,11 @@
 export default {
   // No need to set the `handler` as the function loader does it
-  description: 'Session resolver function.',
+  description: 'GraphQL Playground endpoint handler.',
   events: [
     {
       http: {
         method: 'get',
-        path: '/session',
+        path: '/graphql',
         cors: '${self:custom.cors}'
       }
     }

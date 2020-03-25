@@ -8,10 +8,10 @@ import {
 
 import { resolvers, typeDefs } from '../../components/graphql';
 
-const log = createLogger('graphql-handler');
+const log = createLogger('graphql-playground-handler');
 
 /**
- * GraphQL handler function.
+ * GraphQL Playground handler function.
  *
  * @param {object} event Call event object.
  * @param {object} context Context object.
@@ -20,8 +20,8 @@ const log = createLogger('graphql-handler');
  */
 export function handler(event: Event, context: Context): Promise<Result> {
   try {
-    const { graphqlHandler } = new GraphQLServerLambda({
-      context: (): Event => ({ ...event }),
+    const { playgroundHandler } = new GraphQLServerLambda({
+      context: (): Event => event,
       resolvers: { ...resolvers },
       typeDefs: String(typeDefs),
       options: {
@@ -30,7 +30,7 @@ export function handler(event: Event, context: Context): Promise<Result> {
     });
 
     return new Promise(resolve => {
-      graphqlHandler(event, context, (err: Error, result: Result): void => {
+      playgroundHandler(event, context, (err: Error, result: Result): void => {
         if (err) {
           log.error(err);
         }

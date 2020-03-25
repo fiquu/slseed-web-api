@@ -7,7 +7,7 @@ export default {
         method: 'post',
         path: '/graphql',
         cors: '${self:custom.cors}',
-        authorizer: '${self:custom.authorizer}',
+        authorizer: '${self:custom.authorizer}'
       }
     }
   ]

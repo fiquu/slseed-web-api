@@ -1,13 +1,4 @@
-/* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
-
-/**
- * Create User script.
- *
- * Creates a Cognito user and the user reference in the database.
- *
- * @example $ node scripts/users/create.js
- */
-
+import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 import inquirer from 'inquirer';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -15,8 +6,6 @@ import chalk from 'chalk';
 import AWS from 'aws-sdk';
 import is from 'fi-is';
 import ora from 'ora';
-
-import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 
 const spinner = ora();
 
@@ -53,10 +42,7 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
 (async (): Promise<void> => {
   await stageSelect();
 
-  const env = dotenv.config({
-    path: `.env.${process.env.NODE_ENV}`,
-    debug: true
-  });
+  const env = dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
   if (env.error) {
     throw env.error;
@@ -65,14 +51,12 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
   console.log(`${chalk.cyan.bold('Create User Script')}\n`);
 
   try {
-    const userSchema = (await import('../../service/entities/user/schema.db')).default; // ?;
-    const User = mongoose.model('user', userSchema);
-
     spinner.start('Connecting to the database...');
 
     const db = (await import('../../service/components/database')).default; // ?;
+    const conn = await db.connect('default');
 
-    await db.connect();
+    const User = conn.model('user');
 
     spinner.succeed('Successfully connected to the database.');
 

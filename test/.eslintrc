@@ -1,6 +1,11 @@
 {
-  "extends": "../.eslintrc",
+  "extends": "@fiquu/eslint-config/typescript",
   "env": {
     "mocha": true
+  },
+  "rules": {
+    "node/no-unpublished-import": "off",
+    "node/no-extraneous-import": "off",
+    "max-lines-per-function": "off"
   }
 }

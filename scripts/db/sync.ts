@@ -1,13 +1,5 @@
 /* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
 
-/**
- * Syncs the database indexes.
- *
- * @see https://mongoosejs.com/docs/api.html#model_Model.syncIndexes
- *
- * @example $ node scripts/db/sync.js
- */
-
 import confirmPrompt from '@fiquu/slseed-web-utils/lib/confirm-prompt';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 import mongoose, { Connection } from 'mongoose';
@@ -24,9 +16,11 @@ const spinner = ora();
 async function init(): Promise<void> {
   await stageSelect();
 
-  dotenv.config({
-    path: resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
-  });
+  const env = dotenv.config({ path: resolve(process.cwd(), `.env.${process.env.NODE_ENV}`) });
+
+  if (env.error) {
+    throw env.error;
+  }
 
   mongoose.set('debug', true);
 }
@@ -34,7 +28,9 @@ async function init(): Promise<void> {
 /**
  * Syncs the database indexes.
  *
- * @param conn
+ * @param {Connection} conn The connection.
+ *
+ * @returns {Promise<void>} A promise to the operation.
  */
 async function syncIndexes(conn: Connection): Promise<void> {
   spinner.info('Syncing indexes...');
@@ -49,10 +45,12 @@ async function syncIndexes(conn: Connection): Promise<void> {
 (async (): Promise<void> => {
   console.log(`\n${chalk.cyan.bold('Sync Database Indexes Script')}\n`);
 
+  let db;
+
   try {
     await init();
 
-    const db: any = (await import('../../service/components/database')).default; // ?
+    db = (await import('../../service/components/database')).default; // ?
 
     spinner.info(`${chalk.bold('Target database:')} "default"`);
 
@@ -64,10 +62,9 @@ async function syncIndexes(conn: Connection): Promise<void> {
     const conn = await db.connect('default');
 
     await syncIndexes(conn);
-
-    await db.disconnect('default', true);
   } catch (err) {
     spinner.fail(err.message);
-    throw err;
   }
+
+  await db.disconnect('default');
 })();
