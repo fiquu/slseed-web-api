@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@fiquu/eslint-config": "^3.0.2",
-    "@fiquu/slseed-web-utils": "^1.0.2",
+    "@fiquu/slseed-web-utils": "^1.0.3",
     "@types/aws-lambda": "^8.10.46",
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.11",
