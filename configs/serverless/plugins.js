@@ -7,12 +7,19 @@ const plugins = [
 /* Set per-stage plugins */
 switch (process.env.NODE_ENV) {
   case 'production':
-    plugins.push('serverless-domain-manager');
+  case 'staging':
     break;
 
-  default:
+  case 'development':
+    break;
+
+  case 'testing':
     plugins.push('serverless-mocha-plugin');
+    break;
+
+  case 'local':
     plugins.push('serverless-offline');
+    break;
 }
 
 module.exports = plugins;
