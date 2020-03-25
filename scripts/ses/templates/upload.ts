@@ -7,6 +7,7 @@ import htmlToText from 'html-to-text';
 import { prompt } from 'inquirer';
 import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
+import juice from 'juice';
 import chalk from 'chalk';
 import AWS from 'aws-sdk';
 import glob from 'glob';
@@ -84,11 +85,11 @@ const spinner = ora();
         TextPart: htmlToText.fromString(template),
         TemplateName,
         SubjectPart,
-        HtmlPart: minify(template, {
+        HtmlPart: juice(minify(template, {
           collapseWhitespace: true,
           removeComments: true,
           minifyCSS: true
-        })
+        }))
       }
     };
 
