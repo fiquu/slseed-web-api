@@ -79,15 +79,9 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
         }
       },
       {
-        name: 'firstname',
+        name: 'name',
         type: 'input',
-        message: 'Enter user\'s first name:',
-        validate: (val: string): boolean => val && val.length > 1
-      },
-      {
-        name: 'lastname',
-        type: 'input',
-        message: 'Enter user\'s last name:',
+        message: 'Enter user\'s name:',
         validate: (val: string): boolean => val && val.length > 1
       },
       {
@@ -132,9 +126,8 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
     spinner.info('Creating user in the database...');
 
     const user = await User.create({
-      firstname: answers.firstname,
-      lastname: answers.lastname,
-      sub: CognitoUser.Username
+      sub: CognitoUser.Username,
+      name: answers.name
     });
 
     if (!user) {
