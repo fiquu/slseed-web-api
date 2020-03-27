@@ -5,8 +5,8 @@ module.exports = {
     arn: '${env:COGNITO_USER_POOL_ARN}'
   },
   'serverless-offline': {
-    lambdaPort: 8082,
-    httpPort: 8080
+    lambdaPort: (process.env.PORT || 8080) + 2,
+    httpPort: process.env.PORT || 8080
   },
   prune: {
     automatic: true,
