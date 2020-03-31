@@ -5,6 +5,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
     "node/no-unpublished-import": "off",
     "max-lines-per-function": "off"
   }

@@ -1,11 +1,9 @@
-/* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
-
 import confirmPrompt from '@fiquu/slseed-web-utils/lib/confirm-prompt';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 import { minify } from 'html-minifier';
 import htmlToText from 'html-to-text';
-import { prompt } from 'inquirer';
 import { readFileSync } from 'fs';
+import { prompt } from 'inquirer';
 import dotenv from 'dotenv';
 import juice from 'juice';
 import chalk from 'chalk';
@@ -24,7 +22,7 @@ const spinner = ora();
     throw env.error;
   }
 
-  console.log(`${chalk.cyan.bold('SES Create Email Template Script')}\n`);
+  console.log(`${chalk.cyan.bold('SES Email Template Upload Script')}\n`);
 
   spinner.start('Listing templates...');
 

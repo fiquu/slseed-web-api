@@ -1,5 +1,3 @@
-/* eslint-disable max-lines-per-function, node/no-unpublished-import, node/no-unpublished-require */
-
 import confirmPrompt from '@fiquu/slseed-web-utils/lib/confirm-prompt';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 import mongoose, { Connection } from 'mongoose';
