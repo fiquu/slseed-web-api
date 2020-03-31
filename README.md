@@ -27,6 +27,12 @@ That's it. Your App should be running wherever it says it's running.
 
 See the `"scripts"` section on the `package.json` for more commands.
 
+## Running Scripts
+
+We've bundled some utility scripts that you may find useful while developing or maintaining your app. To run them, user `ts-node` like this:
+
+`$ ts-node scripts/users/create.ts`
+
 ## Deploying
 
 1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup`, selecting the stage and checking if the `.env.[stage]` exists.
