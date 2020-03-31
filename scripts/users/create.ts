@@ -1,13 +1,17 @@
+import { AdminCreateUserRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
+import { PromiseResult } from 'aws-sdk/lib/request';
 import inquirer from 'inquirer';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import is from '@fiquu/is';
 import chalk from 'chalk';
 import AWS from 'aws-sdk';
-import is from 'fi-is';
 import ora from 'ora';
 
 const spinner = ora();
+
+type CreateResult = Promise<PromiseResult<AWS.CognitoIdentityServiceProvider.AdminCreateUserResponse, AWS.AWSError>>;
 
 /**
  * Creates a user in the Cognito user pool.
@@ -17,10 +21,9 @@ const spinner = ora();
  *
  * @returns {Promise} A promise to the user creation.
  */
-function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
+function createCognitoUser(answers: any, UserAttributes: any[]): CreateResult {
   const cognito = new AWS.CognitoIdentityServiceProvider();
-
-  const params = {
+  const params: AdminCreateUserRequest = {
     Username: answers.Username,
     ForceAliasCreation: answers.ForceAliasCreation,
     TemporaryPassword: answers.TemporaryPassword,
@@ -101,20 +104,17 @@ function createCognitoUser(answers: any, UserAttributes: any[]): Promise<any> {
         name: 'MessageAction',
         type: 'list',
         message: 'Select message action:',
-        choices: ['None', 'Resend', 'Supress'],
         default: 'None',
-        filter: (val: string): string => {
-          switch (val) {
-            case 'Resend':
-              return 'RESEND';
-
-            case 'Supress':
-              return 'SUPRESS';
-
-            default:
-              return null;
-          }
-        }
+        choices: [{
+          name: 'None',
+          value: null
+        }, {
+          name: 'Resend',
+          value: 'RESEND'
+        }, {
+          name: 'Supress',
+          value: 'SUPRESS'
+        }]
       }
     ]);
 
