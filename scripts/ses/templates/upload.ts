@@ -13,6 +13,8 @@ import ora from 'ora';
 
 const spinner = ora();
 
+console.log(`${chalk.cyan.bold('SES Email Template Upload Script')}\n`);
+
 (async (): Promise<void> => {
   await stageSelect();
 
@@ -21,8 +23,6 @@ const spinner = ora();
   if (env.error) {
     throw env.error;
   }
-
-  console.log(`${chalk.cyan.bold('SES Email Template Upload Script')}\n`);
 
   spinner.start('Listing templates...');
 

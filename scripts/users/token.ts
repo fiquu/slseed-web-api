@@ -46,6 +46,8 @@ export async function listUsers(): Promise<string[]> {
   });
 }
 
+console.log(`${chalk.cyan.bold('Get User Auth Token Script')}\n`);
+
 (async (): Promise<void> => {
   await stageSelect();
 
@@ -54,8 +56,6 @@ export async function listUsers(): Promise<string[]> {
   if (env.error) {
     throw env.error;
   }
-
-  console.log(`${chalk.cyan.bold('Set User Password Script')}\n`);
 
   const users = await listUsers();
   const { USERNAME, PASSWORD } = await prompt([

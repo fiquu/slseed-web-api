@@ -1,8 +1,7 @@
-import { AdminCreateUserRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { AdminCreateUserRequest, AdminDeleteUserRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
 import { PromiseResult } from 'aws-sdk/lib/request';
 import inquirer from 'inquirer';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import is from '@fiquu/is';
 import chalk from 'chalk';
@@ -12,6 +11,7 @@ import ora from 'ora';
 const spinner = ora();
 
 type CreateResult = Promise<PromiseResult<AWS.CognitoIdentityServiceProvider.AdminCreateUserResponse, AWS.AWSError>>;
+type DeleteResult = Promise<{ $response: AWS.Response<{}, AWS.AWSError> }>;
 
 /**
  * Creates a user in the Cognito user pool.
@@ -42,21 +42,36 @@ function createCognitoUser(answers: any, UserAttributes: any[]): CreateResult {
   return cognito.adminCreateUser(params).promise();
 }
 
+/**
+ * @param {string} Username The username to delete.
+ */
+async function deleteCognitoUser(Username: string): DeleteResult {
+  const cognito = new AWS.CognitoIdentityServiceProvider();
+  const params: AdminDeleteUserRequest = {
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    Username
+  };
+
+  return cognito.adminDeleteUser(params).promise();
+}
+
+console.log(`${chalk.cyan.bold('Create User Script')}\n`);
+
 (async (): Promise<void> => {
   await stageSelect();
 
   const env = dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+  let db;
 
   if (env.error) {
     throw env.error;
   }
 
-  console.log(`${chalk.cyan.bold('Create User Script')}\n`);
-
   try {
     spinner.start('Connecting to the database...');
 
-    const db = (await import('../../service/components/database')).default; // ?;
+    db = (await import('../../service/components/database')).default; // ?;
+
     const conn = await db.connect('default');
 
     const User = conn.model('user');
@@ -125,20 +140,29 @@ function createCognitoUser(answers: any, UserAttributes: any[]): CreateResult {
     spinner.succeed(`Cognito user created: ${chalk.bold(CognitoUser.Username)}`);
     spinner.info('Creating user in the database...');
 
-    const user = await User.create({
-      sub: CognitoUser.Username,
-      name: answers.name
-    });
+    try {
+      const user = await User.create({
+        sub: CognitoUser.Username,
+        name: answers.name
+      });
 
-    if (!user) {
-      throw new Error('User not created!');
+      if (!user) {
+        throw new Error('User not created!');
+      }
+
+      spinner.succeed(`User created: ${chalk.bold(user._id.toString())}`);
+    } catch (err) {
+      spinner.start('Deleting Cognito user...');
+
+      await deleteCognitoUser(CognitoUser.Username);
+
+      spinner.succeed('Cognito user deleted.');
+
+      throw err;
     }
-
-    spinner.succeed(`User created: ${chalk.bold(user._id.toString())}`);
   } catch (err) {
     spinner.fail(err.message);
-    console.error(err);
   }
 
-  await mongoose.disconnect();
+  await db.disconnect();
 })();

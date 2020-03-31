@@ -40,9 +40,9 @@ async function syncIndexes(conn: Connection): Promise<void> {
   spinner.succeed('Indexes synced');
 }
 
-(async (): Promise<void> => {
-  console.log(`\n${chalk.cyan.bold('Sync Database Indexes Script')}\n`);
+console.log(`\n${chalk.cyan.bold('Sync Database Indexes Script')}\n`);
 
+(async (): Promise<void> => {
   let db;
 
   try {
