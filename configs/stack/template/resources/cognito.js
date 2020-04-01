@@ -41,6 +41,12 @@ module.exports = {
     Properties: {
       ExplicitAuthFlows: ['ADMIN_NO_SRP_AUTH'],
       GenerateSecret: false,
+      AccountRecoverySetting: {
+        RecoveryMechanisms: [{
+          Name: 'verified_email',
+          Priority: 1
+        }]
+      },
       ClientName: {
         'Fn::Sub': '${ProjectName}-${Environment}-app-client'
       },
