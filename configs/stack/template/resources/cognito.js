@@ -43,8 +43,7 @@ module.exports = {
       GenerateSecret: false,
       AccountRecoverySetting: {
         RecoveryMechanisms: [{
-          Name: 'verified_email',
-          Priority: 1
+          Name: 'verified_email'
         }]
       },
       ClientName: {
