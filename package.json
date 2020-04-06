@@ -64,11 +64,11 @@
     "check": "npm-check --update"
   },
   "dependencies": {
-    "@fiquu/database-manager-mongoose": "^1.0.1",
-    "@fiquu/is": "^1.2.1",
-    "@fiquu/lambda-http-event-handler": "^1.0.0",
-    "@fiquu/logger": "^1.0.1",
-    "@fiquu/schema-loader-mongoose": "^1.0.0",
+    "@fiquu/database-manager-mongoose": "^1.0.2",
+    "@fiquu/is": "^1.2.2",
+    "@fiquu/lambda-http-event-handler": "^1.0.1",
+    "@fiquu/logger": "^1.0.2",
+    "@fiquu/schema-loader-mongoose": "^1.0.2",
     "aws-sdk": "^2.653.0",
     "email-addresses": "^3.1.0",
     "graphql": "^15.0.0",
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@fiquu/eslint-config": "^3.0.2",
-    "@fiquu/slseed-web-utils": "^1.0.6",
+    "@fiquu/slseed-web-utils": "^1.0.7",
     "@types/aws-lambda": "^8.10.47",
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.11",
