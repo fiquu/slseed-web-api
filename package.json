@@ -51,7 +51,7 @@
   },
   "scripts": {
     "test": "nyc ts-mocha test/**/*.spec.ts",
-    "postversion": "git push --tags",
+    "postversion": "git push --follow-tags",
     "domain": "sls create_domain --stage production",
     "clean": "rimraf .build/",
     "prestart": "npm run clean",
