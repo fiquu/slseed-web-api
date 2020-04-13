@@ -17,14 +17,6 @@
   "contributors": [
     "Santiago G. Marín <santiago.marin@final.cl> (https://github.com/stgogm)"
   ],
-  "keywords": [
-    "slseed",
-    "serverless",
-    "sls",
-    "api",
-    "seed",
-    "project"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:fiquu/slseed-web-api.git"
@@ -39,16 +31,6 @@
     "node": ">= 12.0.0",
     "npm": ">= 6.0.0"
   },
-  "nyc": {
-    "reporter": [
-      "html"
-    ],
-    "include": [
-      "service"
-    ],
-    "cache": true,
-    "all": true
-  },
   "scripts": {
     "test": "nyc ts-mocha test/**/*.spec.ts",
     "postversion": "git push --follow-tags",
@@ -60,8 +42,7 @@
     "setup:env": "slseed-utils --do setup-env",
     "setup": "slseed-utils",
     "predeploy": "npm run clean",
-    "deploy": "slseed-utils --do deploy",
-    "check": "npm-check --update"
+    "deploy": "slseed-utils --do deploy"
   },
   "dependencies": {
     "@fiquu/database-manager-mongoose": "^1.0.2",
@@ -69,22 +50,23 @@
     "@fiquu/lambda-http-event-handler": "^1.0.1",
     "@fiquu/logger": "^1.0.2",
     "@fiquu/schema-loader-mongoose": "^1.0.2",
-    "aws-sdk": "^2.654.0",
+    "aws-sdk": "^2.656.0",
     "email-addresses": "^3.1.0",
     "graphql": "^15.0.0",
     "graphql-yoga": "^1.18.3",
     "merge-graphql-schemas": "^1.7.7",
-    "mongoose": "^5.9.7"
+    "mongoose": "^5.9.7",
+    "serverless-mocha-plugin": "^1.12.0"
   },
   "devDependencies": {
     "@fiquu/eslint-config": "^3.0.3",
-    "@fiquu/slseed-web-utils": "^1.0.10",
-    "@types/aws-lambda": "^8.10.47",
+    "@fiquu/slseed-web-utils": "^1.0.17",
+    "@types/aws-lambda": "^8.10.48",
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.11",
     "@types/mocha": "^7.0.2",
-    "@types/mongoose": "^5.7.8",
-    "@types/node": "^13.11.0",
+    "@types/mongoose": "^5.7.10",
+    "@types/node": "^13.11.1",
     "@types/ws": "^7.2.3",
     "amazon-cognito-identity-js-node": "0.0.3",
     "chai": "^4.2.0",
@@ -105,10 +87,9 @@
     "nyc": "^15.0.1",
     "ora": "^4.0.3",
     "rimraf": "^3.0.2",
-    "serverless": "^1.67.1",
+    "serverless": "^1.67.3",
     "serverless-domain-manager": "^3.3.1",
     "serverless-dotenv-plugin": "^2.3.2",
-    "serverless-mocha-plugin": "git+https://github.com/nordcloud/serverless-mocha-plugin.git",
     "serverless-offline": "^6.1.4",
     "serverless-plugin-typescript": "^1.1.9",
     "serverless-prune-plugin": "^1.4.2",
