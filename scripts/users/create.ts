@@ -1,6 +1,5 @@
 import { AdminCreateUserRequest, AdminDeleteUserRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import stageSelect from '@fiquu/slseed-web-utils/lib/stage-select';
-import { PromiseResult } from 'aws-sdk/lib/request';
 import inquirer from 'inquirer';
 import dotenv from 'dotenv';
 import is from '@fiquu/is';
@@ -10,9 +9,6 @@ import ora from 'ora';
 
 const spinner = ora();
 
-type CreateResult = Promise<PromiseResult<AWS.CognitoIdentityServiceProvider.AdminCreateUserResponse, AWS.AWSError>>;
-type DeleteResult = Promise<{ $response: AWS.Response<{}, AWS.AWSError> }>;
-
 /**
  * Creates a user in the Cognito user pool.
  *
@@ -21,10 +17,10 @@ type DeleteResult = Promise<{ $response: AWS.Response<{}, AWS.AWSError> }>;
  *
  * @returns {Promise} A promise to the user creation.
  */
-function createCognitoUser(answers: any, UserAttributes: any[]): CreateResult {
+function createCognitoUser(answers: any, UserAttributes: any[]) {
   const cognito = new AWS.CognitoIdentityServiceProvider();
   const params: AdminCreateUserRequest = {
-    Username: answers.Username,
+    Username: answers.Username.toLowerCase(), // Cognito is case-sensitive!
     ForceAliasCreation: answers.ForceAliasCreation,
     TemporaryPassword: answers.TemporaryPassword,
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
@@ -45,11 +41,11 @@ function createCognitoUser(answers: any, UserAttributes: any[]): CreateResult {
 /**
  * @param {string} Username The username to delete.
  */
-async function deleteCognitoUser(Username: string): DeleteResult {
+async function deleteCognitoUser(Username: string) {
   const cognito = new AWS.CognitoIdentityServiceProvider();
   const params: AdminDeleteUserRequest = {
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    Username
+    Username: Username.toLowerCase() // Cognito is case-sensitive!
   };
 
   return cognito.adminDeleteUser(params).promise();
@@ -89,7 +85,7 @@ console.log(`${chalk.cyan.bold('Create User Script')}\n`);
           if (val) {
             UserAttributes.push({
               Name: 'email',
-              Value: val
+              Value: val.toLowerCase() // Cognito is case-sensitive!
             });
           }
 
