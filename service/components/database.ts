@@ -15,7 +15,7 @@ db.add('default', config);
  *
  * @returns {Connection} The connection.
  */
-async function connect(name = 'default'): Promise<Connection> {
+async function connect(name = 'default') {
   const conn: Connection = await db.connect(name);
 
   await schemas.load(name, conn);
@@ -31,7 +31,7 @@ async function connect(name = 'default'): Promise<Connection> {
  *
  * @returns {Promise<void>} A promise to the disconnection.
  */
-function disconnect(name = 'default', force?: boolean): Promise<void> {
+function disconnect(name = 'default', force?: boolean) {
   return db.disconnect(name, force);
 }
 

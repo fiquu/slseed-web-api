@@ -25,21 +25,25 @@ export function handler(event: Event, context: Context): Promise<Result> {
       resolvers: { ...resolvers },
       typeDefs: String(typeDefs),
       options: {
-        debug: ['local'].includes(process.env.NODE_ENV)
+        debug: process.env.LOG_LEVEL === 'debug'
       }
     });
 
     return new Promise(resolve => {
       playgroundHandler(event, context, (err: Error, result: Result): void => {
         if (err) {
-          log.error(err);
+          log.error('Playground handler error', {
+            error: err
+          });
         }
 
         resolve(result);
       });
     });
   } catch (err) {
-    log.error(err);
+    log.error('Unknown Playground handler error', {
+      error: err
+    });
 
     return Promise.resolve({
       statusCode: 500,

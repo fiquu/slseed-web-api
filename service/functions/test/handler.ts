@@ -22,11 +22,15 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
   try {
     const _res = noContent();
 
-    log.debug('Test Response', { res: _res });
+    log.debug('Test Response', {
+      res: _res
+    });
 
     return res.send(_res);
   } catch (err) {
-    log.error('It failed...', { err });
+    log.error('It failed...', {
+      error: err
+    });
 
     return res.handle(err);
   }

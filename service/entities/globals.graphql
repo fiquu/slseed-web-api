@@ -1,3 +1,5 @@
+scalar Date
+
 input PaginationInput {
   limit: Int
   skip: Int

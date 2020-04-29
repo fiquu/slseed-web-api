@@ -1,17 +1,20 @@
 type User {
   _id: ID!
+  # User's Cognito subject.
   sub: String!
+  # User's display name.
   name: String!
+  # User's created at date.
+  createdAt: Date!
+  # User's updated at date.
+  updatedAt: Date!
 }
 
 type Query {
-  user(
-    _id: ID!
-  ): User
-
-  users(
-    pagination: PaginationInput
-  ): [User]!
+  # Finds a User by its ID.
+  user(_id: ID!): User
+  # Finds all Users.
+  users(pagination: PaginationInput): [User]!
 }
 
 input UpdateUserInput {
@@ -19,8 +22,6 @@ input UpdateUserInput {
 }
 
 type Mutation {
-  updateUser(
-    _id: ID!
-    input: UpdateUserInput!
-  ): User!
+  # Updates a User by its ID with the provided input.
+  updateUser(_id: ID!, input: UpdateUserInput!): User!
 }

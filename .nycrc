@@ -1,10 +1,11 @@
 {
-  "cache": true,
   "all": true,
   "reporter": [
+    "text",
+    "text-summary",
     "html"
   ],
   "include": [
     "service"
-
+  ]
 }

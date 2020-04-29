@@ -1,21 +1,15 @@
 import { v4 as uuid } from 'uuid';
-import { Types } from 'mongoose';
 import faker from 'faker';
 
+import { UserDocument } from '../../service/entities/user/schema.db';
 import db from './database';
-
-export interface User {
-  _id?: Types.ObjectId;
-  name: string;
-  sub: string;
-}
 
 /**
  * @param {string} model The model name to use as User.
  *
  * @returns {Promise<object>} A promise to the user.
  */
-export async function createUser(model: string): Promise<User> {
+export async function createUser(model: string) {
   const conn = await db.connect();
   const sub = uuid();
 
@@ -24,9 +18,9 @@ export async function createUser(model: string): Promise<User> {
     sub
   });
 
-  const user: any = await conn.model(model).findOne()
+  const user: UserDocument = await conn.model(model).findOne()
     .where('sub').equals(sub)
     .lean();
 
-  return user as User;
+  return user;
 }
