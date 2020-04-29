@@ -32,16 +32,16 @@
     "npm": ">= 6.0.0"
   },
   "scripts": {
+    "pretest": "npm run clean",
     "test": "nyc ts-mocha --ui tdd test/**/*.spec.ts",
     "postversion": "git push --follow-tags",
-    "domain": "sls create_domain --stage production",
     "clean": "rimraf .build/",
     "prestart": "npm run clean",
     "start": "sls offline start --stage local",
     "setup:stack": "slseed-utils --do setup-stack",
     "setup:env": "slseed-utils --do setup-env",
     "setup": "slseed-utils",
-    "predeploy": "npm run clean",
+    "predeploy": "npm test",
     "deploy": "slseed-utils --do deploy"
   },
   "dependencies": {
