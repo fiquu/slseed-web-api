@@ -33,7 +33,7 @@
   },
   "scripts": {
     "pretest": "npm run clean",
-    "test": "nyc ts-mocha --ui tdd test/**/*.spec.ts",
+    "test": "nyc ts-mocha --ui tdd tests/**/*.spec.ts",
     "postversion": "git push --follow-tags",
     "clean": "rimraf .build/",
     "prestart": "npm run clean",
