@@ -1,24 +1,25 @@
-import '../../helpers/defaults'; // Always load first
+import '../../../helpers/defaults'; // Always load first
 
 import { getWrapper } from 'serverless-mocha-plugin';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { expect } from 'chai';
 
-import { UserDocument } from '../../../service/entities/user/schema.db';
-import { getQueryBody } from '../../helpers/graphql';
-import { createUser } from '../../helpers/users';
-import { getEvent } from '../../helpers/events';
-import db from '../../helpers/database';
-import queries from './queries';
+import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
+import { UserDocument } from '../../../../service/entities/user/schema.types';
+import { getQueryBody } from '../../../helpers/graphql';
+import { createUser } from '../../../helpers/users';
+import { getEvent } from '../../../helpers/events';
+import queries from './graphql/queries';
 
-describe('user', function () {
+describe('query user', function () {
   this.timeout(5000);
 
+  let tdb: StubbedTestDatabase;
   let users: UserDocument[];
   let wrapped;
 
   before(async function () {
-    await db.connect();
+    tdb = await createTestDatabaseAndStub(true);
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
@@ -67,7 +68,7 @@ describe('user', function () {
     const { data } = JSON.parse(res.body);
 
     expect(data).to.be.an('object');
-    expect(data.user).to.be.an('object');
+    expect(data.user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
     expect(users[0]._id.equals(data.user._id)).to.be.true;
     expect(data.user.createdAt).to.be.a('string');
     expect(data.user.updatedAt).to.be.a('string');
@@ -76,6 +77,6 @@ describe('user', function () {
   });
 
   after(async function () {
-    await db.disconnect();
+    await tdb.stopAndRestore();
   });
 });

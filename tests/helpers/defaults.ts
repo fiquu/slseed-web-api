@@ -14,11 +14,12 @@ if (env.error) {
   throw env.error;
 }
 
+process.env.MONGOMS_SYSTEM_BINARY = '/usr/bin/mongod';
 process.env.SERVERLESS_TEST_ROOT = '../../service';
 
-const profile = profiles[process.env.NODE_ENV];
+const profile = profiles[String(process.env.NODE_ENV)];
 
-process.env.AWS_PROFILE = profile;
+process.env.AWS_PROFILE = String(profile);
 
 const credentials: AWS.SharedIniFileCredentials = new AWS.SharedIniFileCredentials({
   profile: profiles[String(profile)]

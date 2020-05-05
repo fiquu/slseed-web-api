@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 import faker from 'faker';
 
 import { UserDocument } from '../../service/entities/user/schema.db';
-import db from './database';
+import db from '../../service/components/database';
 
 /**
  * @param {string} model The model name to use as User.

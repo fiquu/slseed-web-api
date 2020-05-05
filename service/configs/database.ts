@@ -14,6 +14,7 @@ const config: DatabaseClientConfig = {
   uri: process.env.DB_URI,
   options: {
     promiseLibrary: Promise, // Set the native promise library
+    useUnifiedTopology: true,
     connectTimeoutMS: 3000, // Fail quickly if can't connect
     bufferCommands: false, // Disable Mongoose buffering
     useNewUrlParser: true, // Use the new URL parser

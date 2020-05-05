@@ -1,30 +1,33 @@
-import '../../helpers/defaults'; // Always load first
+import '../../../helpers/defaults'; // Always load first
 
 import { getWrapper } from 'serverless-mocha-plugin';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { Types, Connection } from 'mongoose';
 import { expect } from 'chai';
 
-import { UserDocument } from '../../../service/entities/user/schema.db';
-import { getQueryBody } from '../../helpers/graphql';
-import { createUser } from '../../helpers/users';
-import { getEvent } from '../../helpers/events';
-import db from '../../helpers/database';
-import queries from './queries';
+import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
+import { UserDocument } from '../../../../service/entities/user/schema.types';
+import { getQueryBody } from '../../../helpers/graphql';
+import { createUser } from '../../../helpers/users';
+import { getEvent } from '../../../helpers/events';
+import queries from './graphql/queries';
 
-import pag from '../../../service/configs/pagination';
+import pag from '../../../../service/configs/pagination';
 
 const { ObjectId } = Types;
 
-describe('users', function () {
+describe('query users', function () {
   this.timeout(5000);
 
+  let tdb: StubbedTestDatabase;
   let users: UserDocument[];
   let conn: Connection;
   let wrapped;
 
   before(async function () {
-    conn = await db.connect();
+    tdb = await createTestDatabaseAndStub(true);
+
+    conn = tdb.conn;
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
@@ -69,6 +72,7 @@ describe('users', function () {
     expect(data.users).to.be.an('array').of.length(pag.limit.default);
 
     for (const user of data.users) {
+      expect(user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
       expect(ObjectId.isValid(user._id)).to.be.true;
       expect(user.createdAt).to.be.a('string');
       expect(user.updatedAt).to.be.a('string');
@@ -102,6 +106,7 @@ describe('users', function () {
       expect(data.users).to.be.an('array').of.length(8);
 
       for (const user of data.users) {
+        expect(user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
         expect(ObjectId.isValid(user._id)).to.be.true;
         expect(user.createdAt).to.be.a('string');
         expect(user.updatedAt).to.be.a('string');
@@ -133,6 +138,7 @@ describe('users', function () {
       expect(data.users).to.be.an('array').of.length(7);
 
       for (const user of data.users) {
+        expect(user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
         expect(ObjectId.isValid(user._id)).to.be.true;
         expect(user.createdAt).to.be.a('string');
         expect(user.updatedAt).to.be.a('string');
@@ -166,6 +172,7 @@ describe('users', function () {
       expect(data.users).to.be.an('array').of.length(6);
 
       for (const user of data.users) {
+        expect(user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
         expect(ObjectId.isValid(user._id)).to.be.true;
         expect(user.createdAt).to.be.a('string');
         expect(user.updatedAt).to.be.a('string');
@@ -176,6 +183,6 @@ describe('users', function () {
   });
 
   after(async function () {
-    await db.disconnect();
+    await tdb.stopAndRestore();
   });
 });

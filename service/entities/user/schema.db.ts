@@ -1,21 +1,4 @@
-import { Types, Schema, Document } from 'mongoose';
-
-export interface UserDocument extends Document {
-  _id: Types.ObjectId;
-
-  /**
-   * The User's Cognito subject.
-   */
-  sub: string;
-
-  /**
-   * The User's name.
-   */
-  name: string;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Schema } from 'mongoose';
 
 const schema = new Schema({
   // Cognito user name reference (subject)

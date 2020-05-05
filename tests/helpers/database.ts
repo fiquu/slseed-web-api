@@ -1,60 +1,89 @@
 import { MongoMemoryServer } from 'mongodb-memory-server-core';
-import mongoose, { Connection } from 'mongoose';
+import { createConnection, Connection } from 'mongoose';
+import { stub } from 'sinon';
 
-let mongod: MongoMemoryServer;
-let conn: Connection;
-let db;
+import schemas from '../../service/components/schemas';
+import config from '../../service/configs/database';
+import db from '../../service/components/database';
 
-let stopTimeout;
+export interface TestDatabase {
+  /**
+   * The in-memory mongod instance.
+   */
+  mongod: MongoMemoryServer;
 
-/**
- *
- */
-export async function connect(): Promise<Connection> {
-  clearTimeout(stopTimeout); // Clear stop timeout to avoid loosing topology.
+  /**
+   * The connection to the mongod instance.
+   */
+  conn: Connection;
 
-  if (conn) {
-    return conn;
-  }
+  /**
+   * Closes the database connection and stops the mongod instance.
+   */
+  stop(): Promise<void>;
+}
 
-  mongod = await MongoMemoryServer.create();
+export interface StubbedTestDatabase {
+  /**
+   * The in-memory mongod instance.
+   */
+  mongod: MongoMemoryServer;
 
-  process.env.DB_URI = await mongod.getConnectionString(true);
+  /**
+   * The connection to the mongod instance.
+   */
+  conn: Connection;
 
-  if (!db) {
-    db = (await import('../../service/components/database')).default;
-  }
-
-  conn = await db.connect();
-
-  await Promise.all(conn.modelNames().map(model => {
-    return conn.model(model).syncIndexes();
-  }));
-
-  return conn;
+  /**
+   * Closes the database connection and stops the mongod instance.
+   */
+  stopAndRestore(): Promise<void>;
 }
 
 /**
- * Wait a bit before destroying all to avoid recreating database connections or loosing topology and connect can be
- * called again.
+ * Creates a test in-memory database  instance and opens a connection.
  */
-export async function disconnect(): Promise<void> {
-  stopTimeout = setTimeout(async () => {
-    await mongoose.disconnect(); // WTF?
+export async function createTestDatabase() {
+  const mongod = new MongoMemoryServer();
+  const uri = await mongod.getUri(true);
+  const conn = createConnection(uri, {
+    ...config.options
+  });
 
-    if (conn) {
-      await db.disconnect();
-      conn = null;
-    }
+  return {
+    mongod,
+    conn,
 
-    if (mongod) {
+    async stop() {
       await mongod.stop();
-      mongod = null;
+      await conn.close();
     }
-  }, 1000);
+  } as TestDatabase;
 }
 
-export default {
-  disconnect,
-  connect
-};
+/**
+ * Creates a test in-memory database instance and stubs the database component.
+ *
+ * @param {boolean} loadSchemas Whether to register all schemas.
+ */
+export async function createTestDatabaseAndStub(loadSchemas = false) {
+  const tdb = await createTestDatabase();
+  const _dbConnect = stub(db, 'connect').returns(Promise.resolve(tdb.conn));
+  const _dbDisconnect = stub(db, 'disconnect').returns(Promise.resolve());
+
+  if (loadSchemas) {
+    schemas.load('default', tdb.conn);
+  }
+
+  return {
+    mongod: tdb.mongod,
+    conn: tdb.conn,
+
+    async stopAndRestore() {
+      _dbDisconnect.restore();
+      _dbConnect.restore();
+
+      await tdb.stop();
+    }
+  } as StubbedTestDatabase;
+}

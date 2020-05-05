@@ -31,6 +31,7 @@ export function handler(event: Event, context: Context): Promise<Result> {
 
     return new Promise(resolve => {
       graphqlHandler(event, context, (err: Error, result: Result): void => {
+        /* istanbul ignore if: This is just am optional log. */
         if (err) {
           log.error('GraphQL handler error', {
             error: err
@@ -41,10 +42,12 @@ export function handler(event: Event, context: Context): Promise<Result> {
       });
     });
   } catch (err) {
+    /* istanbul ignore next: Triggering these errors is not an easy and may not worth testing. */
     log.error('Unknown GraphQL handler error', {
       error: err
     });
 
+    /* istanbul ignore next: Same as above. */
     return Promise.resolve({
       statusCode: 500,
       body: ''
