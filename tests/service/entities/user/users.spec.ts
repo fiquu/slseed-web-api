@@ -81,7 +81,7 @@ describe('query users', function () {
     }
   });
 
-  describe('pagination', function () {
+  describe('(pagination)', function () {
     it('finds all Users with a skip', async function () {
       const count = await conn.model('user').countDocuments();
       const event = getEvent(users[0].sub, {
