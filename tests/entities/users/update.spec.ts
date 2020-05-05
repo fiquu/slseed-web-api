@@ -15,13 +15,13 @@ import mutations from './mutations';
 
 const { ObjectId } = Types;
 
-suite('updateUser', function () {
+describe('updateUser', function () {
   this.timeout(5000);
 
   let users: UserDocument[];
   let wrapped;
 
-  setup(async function () {
+  before(async function () {
     await db.connect();
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
@@ -29,7 +29,7 @@ suite('updateUser', function () {
     users = await Promise.all(Array(1).fill(0).map(() => createUser('user')));
   });
 
-  test('rejects with no auth', async function () {
+  it('rejects with no auth', async function () {
     const event = getEvent(null, {
       body: getQueryBody({
         query: mutations.updateUser,
@@ -55,7 +55,7 @@ suite('updateUser', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
   });
 
-  test('rejects with non-existen ID', async function () {
+  it('rejects with non-existen ID', async function () {
     const input = {
       name: faker.name.findName()
     };
@@ -83,7 +83,7 @@ suite('updateUser', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NONE_MODIFIED');
   });
 
-  test('updates a User by its ID', async function () {
+  it('updates a User by its ID', async function () {
     const input = {
       name: faker.name.findName()
     };
@@ -114,7 +114,7 @@ suite('updateUser', function () {
     expect(data.updateUser.sub).to.equal(users[0].sub);
   });
 
-  teardown(async function () {
+  after(async function () {
     await db.disconnect();
   });
 });

@@ -16,14 +16,14 @@ import pag from '../../../service/configs/pagination';
 
 const { ObjectId } = Types;
 
-suite('users', function () {
+describe('users', function () {
   this.timeout(5000);
 
   let users: UserDocument[];
   let conn: Connection;
   let wrapped;
 
-  setup(async function () {
+  before(async function () {
     conn = await db.connect();
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
@@ -31,7 +31,7 @@ suite('users', function () {
     users = await Promise.all(Array(100).fill(0).map(() => createUser('user')));
   });
 
-  test('rejects with no auth', async function () {
+  it('rejects with no auth', async function () {
     const event = getEvent(null, {
       body: getQueryBody({
         query: queries.users
@@ -51,7 +51,7 @@ suite('users', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
   });
 
-  test('finds al Users', async function () {
+  it('finds al Users', async function () {
     const event = getEvent(users[0].sub, {
       body: getQueryBody({
         query: queries.users
@@ -77,8 +77,8 @@ suite('users', function () {
     }
   });
 
-  suite('pagination', function () {
-    test('finds all Users with a skip', async function () {
+  describe('pagination', function () {
+    it('finds all Users with a skip', async function () {
       const count = await conn.model('user').countDocuments();
       const event = getEvent(users[0].sub, {
         body: getQueryBody({
@@ -110,7 +110,7 @@ suite('users', function () {
       }
     });
 
-    test('finds all Users with a limit', async function () {
+    it('finds all Users with a limit', async function () {
       const event = getEvent(users[0].sub, {
         body: getQueryBody({
           query: queries.users,
@@ -141,7 +141,7 @@ suite('users', function () {
       }
     });
 
-    test('finds all Users with a skip and limit', async function () {
+    it('finds all Users with a skip and limit', async function () {
       const count = await conn.model('user').countDocuments();
       const event = getEvent(users[0].sub, {
         body: getQueryBody({
@@ -175,7 +175,7 @@ suite('users', function () {
     });
   });
 
-  teardown(async function () {
+  after(async function () {
     await db.disconnect();
   });
 });

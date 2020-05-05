@@ -11,13 +11,13 @@ import { getEvent } from '../../helpers/events';
 import db from '../../helpers/database';
 import queries from './queries';
 
-suite('session', function () {
+describe('session', function () {
   this.timeout(5000);
 
   let user: UserDocument;
   let wrapped;
 
-  setup(async function () {
+  before(async function () {
     await db.connect();
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
@@ -25,7 +25,7 @@ suite('session', function () {
     user = await createUser('user');
   });
 
-  test('rejects with no auth', async function () {
+  it('rejects with no auth', async function () {
     const event = getEvent(null, {
       body: getQueryBody({
         query: queries.session
@@ -46,7 +46,7 @@ suite('session', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
   });
 
-  test('rejects with invalid sub', async function () {
+  it('rejects with invalid sub', async function () {
     const event = getEvent('not-a-sub', {
       body: getQueryBody({
         query: queries.session
@@ -67,7 +67,7 @@ suite('session', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_DATA_FOUND');
   });
 
-  test('succeeds with auth', async function () {
+  it('succeeds with auth', async function () {
     const event = getEvent(user.sub, {
       body: getQueryBody({
         query: queries.session
@@ -87,7 +87,7 @@ suite('session', function () {
     expect(data.session.name).to.equal(user.name);
   });
 
-  teardown(async function () {
+  after(async function () {
     await db.disconnect();
   });
 });

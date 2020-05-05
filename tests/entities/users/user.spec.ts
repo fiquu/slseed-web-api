@@ -11,13 +11,13 @@ import { getEvent } from '../../helpers/events';
 import db from '../../helpers/database';
 import queries from './queries';
 
-suite('user', function () {
+describe('user', function () {
   this.timeout(5000);
 
   let users: UserDocument[];
   let wrapped;
 
-  setup(async function () {
+  before(async function () {
     await db.connect();
 
     wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
@@ -25,7 +25,7 @@ suite('user', function () {
     users = await Promise.all(Array(10).fill(0).map(() => createUser('user')));
   });
 
-  test('rejects with no auth', async function () {
+  it('rejects with no auth', async function () {
     const event = getEvent(null, {
       body: getQueryBody({
         query: queries.user,
@@ -49,7 +49,7 @@ suite('user', function () {
     expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
   });
 
-  test('finds a User by its ID', async function () {
+  it('finds a User by its ID', async function () {
     const event = getEvent(users[0].sub, {
       body: getQueryBody({
         query: queries.user,
@@ -75,7 +75,7 @@ suite('user', function () {
     expect(data.user.sub).to.equal(users[0].sub);
   });
 
-  teardown(async function () {
+  after(async function () {
     await db.disconnect();
   });
 });
