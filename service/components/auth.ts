@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 import op from 'object-path';
 import is from '@fiquu/is';
 
-import { UserDocument } from '../entities/user/schema.db';
+import { UserDocument } from '../entities/user/schema.types';
 import config from '../configs/auth';
 import db from './database';
 
