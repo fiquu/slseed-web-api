@@ -21,7 +21,7 @@ for (const file of files) {
   const _config = require(file).default; // It's a TS file...
 
   _config.handler = `${join(dirname(_path), 'handler')}.handler`;
-  _config.name = `${name}-${_name}`; // Prepend project name to avoid Log Group name collision.
+  _config.name = slug(`${name}-${_name}`); // Prepend project name to avoid Log Group name collision.
 
   fns[String(_name)] = _config;
 }
