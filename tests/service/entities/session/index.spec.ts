@@ -16,12 +16,12 @@ describe('query session', function () {
 
   let tdb: StubbedTestDatabase;
   let user: UserDocument;
-  let wrapped;
+  let handler;
 
   before(async function () {
     tdb = await createTestDatabaseAndStub(true);
 
-    wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
+    handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
     user = await createUser('user');
   });
@@ -33,7 +33,7 @@ describe('query session', function () {
       })
     });
 
-    const res: APIGatewayProxyResult = await wrapped.run(event);
+    const res: APIGatewayProxyResult = await handler.run(event);
 
     expect(res).to.be.an('object');
     expect(res.statusCode).to.equal(200);
@@ -54,7 +54,7 @@ describe('query session', function () {
       })
     });
 
-    const res: APIGatewayProxyResult = await wrapped.run(event);
+    const res: APIGatewayProxyResult = await handler.run(event);
 
     expect(res).to.be.an('object');
     expect(res.statusCode).to.equal(200);
@@ -75,7 +75,7 @@ describe('query session', function () {
       })
     });
 
-    const res: APIGatewayProxyResult = await wrapped.run(event);
+    const res: APIGatewayProxyResult = await handler.run(event);
 
     expect(res).to.be.an('object');
     expect(res.statusCode).to.equal(200);

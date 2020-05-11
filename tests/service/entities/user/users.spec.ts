@@ -22,14 +22,14 @@ describe('query users', function () {
   let tdb: StubbedTestDatabase;
   let users: UserDocument[];
   let conn: Connection;
-  let wrapped;
+  let handler;
 
   before(async function () {
     tdb = await createTestDatabaseAndStub(true);
 
     conn = tdb.conn;
 
-    wrapped = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
+    handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
     users = await Promise.all(Array(100).fill(0).map(() => createUser('user')));
   });
@@ -41,7 +41,7 @@ describe('query users', function () {
       })
     });
 
-    const res: APIGatewayProxyResult = await wrapped.run(event);
+    const res: APIGatewayProxyResult = await handler.run(event);
 
     expect(res).to.be.an('object');
     expect(res.statusCode).to.equal(200);
@@ -61,7 +61,7 @@ describe('query users', function () {
       })
     });
 
-    const res: APIGatewayProxyResult = await wrapped.run(event);
+    const res: APIGatewayProxyResult = await handler.run(event);
 
     expect(res).to.be.an('object');
     expect(res.statusCode).to.equal(200);
@@ -95,7 +95,7 @@ describe('query users', function () {
         })
       });
 
-      const res: APIGatewayProxyResult = await wrapped.run(event);
+      const res: APIGatewayProxyResult = await handler.run(event);
 
       expect(res).to.be.an('object');
       expect(res.statusCode).to.equal(200);
@@ -127,7 +127,7 @@ describe('query users', function () {
         })
       });
 
-      const res: APIGatewayProxyResult = await wrapped.run(event);
+      const res: APIGatewayProxyResult = await handler.run(event);
 
       expect(res).to.be.an('object');
       expect(res.statusCode).to.equal(200);
@@ -161,7 +161,7 @@ describe('query users', function () {
         })
       });
 
-      const res: APIGatewayProxyResult = await wrapped.run(event);
+      const res: APIGatewayProxyResult = await handler.run(event);
 
       expect(res).to.be.an('object');
       expect(res.statusCode).to.equal(200);
