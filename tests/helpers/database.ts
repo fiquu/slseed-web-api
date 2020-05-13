@@ -44,7 +44,7 @@ export interface StubbedTestDatabase {
  * Creates a test in-memory database  instance and opens a connection.
  */
 export async function createTestDatabase() {
-  const mongod = new MongoMemoryServer();
+  const mongod = await MongoMemoryServer.create();
   const uri = await mongod.getUri(true);
   const conn = createConnection(uri, {
     ...config.options
