@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import faker from 'faker';
 
-import { UserDocument } from '../../service/entities/user/schema.db';
+import { UserDocument } from '../../service/entities/user/schema.types';
 import db from '../../service/components/database';
 
 /**
