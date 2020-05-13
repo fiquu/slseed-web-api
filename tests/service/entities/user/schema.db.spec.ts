@@ -7,6 +7,7 @@ import faker from 'faker';
 import { UserCreateInput, UserDocument } from '../../../../service/entities/user/schema.types';
 import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import schema from '../../../../service/entities/user/schema.db';
+import { getUserCreateInput } from '../../../helpers/users';
 
 const { ValidationError } = mongoose.Error;
 
@@ -40,8 +41,8 @@ describe('schema user', function () {
 
     it('does not creates with empty name', async function () {
       const input: UserCreateInput = {
-        name: '',
-        sub: faker.random.uuid()
+        ...getUserCreateInput(),
+        name: ''
       };
 
       await expect(tdb.conn.model('user').create(input)).to.eventually.be.rejectedWith(ValidationError);
@@ -49,8 +50,8 @@ describe('schema user', function () {
 
     it('does not creates with null name', async function () {
       const input: UserCreateInput = {
-        name: null,
-        sub: faker.random.uuid()
+        ...getUserCreateInput(),
+        name: null
       };
 
       await expect(tdb.conn.model('user').create(input)).to.eventually.be.rejectedWith(ValidationError);
@@ -58,7 +59,7 @@ describe('schema user', function () {
 
     it('does not creates with empty sub', async function () {
       const input: UserCreateInput = {
-        name: faker.name.findName(),
+        ...getUserCreateInput(),
         sub: ''
       };
 
@@ -67,7 +68,7 @@ describe('schema user', function () {
 
     it('does not creates with null sub', async function () {
       const input: UserCreateInput = {
-        name: faker.name.findName(),
+        ...getUserCreateInput(),
         sub: null
       };
 
@@ -76,7 +77,7 @@ describe('schema user', function () {
 
     it('does not creates with invalid sub', async function () {
       const input: UserCreateInput = {
-        name: faker.name.findName(),
+        ...getUserCreateInput(),
         sub: '-not a !uuid_'
       };
 
@@ -85,7 +86,7 @@ describe('schema user', function () {
 
     it('does not creates with duplicated sub', async function () {
       const input: UserCreateInput = {
-        name: faker.name.findName(),
+        ...getUserCreateInput(),
         sub: user.sub
       };
 
@@ -94,6 +95,7 @@ describe('schema user', function () {
 
     it('does not creates with invalid inputs', async function () {
       const input: UserCreateInput = {
+        ...getUserCreateInput(),
         name: '',
         sub: '-not a !uuid_ foo-bar'
       };
@@ -102,10 +104,7 @@ describe('schema user', function () {
     });
 
     it('creates with valid inputs', async function () {
-      const input: UserCreateInput = {
-        name: faker.name.findName(),
-        sub: faker.random.uuid()
-      };
+      const input: UserCreateInput = getUserCreateInput();
 
       await expect(tdb.conn.model('user').create(input)).to.eventually.be.fulfilled;
     });

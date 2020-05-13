@@ -31,7 +31,7 @@ describe('query users', function () {
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    users = await Promise.all(Array(100).fill(0).map(() => createUser('user')));
+    users = await Promise.all(Array(100).fill(0).map(() => createUser()));
   });
 
   it('rejects with no auth', async function () {

@@ -1,26 +1,28 @@
 import { v4 as uuid } from 'uuid';
 import faker from 'faker';
 
-import { UserDocument } from '../../service/entities/user/schema.types';
+import { UserDocument, UserCreateInput } from '../../service/entities/user/schema.types';
 import db from '../../service/components/database';
 
 /**
- * @param {string} model The model name to use as User.
- *
- * @returns {Promise<object>} A promise to the user.
+ * @returns {object} A valid User create input.
  */
-export async function createUser(model: string) {
-  const conn = await db.connect();
+export function getUserCreateInput(): UserCreateInput {
   const sub = uuid();
 
-  await conn.model(model).create({
+  return {
     name: faker.name.findName(),
     sub
-  });
+  };
+}
 
-  const user: UserDocument = await conn.model(model).findOne()
-    .where('sub').equals(sub)
-    .lean();
+/**
+ * @returns {Promise<object>} A promise to the user.
+ */
+export async function createUser() {
+  const conn = await db.connect();
+  const input = getUserCreateInput();
+  const user = await conn.model('user').create(input);
 
-  return user;
+  return user.toObject() as UserDocument;
 }
