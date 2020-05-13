@@ -12,7 +12,7 @@ export interface UserUpdateInput {
   name?: string;
 }
 
-type UserCreateInput = Required<UserUpdateInput>;
+export type UserCreateInput = Required<UserUpdateInput>;
 
 export interface UserDocument extends UserCreateInput, Document {
   _id: Types.ObjectId;
