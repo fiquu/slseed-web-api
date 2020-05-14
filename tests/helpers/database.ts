@@ -73,6 +73,11 @@ export async function createTestDatabaseAndStub(loadSchemas = false) {
 
   if (loadSchemas) {
     schemas.load('default', tdb.conn);
+
+    // Let's make sure indexes are up to date
+    for (const name of tdb.conn.modelNames()) {
+      await tdb.conn.model(name).syncIndexes();
+    }
   }
 
   return {
