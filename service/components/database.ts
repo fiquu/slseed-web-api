@@ -4,9 +4,9 @@ import { Connection } from 'mongoose';
 import config from '../configs/database';
 import schemas from './schemas';
 
-const db = createDatabaseManager();
+export const manager = createDatabaseManager();
 
-db.add('default', config);
+manager.add('default', config);
 
 /**
  * Connects to the database and loads it's schemas.
@@ -16,7 +16,7 @@ db.add('default', config);
  * @returns {Connection} The connection.
  */
 async function connect(name = 'default') {
-  const conn: Connection = await db.connect(name);
+  const conn: Connection = await manager.connect(name);
 
   await schemas.load(name, conn);
 
@@ -32,7 +32,7 @@ async function connect(name = 'default') {
  * @returns {Promise<void>} A promise to the disconnection.
  */
 function disconnect(name = 'default', force?: boolean) {
-  return db.disconnect(name, force);
+  return manager.disconnect(name, force);
 }
 
 export default {
