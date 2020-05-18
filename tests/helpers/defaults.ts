@@ -6,13 +6,9 @@ import chai from 'chai';
 
 import { region, profiles } from '../../configs/aws';
 
-const env = dotenv.config({
-  path: path.resolve(process.cwd(), '.env.testing')
+dotenv.config({
+  path: path.resolve(process.cwd(), '.env.test')
 });
-
-if (env.error) {
-  throw env.error;
-}
 
 process.env.MONGOMS_SYSTEM_BINARY = '/usr/bin/mongod';
 process.env.SERVERLESS_TEST_ROOT = '../../service';
