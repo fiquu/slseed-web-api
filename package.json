@@ -66,6 +66,7 @@
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/faker": "^4.1.12",
+    "@types/inquirer": "^6.5.0",
     "@types/mocha": "^7.0.2",
     "@types/mongoose": "^5.7.20",
     "@types/node": "^13.13.6",
