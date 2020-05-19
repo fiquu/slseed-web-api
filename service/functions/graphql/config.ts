@@ -4,7 +4,7 @@ export default {
   events: [
     {
       http: {
-        method: 'post',
+        method: 'any',
         path: '/graphql',
         cors: '${self:custom.cors}',
         authorizer: '${self:custom.authorizer}'

@@ -23,7 +23,7 @@ describe('query session', function () {
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    user = await createUser('user');
+    user = await createUser();
   });
 
   it('rejects with no auth', async function () {
