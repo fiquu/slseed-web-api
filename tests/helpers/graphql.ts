@@ -1,8 +1,6 @@
-import { DocumentNode } from 'graphql';
-
 interface Params {
-  query: DocumentNode;
-  variables?: any;
+  variables?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  query: string;
 }
 
 /**
