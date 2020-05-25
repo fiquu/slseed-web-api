@@ -1,4 +1,4 @@
-import '../../helpers/database'; // Always load first
+import '../../helpers/defaults'; // Always load first
 
 import { expect } from 'chai';
 
