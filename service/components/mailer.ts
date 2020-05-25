@@ -33,8 +33,8 @@ function encodeFriendlyAddress(input: string): string {
  *
  * @returns {Promise<object>} A promise to the sending.
  */
-export function send(params: SendTemplatedEmailRequest) {
-  const sender = new SES();
+export function send(params: Omit<SES.SendTemplatedEmailRequest, 'Source'>) {
+  const ses = new SES();
   const _params: SendTemplatedEmailRequest = {
     ...params,
     Source: encodeFriendlyAddress(config.sender)
@@ -45,7 +45,7 @@ export function send(params: SendTemplatedEmailRequest) {
     return encodeFriendlyAddress(addr);
   });
 
-  return sender.sendTemplatedEmail(_params).promise();
+  return ses.sendTemplatedEmail(_params).promise();
 }
 
 /**
