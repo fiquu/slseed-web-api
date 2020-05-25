@@ -1,25 +1,18 @@
-const plugins = [
+const plugins = {
+  development: [],
+  production: [],
+  staging: [],
+  testing: [],
+  local: [
+    'serverless-offline'
+  ]
+};
+
+module.exports = [
   'serverless-plugin-typescript',
   'serverless-dotenv-plugin',
-  'serverless-prune-plugin'
+  'serverless-mocha-plugin',
+  'serverless-prune-plugin',
+
+  ...plugins[process.env.NODE_ENV]
 ];
-
-/* Set per-stage plugins */
-switch (process.env.NODE_ENV) {
-  case 'production':
-  case 'staging':
-    break;
-
-  case 'development':
-    break;
-
-  case 'testing':
-    plugins.push('serverless-mocha-plugin');
-    break;
-
-  case 'local':
-    plugins.push('serverless-offline');
-    break;
-}
-
-module.exports = plugins;
