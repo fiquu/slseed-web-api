@@ -3,6 +3,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { createHTTPEvent } from '@fiquu/lambda-http-event-handler';
 import { createLogger } from '@fiquu/logger';
 
+import responses from '../../configs/responses';
 import config from '../../configs/http-event';
 
 const log = createLogger('functions/test');
@@ -20,7 +21,13 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
   log.debug('Test Request', req);
 
   try {
-    const _res = noContent();
+    if (req.query.get('fail') === 'true') {
+      throw new Error('Test error');
+    }
+
+    const _res = noContent({
+      headers: responses.headers
+    });
 
     log.debug('Test Response', {
       res: _res

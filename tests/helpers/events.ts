@@ -1,11 +1,7 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { v4 as uuid } from 'uuid';
 
-interface Event {
-  headers?: Record<string, string>;
-  httpMethod?: string;
-  body?: string;
-}
+export type EventParams = Partial<APIGatewayProxyEvent>;
 
 /**
  * @param {string} sub The user subject.
@@ -39,7 +35,7 @@ export function getRequestContext(sub): APIGatewayProxyEvent['requestContext'] {
  *
  * @returns {object} The created event.
  */
-export function getEvent(sub?: string, params?: Event): APIGatewayProxyEvent {
+export function getEvent(sub?: string, params?: EventParams): APIGatewayProxyEvent {
   return {
     requestContext: getRequestContext(sub),
     multiValueQueryStringParameters: null,
