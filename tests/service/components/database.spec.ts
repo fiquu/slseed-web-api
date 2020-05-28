@@ -1,8 +1,6 @@
-import '../../helpers/defaults'; // Always load first
-
+import { MongoMemoryServer } from 'mongodb-memory-server-core';
 import { expect } from 'chai';
 
-import { MongoMemoryServer } from 'mongodb-memory-server-core';
 import db, { manager } from '../../../service/components/database';
 import config from '../../../service/configs/database';
 

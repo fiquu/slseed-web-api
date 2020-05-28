@@ -1,8 +1,5 @@
-import '../../helpers/defaults'; // Always load first
-
-import { PromiseResult } from 'aws-sdk/lib/request';
-import { SES, AWSError } from 'aws-sdk';
 import AWSMock from 'aws-sdk-mock';
+import { SES } from 'aws-sdk';
 import { expect } from 'chai';
 import faker from 'faker';
 

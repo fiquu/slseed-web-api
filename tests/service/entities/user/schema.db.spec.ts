@@ -1,5 +1,3 @@
-import '../../../helpers/defaults'; // Always load first
-
 import mongoose from 'mongoose';
 import { expect } from 'chai';
 import faker from 'faker';

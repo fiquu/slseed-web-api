@@ -1,5 +1,3 @@
-import '../../../helpers/defaults'; // Always load first
-
 import { getWrapper } from 'serverless-mocha-plugin';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { Types, Connection } from 'mongoose';
