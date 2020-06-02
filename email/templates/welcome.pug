@@ -1,0 +1,19 @@
+extends ../layout
+
+block append info
+  //- These values will be set into the SES Template params and must be present:
+  // SES.TemplateName = "Welcome"
+  // SES.SubjectPart  = "Hello and welcome!"
+
+block append vars
+  - const title = 'Simple Transactional Email';
+  - const preview = 'This is preheader text. Some clients will show this text as a preview.'
+
+block append body
+  p Hi there, #[b {{ user.name }}!]
+  p Sometimes you just want to send a simple HTML email with a simple design and clear call to action. This is it.
+
+  +action('Call To Action', 'http://htmlemail.io')
+
+  p This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.
+  p Good luck! Hope it works.
