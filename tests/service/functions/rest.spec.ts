@@ -10,7 +10,7 @@ describe('query session', function () {
   let handler;
 
   before(async function () {
-    handler = getWrapper('graphql', '/functions/test/handler.ts', 'handler');
+    handler = getWrapper('graphql', '/functions/rest/handler.ts', 'handler');
   });
 
   it('succeeds', async function () {

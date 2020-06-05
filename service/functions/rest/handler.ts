@@ -6,7 +6,7 @@ import { createLogger } from '@fiquu/logger';
 import responses from '../../configs/responses';
 import config from '../../configs/http-event';
 
-const log = createLogger('functions/test');
+const log = createLogger('functions/rest');
 
 /**
  * Test handler function.
@@ -18,7 +18,7 @@ const log = createLogger('functions/test');
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const { req, res } = createHTTPEvent(event, config);
 
-  log.debug('Test Request', req);
+  log.debug('REST Request', req);
 
   try {
     if (req.query.get('fail') === 'true') {
@@ -29,7 +29,7 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
       headers: responses.headers
     });
 
-    log.debug('Test Response', {
+    log.debug('REST Response', {
       res: _res
     });
 
