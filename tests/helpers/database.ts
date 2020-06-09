@@ -46,7 +46,7 @@ export interface StubbedTestDatabase {
 export async function createTestDatabase() {
   const mongod = await MongoMemoryServer.create();
   const uri = await mongod.getUri(true);
-  const conn = createConnection(uri, {
+  const conn = await createConnection(uri, {
     ...config.options
   });
 
