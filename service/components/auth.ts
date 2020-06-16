@@ -2,8 +2,7 @@ import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 import op from 'object-path';
 import is from '@fiquu/is';
 
-import { UserDocument } from '../entities/user/schema.types';
-import config from '../configs/auth';
+import config, { UserType } from '../configs/auth';
 import db from './database';
 
 /**
@@ -16,7 +15,7 @@ import db from './database';
  * @throws ERR_NO_AUTH_SUBJECT If there's no subject to authorize.
  * @throws ERR_NO_AUTH_DATA If the provided subject has no data registered.
  */
-export default async ({ requestContext }: Context) => {
+export default async ({ requestContext }: Context): Promise<UserType> => {
   const sub = op.get(requestContext, 'authorizer.claims.sub', '');
 
   if (is.empty(sub) || !is.string(sub)) {
@@ -28,7 +27,7 @@ export default async ({ requestContext }: Context) => {
   const pipeline = config.get('pipeline');
   const model = config.get('model');
 
-  const query = conn.model(model).aggregate();
+  const query = conn.model(model).aggregate<UserType>();
 
   query.match({ sub });
 
@@ -42,5 +41,5 @@ export default async ({ requestContext }: Context) => {
     throw new Error('ERR_NO_AUTH_DATA_FOUND');
   }
 
-  return result as UserDocument;
+  return result;
 };
