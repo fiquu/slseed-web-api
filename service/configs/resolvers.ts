@@ -1,8 +1,6 @@
-import session from '../entities/session/resolvers';
-import user from '../entities/user/resolvers';
-// Add more resolvers here...
+import { loadFilesSync } from '@graphql-tools/load-files';
+import { join } from 'path';
 
-export default [
-  session,
-  user
-];
+export default loadFilesSync(join('service', 'entities', '**', 'resolvers.ts'), {
+  recursive: true
+});

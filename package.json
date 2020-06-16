@@ -22,14 +22,15 @@
     "url": "git@github.com:fiquu/slseed-web-api.git"
   },
   "os": [
+    "darwin",
     "linux"
   ],
   "cpu": [
     "x64"
   ],
   "engines": {
-    "node": ">= 12.0.0",
-    "npm": ">= 6.0.0"
+    "node": "12",
+    "npm": "6"
   },
   "scripts": {
     "scripts:db:sync": "ts-node scripts/sb.sync.ts",
@@ -81,11 +82,12 @@
     "@fiquu/lambda-http-event-handler": "^1.0.1",
     "@fiquu/logger": "^1.0.2",
     "@fiquu/schema-loader-mongoose": "^1.0.2",
+    "@graphql-tools/load-files": "^6.0.10",
+    "@graphql-tools/merge": "^6.0.10",
     "apollo-server-lambda": "^2.14.4",
     "aws-sdk": "^2.696.0",
     "email-addresses": "^3.1.0",
     "graphql": "^15.1.0",
-    "merge-graphql-schemas": "^1.7.8",
     "mongoose": "^5.9.18",
     "object-path": "^0.11.4"
   },

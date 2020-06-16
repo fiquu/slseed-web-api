@@ -1,8 +1,6 @@
-import { fileLoader } from 'merge-graphql-schemas';
+import { loadFilesSync } from '@graphql-tools/load-files';
 import { join } from 'path';
 
-const typesGlob = join('service', 'entities', '**', '*.graphql');
-
-export default fileLoader(typesGlob, {
+export default loadFilesSync(join('service', 'entities', '**', '*.graphql'), {
   recursive: true
 });
