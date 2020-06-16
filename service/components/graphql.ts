@@ -1,8 +1,13 @@
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
+import { loadFilesSync } from '@graphql-tools/load-files';
 
-import _resolvers from '../configs/resolvers';
-import _typeDefs from '../configs/type-defs';
+import config from '../configs/graphql';
 
-export const resolvers = mergeResolvers(_resolvers);
-export const typeDefs = mergeTypeDefs(_typeDefs);
+export const resolvers = mergeResolvers(loadFilesSync(config.resolvers, {
+  recursive: true
+}));
+
+export const typeDefs = mergeTypeDefs(loadFilesSync(config.typeDefs, {
+  recursive: true
+}));
 
