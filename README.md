@@ -1,6 +1,6 @@
 # @fiquu/slseed-web-api
 
-[Serveless](https://www.serverless.com/) Seed API project using AWS CloudFormation, AWS SSM, AWS Lambda, AWS API Gateway (REST/GraphQL), AWS SES, AWS Cognito and MongoDB.
+[Serveless](https://www.serverless.com/) Seed API project using [AWS CloudFormation](https://aws.amazon.com/cloudformation/) (base values and resources), [AWS Systems Manager](https://aws.amazon.com/systems-manager/) (for parameters), [AWS Lambda](https://aws.amazon.com/lambda/) (endpoint handlers), [Amazon API Gateway](https://aws.amazon.com/api-gateway/) (REST and GraphQL enpoints), [Amazon Simple Email Service](https://aws.amazon.com/ses/), [Amazon Cognito](https://aws.amazon.com/cognito/) and [MongoDB](https://www.mongodb.com/cloud/atlas).
 
 ## What's included
 
