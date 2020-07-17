@@ -13,7 +13,7 @@ Serveless Seed API project.
 - REST endpoint.
 - Mailing integration with AWS SES.
 
-Anything can be removed or changed.
+**Anything can be removed or changed.**
 
 ## Getting started
 
