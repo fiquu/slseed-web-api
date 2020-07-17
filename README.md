@@ -7,9 +7,13 @@ Serveless Seed API project.
 - Easy project and service configuration.
 - Logical folder structure.
 - Simplified authorization handling.
-- Simplified database connection management with Mongoose.
+- Simplified database connection management with Mongoose (MongoDB).
 - Simplified HTTP response handling.
+- GraphQL lambda endpoint.
+- REST endpoint.
 - Mailing integration with AWS SES.
+
+Anything can be removed or changed.
 
 ## Getting started
 
@@ -36,12 +40,20 @@ We've bundled some utility scripts that you may find useful while developing or 
 
 You can also run any script defined on the `package.json` with `npm run list`.
 
+## GraphQL
+
+GraphQL is included with https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda.
+
+See the `service/entities` folder to add or create entities.
+
+Modify the `service/configs/graphql.ts` file to change your resolvers (must be added manually).
+
 ## Deploying
 
 1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup`, selecting the stage and checking if the `.env.[stage]` exists.
 1. Run `npm run deploy` and select stage.
 
-## Email Templates
+## Email templates
 
 SES email template uploading are handled by https://github.com/haftahave/serverless-ses-template.
 
