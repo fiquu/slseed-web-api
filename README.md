@@ -17,7 +17,9 @@
 
 ## Getting started
 
-1. Create an IAM programattic user (recommended) and configure with the AWS CLI: `aws configure --profile <profile-name>`.
+1. Clone this repo into a folder.
+1. Update the `"name"` and `"title"` properties on the `package.json` file. These will be used by the CloudFormation template and Serverless to identify the project.
+1. Create an IAM programmatic-only user (recommended) and configure the credentials with the AWS CLI: `aws configure --profile <profile-name>`.
 1. Configure your AWS profile names on `configs/aws.js` for each stage. Must match the profile names configured with the AWS CLI.
 1. Run `npm i`, `update` and `audit fix` as needed.
 1. Set the input values to use on the CloudFormation template on `setup/stack/values.js`.
