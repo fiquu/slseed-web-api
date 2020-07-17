@@ -61,6 +61,10 @@ Modify the `service/configs/graphql.ts` file to change your resolvers (must be a
 
 You can also append the `--stage <stage>` to the command: `npm run deploy -- --stage development`.
 
+## CI/CD
+
+To integrate with your CI/CD service just use `npm run setup:env -- --stage <stage>` and then `npm run deploy -- --stage <stage>` commands.
+
 ## Email templates
 
 SES email template uploading are handled by https://github.com/haftahave/serverless-ses-template.
