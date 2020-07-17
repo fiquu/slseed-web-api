@@ -1,6 +1,6 @@
 # @fiquu/slseed-web-api
 
-Serveless Seed API project.
+[Serveless](https://www.serverless.com/) Seed API project using AWS CloudFormation, AWS Lambda, AWS API Gateway (REST/GraphQL), AWS SES, AWS Cognito and MongoDB.
 
 ## What's included
 
@@ -32,6 +32,12 @@ That's it. Your App should be running wherever it says it's running.
 
 See the `"scripts"` section on the `package.json` for more commands.
 
+### Separate stacks
+
+We decided to use separate stacks to avoid dependencies between the Serverless and base stacks. The base stack may contain references to Cognito  or other critical services that should not be deleted when removing the Serverless service or modified on every deploy.
+
+This could be solved with https://github.com/nordcloud/serverless-plugin-additional-stacks but we needed an easy way to setup and configure reproductible environments on each stage.
+
 ## Running Scripts
 
 We've bundled some utility scripts that you may find useful while developing or maintaining your app. To run them, user `ts-node` like this:
@@ -44,20 +50,22 @@ You can also run any script defined on the `package.json` with `npm run list`.
 
 GraphQL is included with https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda.
 
-See the `service/entities` folder to add or create entities.
+See the `service/entities/` folder to add or create entities.
 
 Modify the `service/configs/graphql.ts` file to change your resolvers (must be added manually).
 
 ## Deploying
 
-1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup`, selecting the stage and checking if the `.env.[stage]` exists.
+1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup:env`, selecting the target stage and checking if the `.env.[stage]` exists.
 1. Run `npm run deploy` and select stage.
+
+You can also append the `--stage <stage>` to the command: `npm run deploy -- --stage development`.
 
 ## Email templates
 
 SES email template uploading are handled by https://github.com/haftahave/serverless-ses-template.
 
-To edit your templates, open the `email/templates` folder and modify or create as you see fit.
+To edit your templates, open the `email/templates/` folder and modify or create as you see fit.
 
 To use a format other than the default with Pug, just modify the loader on `configs/ses/templates.js`.
 
