@@ -2,7 +2,7 @@
 
 block info
 
-include ./includes/mixins
+include includes/mixins
 
 block vars
 
@@ -15,7 +15,7 @@ html
     title=title
 
     style
-      include ./includes/styles.css
+      include includes/styles.css
 
   body
     span.preheader=preview
@@ -26,15 +26,7 @@ html
           td  
           td.container
             .content
-              table.main(role='presentation')
-                tbody
-                  tr
-                    td.wrapper
-                      table(role='presentation' border='0' cellpadding='0' cellspacing='0')
-                        tbody
-                          tr
-                            td
-                              block body
+              include includes/body
 
               include includes/footer
 
