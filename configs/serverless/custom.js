@@ -1,4 +1,5 @@
 module.exports = {
+  sesTemplatesConfigFile: './configs/ses/templates.js',
   package: '${file(./package.json)}',
   cors: true,
   authorizer: {

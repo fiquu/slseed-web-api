@@ -84,6 +84,7 @@
     "@fiquu/schema-loader-mongoose": "^1.0.2",
     "@graphql-tools/load-files": "^6.0.14",
     "@graphql-tools/merge": "^6.0.14",
+    "@haftahave/serverless-ses-template": "^2.0.0",
     "apollo-server-lambda": "^2.16.0",
     "aws-sdk": "^2.714.2",
     "email-addresses": "^3.1.0",

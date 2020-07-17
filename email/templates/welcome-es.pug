@@ -1,0 +1,20 @@
+extends ../layout
+
+block append info
+  //- These values will be set into the SES Template params and must be present:
+  // SES.TemplateName = "Welcome_ES"
+  // SES.SubjectPart  = "Hola y bienvenido!"
+  //- You could add a language suffix like Welcome_ES, or Welcome_EN_UK.
+
+block append vars
+  - const title = 'Correo electrónico transaccional simple';
+  - const preview = 'Este es el texto del encabezado previo. Algunos clientes mostrarán este texto como una vista previa.'
+
+block append body
+  p Hola, #[b {{ user.name }}!]
+  p A veces solo desea enviar un correo electrónico HTML simple con un diseño simple y un claro llamado a la acción. Eso es todo.
+
+  +action('Call To Action', 'http://htmlemail.io')
+
+  p Esta es una plantilla de correo electrónico realmente simple. Su único propósito es hacer que el destinatario haga clic en el botón sin distracciones.
+  p ¡Buena suerte! Espero que funcione.

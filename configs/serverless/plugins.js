@@ -9,6 +9,7 @@ const plugins = {
 };
 
 module.exports = [
+  '@haftahave/serverless-ses-template',
   'serverless-plugin-typescript',
   'serverless-dotenv-plugin',
   'serverless-mocha-plugin',
