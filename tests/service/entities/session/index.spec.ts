@@ -10,7 +10,7 @@ import { getEvent } from '../../../helpers/events';
 import queries from './graphql/queries';
 
 describe('query session', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let tdb: StubbedTestDatabase;
   let user: UserDocument;
@@ -41,8 +41,8 @@ describe('query session', function () {
     expect(body).to.be.an('object');
     expect(body.data).to.be.an('object');
     expect(body.data.session).to.be.null;
-    expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
+    expect(body.errors).to.be.an('array').of.length(1);
+    expect(body.errors[0].message).to.include('No auth subject provided');
   });
 
   it('rejects with invalid sub', async function () {
@@ -63,7 +63,7 @@ describe('query session', function () {
     expect(body.data).to.be.an('object');
     expect(body.data.session).to.be.null;
     expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_DATA_FOUND');
+    expect(body.errors[0].message).to.include('No auth data found');
   });
 
   it('succeeds with auth', async function () {

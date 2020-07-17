@@ -6,7 +6,7 @@ import faker from 'faker';
 import { send } from '../../../service/components/mailer';
 
 describe('component database', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   it('sends', async function () {
     const res: SES.SendTemplatedEmailResponse = {

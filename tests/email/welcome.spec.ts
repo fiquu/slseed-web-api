@@ -7,7 +7,7 @@ const ses = new SES({
 });
 
 describe('confirmation email', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   it('does not renders the template without proper values', async function () {
     const task = ses.testRenderTemplate({

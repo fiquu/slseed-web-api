@@ -14,7 +14,7 @@ import mutations from './graphql/mutations';
 const { ObjectId } = Types;
 
 describe('mutation updateUser', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let tdb: StubbedTestDatabase;
   let users: UserDocument[];
@@ -52,8 +52,8 @@ describe('mutation updateUser', function () {
 
     expect(body).to.be.an('object');
     expect(body.data).to.be.null;
-    expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
+    expect(body.errors).to.be.an('array').of.length(1);
+    expect(body.errors[0].message).to.include('No auth subject provided');
   });
 
   it('rejects with non-existen ID', async function () {
@@ -80,8 +80,8 @@ describe('mutation updateUser', function () {
 
     expect(body).to.be.an('object');
     expect(body.data).to.be.null;
-    expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NONE_MODIFIED');
+    expect(body.errors).to.be.an('array').of.length(1);
+    expect(body.errors[0].message).to.include('No document found for query');
   });
 
   it('updates a User by its ID', async function () {

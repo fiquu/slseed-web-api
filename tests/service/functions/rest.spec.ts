@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { getEvent } from '../../helpers/events';
 
 describe('query session', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let handler;
 

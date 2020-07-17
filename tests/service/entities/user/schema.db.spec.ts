@@ -10,7 +10,7 @@ import { getUserCreateInput } from '../../../helpers/users';
 const { ValidationError } = mongoose.Error;
 
 describe('schema user', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let tdb: StubbedTestDatabase;
 

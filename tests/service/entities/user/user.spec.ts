@@ -10,7 +10,7 @@ import { getEvent } from '../../../helpers/events';
 import queries from './graphql/queries';
 
 describe('query user', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let tdb: StubbedTestDatabase;
   let users: UserDocument[];
@@ -44,8 +44,8 @@ describe('query user', function () {
     expect(body).to.be.an('object');
     expect(body.data).to.be.an('object');
     expect(body.data.user).to.be.null;
-    expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
+    expect(body.errors).to.be.an('array').of.length(1);
+    expect(body.errors[0].message).to.include('No auth subject provided');
   });
 
   it('finds a User by its ID', async function () {

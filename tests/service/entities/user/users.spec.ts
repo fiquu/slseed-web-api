@@ -15,7 +15,7 @@ import pag from '../../../../service/configs/pagination';
 const { ObjectId } = Types;
 
 describe('query users', function () {
-  this.timeout(5000);
+  this.timeout(30000);
 
   let tdb: StubbedTestDatabase;
   let users: UserDocument[];
@@ -48,8 +48,8 @@ describe('query users', function () {
 
     expect(body).to.be.an('object');
     expect(body.data).to.be.null;
-    expect(body.errors).to.be.an('array');
-    expect(body.errors.map(({ message }) => message)).to.include('ERR_NO_AUTH_SUBJECT');
+    expect(body.errors).to.be.an('array').of.length(1);
+    expect(body.errors[0].message).to.include('No auth subject provided');
   });
 
   it('finds al Users', async function () {
