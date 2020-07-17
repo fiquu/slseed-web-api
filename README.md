@@ -1,6 +1,6 @@
 # @fiquu/slseed-web-api
 
-[Serveless](https://www.serverless.com/) Seed API project using AWS CloudFormation, AWS Lambda, AWS API Gateway (REST/GraphQL), AWS SES, AWS Cognito and MongoDB.
+[Serveless](https://www.serverless.com/) Seed API project using AWS CloudFormation, AWS SSM, AWS Lambda, AWS API Gateway (REST/GraphQL), AWS SES, AWS Cognito and MongoDB.
 
 ## What's included
 
@@ -25,7 +25,7 @@
 1. Run `npm run setup`, select `stack`, select the target stage and enter the template values.
 1. Wait for it to finish (it may take a while)...
 1. Configure your SSM to `.env` values mapping on `configs/ssm.env.js` with the SSM param names only without path prefixes as defined on yout CloudFormation template.
-1. Run `npm run setup`, select `env` and select target stage to create or update your `.env.{stage}` file.
+1. Run `npm run setup`, select `env` and select target stage to create or update your local `.env.<stage>` file.
 1. Run `npm start`.
 
 That's it. Your App should be running wherever it says it's running.
@@ -56,14 +56,14 @@ Modify the `service/configs/graphql.ts` file to change your resolvers (must be a
 
 ## Deploying
 
-1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup:env`, selecting the target stage and checking if the `.env.[stage]` exists.
+1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup:env`, selecting the target stage and checking if the `.env.<stage>` file exists.
 1. Run `npm run deploy` and select stage.
 
 You can also append the `--stage <stage>` to the command: `npm run deploy -- --stage development`.
 
 ## CI/CD
 
-To integrate with your CI/CD service just use `npm run setup:env -- --stage <stage>` and then `npm run deploy -- --stage <stage>` commands.
+To integrate with your CI/CD service just use `npm run setup:env -- --stage <stage>` and then `npm run deploy -- --stage <stage>` commands. This will pull the env values from SSM and create a `.env.<stage>` file that the `dotenv` plugin will pick on deploy.
 
 ## Email templates
 
