@@ -1,6 +1,6 @@
 import { Types, Document } from 'mongoose';
 
-export interface UserUpdateInput {
+export interface UserCreateInput {
   /**
    * The User's Cognito subject.
    */
@@ -12,7 +12,7 @@ export interface UserUpdateInput {
   name?: string;
 }
 
-export type UserCreateInput = Required<UserUpdateInput>;
+export type UserUpdateInput = Partial<UserCreateInput>;
 
 export interface UserDocument extends UserCreateInput, Document {
   _id: Types.ObjectId;

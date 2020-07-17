@@ -1,5 +1,7 @@
 import { APIGatewayProxyEvent as Context } from 'aws-lambda';
 
+import { UserDocument } from '../schema.types';
+
 import db from '../../../components/database';
 import auth from '../../../components/auth';
 
@@ -13,26 +15,26 @@ interface Params {
 /**
  * @param {object} root The GraphQL root.
  * @param {object} params The GraphQL query params.
+ * @param {string} params._id The ID to update by.
+ * @param {string} params.input The input data to update with.
  * @param {object} context The request context.
  *
  * @returns {object} The updated user.
  */
-export default async (root: object, { _id, input }: Params, context: Context) => {
+export default async (root: unknown, { _id, input }: Params, context: Context): Promise<UserDocument> => {
   const conn = await db.connect('default');
 
   await auth(context);
 
-  const { nModified } = await conn.model('user').updateOne({
+  await conn.model<UserDocument>('user').updateOne({
     _id
   }, {
-    $set: { ...input }
+    $set: {
+      ...input
+    }
   }, {
     runValidators: true
-  });
+  }).orFail();
 
-  if (nModified !== 1) {
-    throw Error('ERR_NONE_MODIFIED');
-  }
-
-  return conn.model('user').findById(_id).lean();
+  return conn.model<UserDocument>('user').findById(_id).lean();
 };

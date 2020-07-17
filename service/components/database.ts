@@ -15,7 +15,7 @@ manager.add('default', config);
  *
  * @returns {Connection} The connection.
  */
-async function connect(name = 'default') {
+async function connect(name = 'default'): Promise<Connection> {
   const conn: Connection = await manager.connect(name);
 
   await schemas.load(name, conn);
@@ -31,7 +31,7 @@ async function connect(name = 'default') {
  *
  * @returns {Promise<void>} A promise to the disconnection.
  */
-function disconnect(name = 'default', force?: boolean) {
+function disconnect(name = 'default', force?: boolean): Promise<void> {
   return manager.disconnect(name, force);
 }
 

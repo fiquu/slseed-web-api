@@ -12,14 +12,14 @@ import db from './database';
  *
  * @returns {Promise<object>} A promise to the User data.
  *
- * @throws ERR_NO_AUTH_SUBJECT If there's no subject to authorize.
- * @throws ERR_NO_AUTH_DATA If the provided subject has no data registered.
+ * @throws If there's no subject to authorize.
+ * @throws If the provided subject has no data registered.
  */
 export default async ({ requestContext }: Context): Promise<UserType> => {
-  const sub = op.get(requestContext, 'authorizer.claims.sub', '');
+  const sub = op.get<string>(requestContext, 'authorizer.claims.sub', '');
 
   if (is.empty(sub) || !is.string(sub)) {
-    throw new Error('ERR_NO_AUTH_SUBJECT');
+    throw new Error('No auth subject provided');
   }
 
   const conn = await db.connect('default');
@@ -31,14 +31,14 @@ export default async ({ requestContext }: Context): Promise<UserType> => {
 
   query.match({ sub });
 
-  if (Array.isArray(pipeline) && pipeline.length > 0) {
+  if (is.array(pipeline) && !is.empty(pipeline)) {
     query.append(pipeline);
   }
 
   const [result] = await query;
 
   if (is.empty(result)) {
-    throw new Error('ERR_NO_AUTH_DATA_FOUND');
+    throw new Error('No auth data found');
   }
 
   return result;

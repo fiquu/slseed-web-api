@@ -1,5 +1,5 @@
+import { SendTemplatedEmailRequest, SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
 import { parseOneAddress, ParsedMailbox } from 'email-addresses';
-import { SendTemplatedEmailRequest } from 'aws-sdk/clients/ses';
 import { SES } from 'aws-sdk';
 
 import config from '../configs/mailer';
@@ -33,7 +33,7 @@ function encodeFriendlyAddress(input: string): string {
  *
  * @returns {Promise<object>} A promise to the sending.
  */
-export function send(params: Omit<SES.SendTemplatedEmailRequest, 'Source'>) {
+export function send(params: Omit<SendTemplatedEmailRequest, 'Source'>): Promise<SendTemplatedEmailResponse> {
   const ses = new SES();
   const _params: SendTemplatedEmailRequest = {
     ...params,

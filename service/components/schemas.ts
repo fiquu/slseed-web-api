@@ -9,7 +9,7 @@ import config from '../configs/schemas';
  * @param {string} name The connection name to load for.
  * @param {Connection} conn The connection to load into.
  */
-function load(name = 'default', conn: Connection) {
+function load(name = 'default', conn: Connection): void {
   const { schemas, options } = config.get(name);
   const loader = createSchemaLoader(conn, options);
 
