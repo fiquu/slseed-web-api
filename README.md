@@ -13,14 +13,15 @@ Serveless Seed API project.
 
 ## Getting started
 
-1. Configure your AWS profiles on `configs/aws.js` for each stage.
-1. Run `npm i` and update as needed.
+1. Create an IAM programattic user (recommended) and configure with the AWS CLI: `aws configure --profile <profile-name>`.
+1. Configure your AWS profile names on `configs/aws.js` for each stage. Must match the profile names configured with the AWS CLI.
+1. Run `npm i`, `update` and `audit fix` as needed.
 1. Set the input values to use on the CloudFormation template on `setup/stack/values.js`.
 1. Configure your CloudFormation template on the `setup/stack/template/` folder.
-1. Run `npm run setup`, select `stack`, select stage and enter the template values.
+1. Run `npm run setup`, select `stack`, select the target stage and enter the template values.
 1. Wait for it to finish (it may take a while)...
-1. Configure your SSM to `.env` values on `configs/ssm.env.js` (these are the SSM param names only).
-1. Run `npm run setup`, select `env` and select stage to set your `.env.{stage}` file.
+1. Configure your SSM to `.env` values mapping on `configs/ssm.env.js` with the SSM param names only without path prefixes as defined on yout CloudFormation template.
+1. Run `npm run setup`, select `env` and select target stage to create or update your `.env.{stage}` file.
 1. Run `npm start`.
 
 That's it. Your App should be running wherever it says it's running.
@@ -33,10 +34,20 @@ We've bundled some utility scripts that you may find useful while developing or 
 
 `$ ts-node scripts/users/create.ts`
 
+You can also run any script defined on the `package.json` with `npm run list`.
+
 ## Deploying
 
 1. Make sure you have the `.env` file for the stage you want to deploy by running `npm run setup`, selecting the stage and checking if the `.env.[stage]` exists.
 1. Run `npm run deploy` and select stage.
+
+## Email Templates
+
+SES email template uploading are handled by https://github.com/haftahave/serverless-ses-template.
+
+To edit your templates, open the `email/templates` folder and modify or create as you see fit.
+
+To use a format other than the default with Pug, just modify the loader on `configs/ses/templates.js`.
 
 ## Using as seed
 
