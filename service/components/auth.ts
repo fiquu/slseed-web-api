@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent as Context } from 'aws-lambda';
+import { ForbiddenError } from 'apollo-server-lambda';
 import op from 'object-path';
 import is from '@fiquu/is';
 
@@ -19,7 +20,7 @@ export default async ({ requestContext }: Context): Promise<UserType> => {
   const sub = op.get<string>(requestContext, 'authorizer.claims.sub', '');
 
   if (is.empty(sub) || !is.string(sub)) {
-    throw new Error('No auth subject provided');
+    throw new ForbiddenError('No auth subject provided');
   }
 
   const conn = await db.connect('default');
@@ -38,7 +39,7 @@ export default async ({ requestContext }: Context): Promise<UserType> => {
   const [result] = await query;
 
   if (is.empty(result)) {
-    throw new Error('No auth data found');
+    throw new ForbiddenError('No auth data found');
   }
 
   return result;
