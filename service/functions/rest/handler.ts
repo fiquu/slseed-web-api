@@ -18,7 +18,7 @@ const log = createLogger('functions/rest');
 export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const { req, res } = createHTTPEvent(event, config);
 
-  log.debug('REST Request', req);
+  log.debug('REST Request', { req });
 
   try {
     if (req.query.get('fail') === 'true') {
@@ -34,11 +34,9 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
     });
 
     return res.send(_res);
-  } catch (err) {
-    log.error('It failed...', {
-      error: err
-    });
+  } catch (error) {
+    log.error('It failed...', { error });
 
-    return res.handle(err);
+    return res.handle(error);
   }
 }
