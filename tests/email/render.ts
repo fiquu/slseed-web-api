@@ -19,10 +19,12 @@ for (const file of files) {
   fs.ensureFileSync(join(outDir, outFileHtml));
   fs.ensureFileSync(join(outDir, outFileText));
 
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   fs.writeFileSync(join(outDir, outFileHtml), minify(juice(html), {
     removeComments: true,
     minifyCSS: true
   }));
 
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   fs.writeFileSync(join(outDir, outFileText), fromString(html));
 }

@@ -8,7 +8,7 @@ export type EventParams = Partial<APIGatewayProxyEvent>;
  *
  * @returns {object} The request context.
  */
-export function getRequestContext(sub): APIGatewayProxyEvent['requestContext'] {
+export function getRequestContext(sub: string): APIGatewayProxyEvent['requestContext'] {
   return {
     requestTimeEpoch: Date.now(),
     resourceId: '',

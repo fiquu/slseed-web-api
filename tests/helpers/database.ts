@@ -42,8 +42,10 @@ export interface StubbedTestDatabase {
 
 /**
  * Creates a test in-memory database  instance and opens a connection.
+ *
+ * @returns {object} The test database object.
  */
-export async function createTestDatabase() {
+export async function createTestDatabase(): Promise<TestDatabase> {
   const mongod = await MongoMemoryServer.create();
   const uri = await mongod.getUri(true);
   const conn = await createConnection(uri, {
@@ -58,15 +60,17 @@ export async function createTestDatabase() {
       await mongod.stop();
       await conn.close();
     }
-  } as TestDatabase;
+  };
 }
 
 /**
  * Creates a test in-memory database instance and stubs the database component.
  *
  * @param {boolean} loadSchemas Whether to register all schemas.
+ *
+ * @returns {object} The test database object.
  */
-export async function createTestDatabaseAndStub(loadSchemas = false) {
+export async function createTestDatabaseAndStub(loadSchemas = false): Promise<StubbedTestDatabase> {
   const tdb = await createTestDatabase();
   const _dbConnect = stub(db, 'connect').returns(Promise.resolve(tdb.conn));
   const _dbDisconnect = stub(db, 'disconnect').returns(Promise.resolve());
@@ -90,5 +94,5 @@ export async function createTestDatabaseAndStub(loadSchemas = false) {
 
       await tdb.stop();
     }
-  } as StubbedTestDatabase;
+  };
 }

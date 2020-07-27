@@ -4,11 +4,13 @@ import { Types } from 'mongoose';
 import { expect } from 'chai';
 import faker from 'faker';
 
-import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { UserDocument, UserUpdateInput } from '../../../../service/entities/user/schema.types';
+
+import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { getQueryBody } from '../../../helpers/graphql';
 import { createUser } from '../../../helpers/users';
 import { getEvent } from '../../../helpers/events';
+
 import mutations from './graphql/mutations';
 
 const { ObjectId } = Types;
@@ -16,16 +18,16 @@ const { ObjectId } = Types;
 describe('mutation updateUser', function () {
   this.timeout(30000);
 
-  let tdb: StubbedTestDatabase;
+  let db: StubbedTestDatabase;
   let users: UserDocument[];
   let handler;
 
   before(async function () {
-    tdb = await createTestDatabaseAndStub(true);
+    db = await createTestDatabaseAndStub(true);
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    users = await Promise.all(Array(1).fill(0).map(() => createUser()));
+    users = await Promise.all(Array(1).fill(0).map(() => createUser(db.conn)));
   });
 
   it('rejects with no auth', async function () {
@@ -116,6 +118,6 @@ describe('mutation updateUser', function () {
   });
 
   after(async function () {
-    await tdb.stopAndRestore();
+    await db.stopAndRestore();
   });
 });

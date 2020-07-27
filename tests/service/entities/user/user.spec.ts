@@ -2,26 +2,28 @@ import { getWrapper } from 'serverless-mocha-plugin';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { expect } from 'chai';
 
-import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { UserDocument } from '../../../../service/entities/user/schema.types';
+
+import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { getQueryBody } from '../../../helpers/graphql';
 import { createUser } from '../../../helpers/users';
 import { getEvent } from '../../../helpers/events';
+
 import queries from './graphql/queries';
 
 describe('query user', function () {
   this.timeout(30000);
 
-  let tdb: StubbedTestDatabase;
+  let db: StubbedTestDatabase;
   let users: UserDocument[];
   let handler;
 
   before(async function () {
-    tdb = await createTestDatabaseAndStub(true);
+    db = await createTestDatabaseAndStub(true);
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    users = await Promise.all(Array(10).fill(0).map(() => createUser()));
+    users = await Promise.all(Array(10).fill(0).map(() => createUser(db.conn)));
   });
 
   it('rejects with no auth', async function () {
@@ -75,6 +77,6 @@ describe('query user', function () {
   });
 
   after(async function () {
-    await tdb.stopAndRestore();
+    await db.stopAndRestore();
   });
 });

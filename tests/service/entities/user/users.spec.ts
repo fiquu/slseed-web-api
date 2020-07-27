@@ -3,33 +3,34 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { Types, Connection } from 'mongoose';
 import { expect } from 'chai';
 
-import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { UserDocument } from '../../../../service/entities/user/schema.types';
+import pagination from '../../../../service/configs/pagination';
+
+import { createTestDatabaseAndStub, StubbedTestDatabase } from '../../../helpers/database';
 import { getQueryBody } from '../../../helpers/graphql';
 import { createUser } from '../../../helpers/users';
 import { getEvent } from '../../../helpers/events';
-import queries from './graphql/queries';
 
-import pag from '../../../../service/configs/pagination';
+import queries from './graphql/queries';
 
 const { ObjectId } = Types;
 
 describe('query users', function () {
   this.timeout(30000);
 
-  let tdb: StubbedTestDatabase;
+  let db: StubbedTestDatabase;
   let users: UserDocument[];
   let conn: Connection;
   let handler;
 
   before(async function () {
-    tdb = await createTestDatabaseAndStub(true);
+    db = await createTestDatabaseAndStub(true);
 
-    conn = tdb.conn;
+    conn = db.conn;
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    users = await Promise.all(Array(100).fill(0).map(() => createUser()));
+    users = await Promise.all(Array(100).fill(0).map(() => createUser(db.conn)));
   });
 
   it('rejects with no auth', async function () {
@@ -67,7 +68,7 @@ describe('query users', function () {
     const { data } = JSON.parse(res.body);
 
     expect(data).to.be.an('object');
-    expect(data.users).to.be.an('array').of.length(pag.limit.default);
+    expect(data.users).to.be.an('array').of.length(pagination.limit.default);
 
     for (const user of data.users) {
       expect(user).to.be.an('object').with.keys('_id', 'name', 'sub', 'createdAt', 'updatedAt');
@@ -181,6 +182,6 @@ describe('query users', function () {
   });
 
   after(async function () {
-    await tdb.stopAndRestore();
+    await db.stopAndRestore();
   });
 });

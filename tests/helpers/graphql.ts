@@ -5,6 +5,8 @@ interface Params {
 
 /**
  * @param {object} params The GraphQL query params.
+ * @param {string} params.query The GraphQL query.
+ * @param {object} params.variables The GraphQL variables.
  *
  * @returns {string} The query body.
  */

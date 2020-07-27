@@ -12,16 +12,16 @@ import queries from './graphql/queries';
 describe('query session', function () {
   this.timeout(30000);
 
-  let tdb: StubbedTestDatabase;
+  let db: StubbedTestDatabase;
   let user: UserDocument;
   let handler;
 
   before(async function () {
-    tdb = await createTestDatabaseAndStub(true);
+    db = await createTestDatabaseAndStub(true);
 
     handler = getWrapper('graphql', '/functions/graphql/handler.ts', 'handler');
 
-    user = await createUser();
+    user = await createUser(db.conn);
   });
 
   it('rejects with no auth', async function () {
@@ -87,6 +87,6 @@ describe('query session', function () {
   });
 
   after(async function () {
-    await tdb.stopAndRestore();
+    await db.stopAndRestore();
   });
 });
