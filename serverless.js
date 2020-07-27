@@ -10,8 +10,10 @@ const { name } = require('./package.json');
 // Force NODE_ENV to equal Serverless' stage
 process.env.NODE_ENV = argv.stage;
 
-// Set proper AWS stage profile
-process.env.AWS_PROFILE = profiles[String(argv.stage)];
+if (process.env.SLSEED_USE_AWS_PROFILES !== 'false') {
+  // Set proper AWS stage profile
+  process.env.AWS_PROFILE = profiles[String(argv.stage)];
+}
 
 module.exports = {
   service: slug(name),
