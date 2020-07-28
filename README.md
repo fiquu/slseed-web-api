@@ -7,13 +7,13 @@
 - Easy project and service configuration.
 - Logical folder structure.
 - Simplified authorization handling.
-- Simplified database connection management with Mongoose (MongoDB).
+- Simplified database connection management with [Mongoose](https://mongoosejs.com/) (MongoDB).
 - Simplified HTTP response handling.
-- GraphQL lambda endpoint.
+- [GraphQL](https://graphql.org/) lambda endpoint.
 - REST endpoint.
-- Mailing integration with AWS SES.
+- Mailing integration with Amazon Simple Email Service.
 
-**Anything can be removed or changed.**
+**Anything can be removed or changed,** so if you need to create a service to just handle [S3](https://aws.amazon.com/s3/) events, you can just leave a function to handle that. There are no limitations.
 
 ## Getting started
 
@@ -38,7 +38,7 @@ See the `"scripts"` section on the `package.json` for more commands.
 
 We decided to use separate stacks to avoid dependencies between the Serverless and base stacks. The base stack may contain references to Cognito  or other critical services that should not be deleted when removing the Serverless service or modified on every deploy.
 
-This could be solved with https://github.com/nordcloud/serverless-plugin-additional-stacks but we needed an easy way to setup and configure reproductible environments on each stage.
+This could be solved with the [Serverless Plugin Additional Stacks](https://github.com/nordcloud/serverless-plugin-additional-stacks) but we needed an easy way to setup and configure reproductible environments on each stage.
 
 ### Running Scripts
 
@@ -50,7 +50,7 @@ You can also run any script defined on the `package.json` with `npm run list`.
 
 ### Email templates
 
-SES email template uploading are handled by https://github.com/haftahave/serverless-ses-template.
+SES email template uploading are handled by the [Serverless SES Template](https://github.com/haftahave/serverless-ses-template) plugin.
 
 To edit your templates, open the `email/templates/` folder and modify or create as you see fit.
 
@@ -58,7 +58,7 @@ To use a format other than the default with Pug, just modify the loader on `conf
 
 ### GraphQL
 
-GraphQL is included with https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda.
+GraphQL is included with [Apollo Server Lambda](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda).
 
 See the `service/entities/` folder to add or create entities.
 
